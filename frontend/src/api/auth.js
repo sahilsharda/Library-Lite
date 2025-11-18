@@ -1,5 +1,24 @@
-// API configuration
-const API_BASE_URL = import.meta.env.API_BASE_URL;
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.API_BASE_URL ||
+  'http://localhost:3000/api';
+
+const clearStoredSession = () => {
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  localStorage.removeItem('user');
+};
+
+const handleJsonResponse = async (response) => {
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(data.error || 'Request failed');
+    error.status = response.status;
+    error.meta = data;
+    throw error;
+  }
+  return data;
+};
 
 // Auth API functions
 export const authAPI = {
@@ -18,11 +37,7 @@ export const authAPI = {
       }),
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Signup failed');
-    }
+    const data = await handleJsonResponse(response);
 
     // Store session token and user data
     if (data.session) {
@@ -45,11 +60,7 @@ export const authAPI = {
             body: JSON.stringify({ email, password }),
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Login failed');
-        }
+        const data = await handleJsonResponse(response);
 
         // Store session token and user data
         if (data.session) {
@@ -68,20 +79,17 @@ export const authAPI = {
   logout: async () => {
     const token = localStorage.getItem('access_token');
 
-    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    if (token) {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).catch(() => ({}));
+    }
 
-    // Clear local storage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
-
-    const data = await response.json();
-    return data;
+    clearStoredSession();
+    return { success: true };
   },
   // Get current user
     getCurrentUser: async () => {
@@ -98,18 +106,21 @@ export const authAPI = {
             },
         });
 
-        const data = await response.json();
+        try {
+          const data = await handleJsonResponse(response);
 
-        if (!response.ok) {
-            throw new Error(data.error || 'Failed to get user');
+          // Update stored user data
+          if (data.user) {
+              localStorage.setItem('user', JSON.stringify(data.user));
+          }
+
+          return data;
+        } catch (error) {
+          if (error.status === 401) {
+            clearStoredSession();
+          }
+          throw error;
         }
-
-        // Update stored user data
-        if (data.user) {
-            localStorage.setItem('user', JSON.stringify(data.user));
-        }
-
-        return data;
     },
 
     // Get stored user from localStorage

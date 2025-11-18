@@ -5,6 +5,7 @@ import BackgroundVideo from "./components/BackgroundVideo";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import UserProfile from "./components/UserProfile";
+import Dashboard from "./components/Dashboard";
 
 
 function App() {
@@ -32,6 +33,9 @@ function App() {
 
         {/* User Profile Route */}
         <Route path="/userprofile" element={<UserProfile />} />
+
+        {/* Dashboard Route */}
+        <Route path="/dashboard" element={<Dashboard />} />
 
         {/* Redirect any unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />

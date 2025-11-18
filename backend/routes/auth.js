@@ -4,11 +4,228 @@ import prisma from "../prisma/prismaClient.js";
 
 const router = express.Router();
 
+const buildUserDashboard = async (authId) => {
+  if (!authId) {
+    return { dbUser: null, dashboard: null };
+  }
+
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: { authId },
+      include: {
+        member: true,
+        loans: {
+          orderBy: { borrowDate: "desc" },
+          include: {
+            book: {
+              select: {
+                id: true,
+                title: true,
+                coverUrl: true,
+                author: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payments: {
+          orderBy: { paymentDate: "desc" },
+          include: {
+            loan: {
+              select: {
+                id: true,
+                book: {
+                  select: {
+                    title: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        reservations: {
+          orderBy: { reservedAt: "desc" },
+          include: {
+            book: {
+              select: {
+                title: true,
+                author: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!dbUser) {
+      return { dbUser: null, dashboard: null };
+    }
+
+    const now = new Date();
+    const msInDay = 1000 * 60 * 60 * 24;
+
+    const loans = (dbUser.loans || []).map((loan) => {
+      const borrowDate = loan.borrowDate ? new Date(loan.borrowDate) : null;
+      const dueDate = loan.dueDate ? new Date(loan.dueDate) : null;
+      const durationDays =
+        borrowDate && dueDate
+          ? Math.max(1, Math.ceil((dueDate - borrowDate) / msInDay))
+          : null;
+      const daysRemaining =
+        dueDate !== null
+          ? Math.ceil((dueDate - now) / msInDay)
+          : null;
+
+      return {
+        id: loan.id,
+        status: loan.status,
+        borrowDate: loan.borrowDate,
+        dueDate: loan.dueDate,
+        returnDate: loan.returnDate,
+        fine: loan.fine,
+        durationDays,
+        daysRemaining,
+        book: {
+          id: loan.book?.id,
+          title: loan.book?.title,
+          author: loan.book?.author?.name,
+          coverUrl: loan.book?.coverUrl,
+          price: loan.book?.price || 0,
+        },
+      };
+    });
+
+    const payments = (dbUser.payments || []).map((payment) => ({
+      id: payment.id,
+      amount: payment.amount,
+      status: payment.status,
+      method: payment.paymentMethod,
+      paymentDate: payment.paymentDate,
+      loanId: payment.loanId,
+      loan: payment.loan
+        ? {
+          id: payment.loan.id,
+          bookTitle: payment.loan.book?.title,
+          bookPrice: payment.loan.book?.price || 0,
+        }
+        : null,
+    }));
+
+    // Treat payments for books as purchases (for demo purposes)
+    // In production, you'd have a separate Purchase model
+    const purchases = payments
+      .filter((p) => p.status === "completed" && p.loan?.bookTitle)
+      .map((payment) => {
+        // Simulate purchase access period (30 days from purchase)
+        const purchaseDate = new Date(payment.paymentDate);
+        const accessExpiry = new Date(purchaseDate);
+        accessExpiry.setDate(accessExpiry.getDate() + 30);
+        const daysRemaining = Math.ceil((accessExpiry - now) / msInDay);
+
+        return {
+          id: `purchase-${payment.id}`,
+          bookTitle: payment.loan.bookTitle,
+          bookPrice: payment.loan.bookPrice || payment.amount,
+          purchaseDate: payment.paymentDate,
+          accessExpiry: accessExpiry.toISOString(),
+          daysRemaining: daysRemaining > 0 ? daysRemaining : 0,
+          amount: payment.amount,
+          method: payment.method,
+        };
+      });
+
+    const reservations = (dbUser.reservations || []).map((reservation) => ({
+      id: reservation.id,
+      status: reservation.status,
+      reservedAt: reservation.reservedAt ?? reservation.createdAt,
+      expiresAt: reservation.expiresAt,
+      bookTitle: reservation.book?.title,
+      author: reservation.book?.author?.name,
+    }));
+
+    const completedPayments = payments.filter(
+      (payment) => payment.status === "completed"
+    );
+    const totalSpent = completedPayments.reduce(
+      (sum, payment) => sum + (payment.amount || 0),
+      0
+    );
+    const totalFines = loans.reduce(
+      (sum, loan) => sum + (loan.fine || 0),
+      0
+    );
+    const activeLoans = loans.filter((loan) => loan.status === "borrowed");
+    const overdueLoans = loans.filter(
+      (loan) =>
+        loan.status === "overdue" ||
+        (loan.status === "borrowed" && (loan.daysRemaining ?? 0) < 0)
+    );
+
+    // Calculate wallet balance (simulated - in production this would come from User model)
+    // For now, we'll simulate it as: initial balance - total spent
+    const initialWalletBalance = 5000; // Simulated initial balance
+    const walletBalance = Math.max(0, initialWalletBalance - totalSpent);
+
+    const dashboard = {
+      stats: {
+        totalBorrows: loans.length,
+        activeBorrows: activeLoans.length,
+        overdueBorrows: overdueLoans.length,
+        completedBorrows: loans.filter((loan) => loan.status === "returned")
+          .length,
+        totalPurchases: purchases.length,
+        activePurchases: purchases.filter((p) => p.daysRemaining > 0).length,
+        totalSpent,
+        totalFines,
+        walletBalance,
+        averageSpend:
+          completedPayments.length > 0
+            ? totalSpent / completedPayments.length
+            : 0,
+      },
+      subscription: dbUser.member
+        ? {
+          membershipType: dbUser.member.membershipType,
+          status: dbUser.member.status,
+          startedAt: dbUser.member.startDate,
+          expiresAt: dbUser.member.expiryDate,
+        }
+        : null,
+      loans,
+      purchases,
+      payments,
+      reservations,
+    };
+
+    return { dbUser, dashboard };
+  } catch (error) {
+    console.error("buildUserDashboard error:", error);
+    return { dbUser: null, dashboard: null };
+  }
+};
+
+const attachDashboardToUser = async (authUser) => {
+  if (!authUser) return authUser;
+  const { dbUser, dashboard } = await buildUserDashboard(authUser.id);
+  return {
+    ...authUser,
+    dbUser,
+    dashboard,
+  };
+};
+
 // Signup route
 router.post("/signup", async (req, res) => {
   try {
     const { email, password, fullName, confirmPassword } = req.body;
-    
+
     // Validate required fields
     if (!email || !password) {
       return res.status(400).json({
@@ -55,27 +272,24 @@ router.post("/signup", async (req, res) => {
     // Create user record in database using Prisma
     if (data.user) {
       try {
-        const dbUser = await prisma.user.create({
+        await prisma.user.create({
           data: {
             authId: data.user.id,
             email: data.user.email,
             fullName: fullName.trim(),
-            name: fullName.trim().split(' ')[0], // Use first name
+            name: fullName.trim().split(" ")[0], // Use first name
           },
         });
 
+        const enrichedUser = await attachDashboardToUser(data.user);
+
         res.status(201).json({
           message: "User created successfully",
-          user: {
-            ...data.user,
-            dbUser: dbUser,
-          },
+          user: enrichedUser,
           session: data.session,
         });
       } catch (dbError) {
         console.error("Database error:", dbError);
-        // If DB creation fails, we might want to delete the auth user
-        // For now, just return success with auth data
         res.status(201).json({
           message: "User created in auth, but database sync failed",
           user: data.user,
@@ -118,22 +332,20 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: error.message });
     }
 
-    // Get user from database
-    let dbUser = null;
+    // Ensure user exists in the database & build dashboard
     if (data.user) {
       try {
-        dbUser = await prisma.user.findUnique({
+        const existingUser = await prisma.user.findUnique({
           where: { authId: data.user.id },
         });
 
-        // If user doesn't exist in DB, create them
-        if (!dbUser) {
-          dbUser = await prisma.user.create({
+        if (!existingUser) {
+          await prisma.user.create({
             data: {
               authId: data.user.id,
               email: data.user.email,
               fullName: data.user.user_metadata?.full_name || null,
-              name: data.user.user_metadata?.full_name || email.split('@')[0],
+              name: data.user.user_metadata?.full_name || email.split("@")[0],
             },
           });
         }
@@ -142,13 +354,11 @@ router.post("/login", async (req, res) => {
       }
     }
 
-    // Return user data and session
+    const enrichedUser = await attachDashboardToUser(data.user);
+
     res.status(200).json({
       message: "Login successful",
-      user: {
-        ...data.user,
-        dbUser: dbUser,
-      },
+      user: enrichedUser,
       session: data.session,
     });
   } catch (error) {
@@ -193,34 +403,10 @@ router.get("/user", async (req, res) => {
       return res.status(401).json({ error: error.message });
     }
 
-    // Get user from database
-    let dbUser = null;
-    if (user) {
-      try {
-        dbUser = await prisma.user.findUnique({
-          where: { authId: user.id },
-          include: {
-            borrowings: {
-              include: {
-                book: {
-                  include: {
-                    author: true,
-                  },
-                },
-              },
-            },
-          },
-        });
-      } catch (dbError) {
-        console.error("Database error:", dbError);
-      }
-    }
+    const enrichedUser = await attachDashboardToUser(user);
 
-    res.status(200).json({ 
-      user: {
-        ...user,
-        dbUser: dbUser,
-      }
+    res.status(200).json({
+      user: enrichedUser
     });
   } catch (error) {
     console.error("Get user error:", error);

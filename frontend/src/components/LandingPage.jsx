@@ -1,9 +1,65 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
+import { useAuth } from '../context/AuthContext.jsx';
 
 function LandingPage() {
   const navigate = useNavigate();
+  const { user, loading, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  const displayName = useMemo(() => {
+    if (!user) return '';
+    return (
+      user?.dbUser?.fullName ||
+      user?.dbUser?.name ||
+      user?.user_metadata?.full_name ||
+      user?.email?.split('@')[0] ||
+      ''
+    );
+  }, [user]);
+
+  const membershipLabel = useMemo(() => {
+    if (!user) return 'Guest';
+    return (
+      user?.dashboard?.subscription?.membershipType ||
+      user?.dbUser?.member?.membershipType ||
+      'Member'
+    );
+  }, [user]);
+
+  const initials = useMemo(() => {
+    if (!displayName) return 'U';
+    const nameParts = displayName.trim().split(' ').filter(Boolean);
+    if (!nameParts.length) return displayName[0]?.toUpperCase() || 'U';
+    const chars = nameParts.slice(0, 2).map((part) => part[0]?.toUpperCase() || '');
+    return chars.join('');
+  }, [displayName]);
+
+  const avatarUrl =
+    user?.user_metadata?.avatar_url ||
+    user?.dbUser?.avatarUrl ||
+    null;
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    setMenuOpen(false);
+    navigate('/');
+  };
 
   return (
     <div className="landing-page">
@@ -25,12 +81,71 @@ function LandingPage() {
           </div>
 
           <div className="nav-actions">
-            <button className="nav-btn login-btn" onClick={() => navigate('/login')}>
-              Login
-            </button>
-            <button className="nav-btn signup-btn" onClick={() => navigate('/signup')}>
-              Sign Up
-            </button>
+            {loading ? (
+              <div className="nav-loading-state">
+                <span className="loading-dot" />
+                <span className="loading-dot" />
+                <span className="loading-dot" />
+              </div>
+            ) : user ? (
+              <div className="nav-profile-menu" ref={menuRef}>
+                <button
+                  className="profile-chip"
+                  onClick={() => setMenuOpen((prev) => !prev)}
+                  aria-haspopup="menu"
+                  aria-expanded={menuOpen}
+                >
+                  <div className="profile-avatar">
+                    {avatarUrl ? (
+                      <img src={avatarUrl} alt={displayName} />
+                    ) : (
+                      <span>{initials}</span>
+                    )}
+                  </div>
+                  <div className="profile-copy">
+                    <span className="profile-name">{displayName}</span>
+                    <span className="profile-role">{membershipLabel}</span>
+                  </div>
+                  <svg
+                    className={`profile-chevron ${menuOpen ? 'open' : ''}`}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                {menuOpen && (
+                  <div className="profile-dropdown" role="menu">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate('/dashboard');
+                      }}
+                    >
+                      View Dashboard
+                    </button>
+                    <button type="button" onClick={handleLogout}>
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <button className="nav-btn demo-btn" onClick={() => navigate('/dashboard?demo=1')}>
+                  View Demo
+                </button>
+                <button className="nav-btn login-btn" onClick={() => navigate('/login')}>
+                  Login
+                </button>
+                <button className="nav-btn signup-btn" onClick={() => navigate('/signup')}>
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
         </div>
       </nav>

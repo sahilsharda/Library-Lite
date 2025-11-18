@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../api/auth';
+import { useAuth } from '../context/AuthContext.jsx';
 import './LoginPage.css';
 
 function LoginPage({ onSwitchToSignup, onLogin }) {
     const navigate = useNavigate();
+    const { refreshUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -23,15 +25,17 @@ function LoginPage({ onSwitchToSignup, onLogin }) {
 
         try {
             const result = await authAPI.login(formData.email, formData.password);
-
-            console.log('Login successful:', result);
+            try {
+                await refreshUser({ silent: true });
+            } catch (refreshError) {
+                console.error('Unable to refresh user session:', refreshError);
+            }
 
             if (onLogin) {
                 onLogin(result);
             }
 
-            // Redirect to user profile page
-            navigate('/userprofile');
+            navigate('/dashboard');
         } catch (err) {
             setError(err.message || 'Login failed. Please check your credentials.');
             console.error('Login error:', err);
