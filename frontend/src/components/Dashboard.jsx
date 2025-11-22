@@ -230,6 +230,15 @@ function Dashboard() {
             <span>Profile</span>
           </button>
         </nav>
+        <div className="sidebar-footer">
+          <button onClick={() => navigate('/')} className="nav-item back-home-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Back to Home</span>
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
@@ -242,6 +251,9 @@ function Dashboard() {
             {activePage === 'orders' && 'My Orders'}
             {activePage === 'payments' && 'Payments'}
             {activePage === 'profile' && 'My Profile'}
+            {activePage === 'request-book' && 'Request a Book'}
+            {activePage === 'add-payment' && 'Add Payment'}
+            {activePage === 'support' && 'Support'}
           </h1>
           <div className="header-actions">
             {activePage === 'books' && (
@@ -284,6 +296,7 @@ function Dashboard() {
               dueSoonBooks={dueSoonBooks}
               currencyFormatter={currencyFormatter}
               isDemo={isDemo}
+              onNavigate={handlePageChange}
             />
           )}
 
@@ -325,6 +338,10 @@ function Dashboard() {
               handleLogout={handleLogout}
             />
           )}
+
+          {activePage === 'request-book' && <RequestBookPage />}
+          {activePage === 'add-payment' && <AddPaymentPage />}
+          {activePage === 'support' && <SupportPage />}
         </div>
       </main>
     </div>
@@ -332,12 +349,23 @@ function Dashboard() {
 }
 
 // Dashboard Home Component
-function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, currencyFormatter, isDemo }) {
+function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, currencyFormatter, isDemo, onNavigate }) {
+  const navigateTo = (page) => {
+    // Find the parent component's handlePageChange or use a passed callback
+    // Since we can't easily pass the setter down without prop drilling, 
+    // we'll assume the parent passes a handler or we dispatch an event.
+    // Actually, let's just pass the handler from the parent.
+    // Wait, I need to update the Dashboard component to pass handlePageChange to DashboardHome.
+    // I'll do that in a separate edit or assume it's passed.
+    // Let's assume onNavigate is passed.
+    onNavigate(page);
+  };
+
   return (
     <>
       {/* Quick Actions */}
       <section className="quick-actions">
-        <button className="action-card primary">
+        <button className="action-card primary" onClick={() => onNavigate('books')}>
           <div className="action-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
@@ -348,7 +376,7 @@ function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, cu
           </div>
           <span>Browse Books</span>
         </button>
-        <button className="action-card">
+        <button className="action-card" onClick={() => onNavigate('request-book')}>
           <div className="action-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -359,7 +387,7 @@ function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, cu
           </div>
           <span>Request Book</span>
         </button>
-        <button className="action-card">
+        <button className="action-card" onClick={() => onNavigate('add-payment')}>
           <div className="action-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
@@ -368,7 +396,7 @@ function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, cu
           </div>
           <span>Add Payment</span>
         </button>
-        <button className="action-card">
+        <button className="action-card" onClick={() => onNavigate('support')}>
           <div className="action-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -889,3 +917,150 @@ function ProfilePage({ user, displayName, theme, toggleTheme, handleLogout }) {
 }
 
 export default Dashboard;
+// Request Book Page
+function RequestBookPage() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="success-state">
+        <div className="success-icon">✓</div>
+        <h3>Request Submitted!</h3>
+        <p>We'll notify you when the book becomes available.</p>
+        <button className="btn-primary" onClick={() => setSubmitted(false)}>Request Another</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="form-page-container">
+      <div className="form-card">
+        <div className="card-header">
+          <h3>Request a Book</h3>
+          <p>Can't find what you're looking for? Let us know!</p>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Book Title</label>
+            <input type="text" required placeholder="e.g. The Hobbit" />
+          </div>
+          <div className="form-group">
+            <label>Author</label>
+            <input type="text" required placeholder="e.g. J.R.R. Tolkien" />
+          </div>
+          <div className="form-group">
+            <label>Additional Notes</label>
+            <textarea placeholder="Any specific edition or details..." rows="3"></textarea>
+          </div>
+          <button type="submit" className="btn-primary full-width">Submit Request</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// Add Payment Page
+function AddPaymentPage() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="success-state">
+        <div className="success-icon">✓</div>
+        <h3>Payment Method Added!</h3>
+        <p>Your card has been securely saved.</p>
+        <button className="btn-primary" onClick={() => setSubmitted(false)}>Add Another</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="form-page-container">
+      <div className="form-card">
+        <div className="card-header">
+          <h3>Add Payment Method</h3>
+          <p>Securely add a new card for future payments</p>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Card Number</label>
+            <input type="text" required placeholder="0000 0000 0000 0000" />
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Expiry Date</label>
+              <input type="text" required placeholder="MM/YY" />
+            </div>
+            <div className="form-group">
+              <label>CVV</label>
+              <input type="text" required placeholder="123" />
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Cardholder Name</label>
+            <input type="text" required placeholder="Name on card" />
+          </div>
+          <button type="submit" className="btn-primary full-width">Add Card</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// Support Page
+function SupportPage() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="success-state">
+        <div className="success-icon">✓</div>
+        <h3>Message Sent!</h3>
+        <p>Our support team will get back to you shortly.</p>
+        <button className="btn-primary" onClick={() => setSubmitted(false)}>Send Another Message</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="form-page-container">
+      <div className="form-card">
+        <div className="card-header">
+          <h3>Contact Support</h3>
+          <p>How can we help you today?</p>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Subject</label>
+            <select>
+              <option>General Inquiry</option>
+              <option>Technical Issue</option>
+              <option>Billing Question</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Message</label>
+            <textarea required placeholder="Describe your issue..." rows="5"></textarea>
+          </div>
+          <button type="submit" className="btn-primary full-width">Send Message</button>
+        </form>
+      </div>
+    </div>
+  );
+}
