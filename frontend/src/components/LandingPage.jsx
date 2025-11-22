@@ -136,10 +136,10 @@ function LandingPage() {
             ) : (
               <>
 
-                <button className="nav-btn login-btn" onClick={() => navigate('/login')}>
+                <button className="nav-btn login-btn" onClick={() => navigate('/auth?mode=login')}>
                   Login
                 </button>
-                <button className="nav-btn signup-btn" onClick={() => navigate('/signup')}>
+                <button className="nav-btn signup-btn" onClick={() => navigate('/auth?mode=signup')}>
                   Sign Up
                 </button>
               </>
@@ -169,13 +169,13 @@ function LandingPage() {
               track your reading journey, and never miss a return date.
             </p>
             <div className="hero-buttons">
-              <button className="hero-btn primary-btn" onClick={() => navigate('/signup')}>
+              <button className="hero-btn primary-btn" onClick={() => navigate('/auth?mode=signup')}>
                 <span>Get Started Free</span>
                 <svg className="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
-              <button className="hero-btn secondary-btn" onClick={() => navigate('/login')}>
+              <button className="hero-btn secondary-btn" onClick={() => navigate('/auth?mode=login')}>
                 <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10" />
                   <polygon points="10 8 16 12 10 16 10 8" />
@@ -289,10 +289,10 @@ function LandingPage() {
               Join thousands of readers who are already managing their reading journey efficiently.
             </p>
             <div className="cta-buttons">
-              <button className="cta-btn primary" onClick={() => navigate('/signup')}>
+              <button className="cta-btn primary" onClick={() => navigate('/auth?mode=signup')}>
                 Start Your Journey
               </button>
-              <button className="cta-btn secondary" onClick={() => navigate('/login')}>
+              <button className="cta-btn secondary" onClick={() => navigate('/auth?mode=login')}>
                 Sign In
               </button>
             </div>

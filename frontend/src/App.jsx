@@ -1,35 +1,41 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import LandingPage from "./components/LandingPage";
+import React, { useState } from "react";
+import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
 import BackgroundVideo from "./components/BackgroundVideo";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import UserProfile from "./components/UserProfile";
 import Dashboard from "./components/Dashboard";
+import LandingPage from "./components/LandingPage";
 
+function AuthWrapper() {
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get('mode');
+  const [isLogin, setIsLogin] = useState(mode === 'signup' ? false : true);
+
+  const handleSwitch = () => setIsLogin(!isLogin);
+
+  return (
+    <>
+      <BackgroundVideo />
+      {isLogin ? (
+        <LoginPage onSwitchToSignup={handleSwitch} />
+      ) : (
+        <SignupPage onSwitchToLogin={handleSwitch} />
+      )}
+    </>
+  );
+}
 
 function App() {
+
   return (
     <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden" }}>
       <Routes>
-        {/* Landing Page Route */}
+        {/* Landing Page */}
         <Route path="/" element={<LandingPage />} />
 
-        {/* Login Route with Background Video */}
-        <Route path="/login" element={
-          <>
-            <BackgroundVideo />
-            <LoginPage onSwitchToSignup={() => window.location.href = '/signup'} />
-          </>
-        } />
-
-        {/* Signup Route with Background Video */}
-        <Route path="/signup" element={
-          <>
-            <BackgroundVideo />
-            <SignupPage onSwitchToLogin={() => window.location.href = '/login'} />
-          </>
-        } />
+        {/* Auth Routes with Background Video */}
+        <Route path="/auth" element={<AuthWrapper />} />
 
         {/* User Profile Route */}
         <Route path="/userprofile" element={<UserProfile />} />
