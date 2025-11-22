@@ -1,10 +1,11 @@
 import express from 'express';
 import prisma from '../prisma/prismaClient.js';
+import { isAdmin } from '../middleware/roleCheck.js';
 
 const router = express.Router();
 
 // Get dashboard statistics and reports
-router.get('/reports', async (req, res) => {
+router.get('/reports', isAdmin, async (req, res) => {
   try {
     const [
       totalUsers,
@@ -157,7 +158,7 @@ router.get('/reports', async (req, res) => {
 });
 
 // Get activity logs
-router.get('/logs', async (req, res) => {
+router.get('/logs', isAdmin, async (req, res) => {
   try {
     const {
       userId,
@@ -222,7 +223,7 @@ router.get('/logs', async (req, res) => {
 });
 
 // Get user statistics
-router.get('/users/stats', async (req, res) => {
+router.get('/users/stats', isAdmin, async (req, res) => {
   try {
     const userRoleDistribution = await prisma.user.groupBy({
       by: ['role'],
@@ -292,7 +293,7 @@ router.get('/users/stats', async (req, res) => {
 });
 
 // Get book statistics
-router.get('/books/stats', async (req, res) => {
+router.get('/books/stats', isAdmin, async (req, res) => {
   try {
     const totalCopies = await prisma.book.aggregate({
       _sum: { totalCopies: true }
@@ -386,7 +387,7 @@ router.get('/books/stats', async (req, res) => {
 });
 
 // Get loan statistics
-router.get('/loans/stats', async (req, res) => {
+router.get('/loans/stats', isAdmin, async (req, res) => {
   try {
     const statusDistribution = await prisma.loan.groupBy({
       by: ['status'],

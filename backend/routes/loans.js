@@ -1,12 +1,13 @@
 import express from 'express';
 import prisma from '../prisma/prismaClient.js';
+import { isLibrarian } from '../middleware/roleCheck.js';
 
 const router = express.Router();
 
 const FINE_PER_DAY = 5;
 
 // Get all loans
-router.get('/', async (req, res) => {
+router.get('/', isLibrarian, async (req, res) => {
   try {
     const {
       userId,
@@ -76,7 +77,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get overdue loans
-router.get('/overdue', async (req, res) => {
+router.get('/overdue', isLibrarian, async (req, res) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -138,7 +139,7 @@ router.get('/overdue', async (req, res) => {
 });
 
 // Borrow a book
-router.post('/borrow', async (req, res) => {
+router.post('/borrow', isLibrarian, async (req, res) => {
   try {
     const { userId, bookId, dueDate } = req.body;
 
@@ -241,7 +242,7 @@ router.post('/borrow', async (req, res) => {
 });
 
 // Return a book
-router.post('/return', async (req, res) => {
+router.post('/return', isLibrarian, async (req, res) => {
   try {
     const { loanId } = req.body;
 

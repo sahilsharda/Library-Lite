@@ -1,10 +1,11 @@
 import express from 'express';
 import prisma from '../prisma/prismaClient.js';
+import { isLibrarian, isAdmin } from '../middleware/roleCheck.js';
 
 const router = express.Router();
 
 // Get all members
-router.get('/', async (req, res) => {
+router.get('/', isLibrarian, async (req, res) => {
   try {
     const {
       search,
@@ -137,7 +138,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new member
-router.post('/', async (req, res) => {
+router.post('/', isLibrarian, async (req, res) => {
   try {
     const {
       userId,
@@ -204,7 +205,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update member
-router.put('/:id', async (req, res) => {
+router.put('/:id', isLibrarian, async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -257,7 +258,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete member
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 

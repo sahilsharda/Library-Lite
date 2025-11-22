@@ -1,5 +1,6 @@
 import express from 'express';
 import prisma from '../prisma/prismaClient.js';
+import { isLibrarian, isAdmin } from '../middleware/roleCheck.js';
 
 const router = express.Router();
 
@@ -133,7 +134,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new book
-router.post('/', async (req, res) => {
+router.post('/', isLibrarian, async (req, res) => {
   try {
     const {
       title,
@@ -203,7 +204,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update book
-router.put('/:id', async (req, res) => {
+router.put('/:id', isLibrarian, async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -278,7 +279,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete book
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 

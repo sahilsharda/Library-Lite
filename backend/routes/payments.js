@@ -1,10 +1,11 @@
 import express from 'express';
 import prisma from '../prisma/prismaClient.js';
+import { isLibrarian } from '../middleware/roleCheck.js';
 
 const router = express.Router();
 
 // Get all payments
-router.get('/', async (req, res) => {
+router.get('/', isLibrarian, async (req, res) => {
   try {
     const {
       userId,
@@ -128,7 +129,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Process fine payment
-router.post('/payfine', async (req, res) => {
+router.post('/payfine', isLibrarian, async (req, res) => {
   try {
     const {
       userId,
