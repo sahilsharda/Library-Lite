@@ -135,9 +135,7 @@ function LandingPage() {
               </div>
             ) : (
               <>
-                <button className="nav-btn demo-btn" onClick={() => navigate('/dashboard?demo=1')}>
-                  View Demo
-                </button>
+
                 <button className="nav-btn login-btn" onClick={() => navigate('/login')}>
                   Login
                 </button>
