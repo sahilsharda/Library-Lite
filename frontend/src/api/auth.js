@@ -29,9 +29,9 @@ export const authAPI = {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
-        email, 
-        password, 
+      body: JSON.stringify({
+        email,
+        password,
         fullName,
         ...(confirmPassword && { confirmPassword })
       }),
@@ -44,36 +44,36 @@ export const authAPI = {
       localStorage.setItem('access_token', data.session.access_token);
       localStorage.setItem('refresh_token', data.session.refresh_token);
     }
-    
+
     if (data.user) {
       localStorage.setItem('user', JSON.stringify(data.user));
     }
 
     return data;
   },    // Login
-    login: async (email, password) => {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
+  login: async (email, password) => {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-        const data = await handleJsonResponse(response);
+    const data = await handleJsonResponse(response);
 
-        // Store session token and user data
-        if (data.session) {
-            localStorage.setItem('access_token', data.session.access_token);
-            localStorage.setItem('refresh_token', data.session.refresh_token);
-        }
-        
-        if (data.user) {
-            localStorage.setItem('user', JSON.stringify(data.user));
-        }
+    // Store session token and user data
+    if (data.session) {
+      localStorage.setItem('access_token', data.session.access_token);
+      localStorage.setItem('refresh_token', data.session.refresh_token);
+    }
 
-        return data;
-    },
+    if (data.user) {
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
+
+    return data;
+  },
 
   // Logout
   logout: async () => {
@@ -92,45 +92,45 @@ export const authAPI = {
     return { success: true };
   },
   // Get current user
-    getCurrentUser: async () => {
-        const token = localStorage.getItem('access_token');
+  getCurrentUser: async () => {
+    const token = localStorage.getItem('access_token');
 
-        if (!token) {
-            throw new Error('No token found');
-        }
+    if (!token) {
+      throw new Error('No token found');
+    }
 
-        const response = await fetch(`${API_BASE_URL}/auth/user`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        });
+    const response = await fetch(`${API_BASE_URL}/auth/user`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
 
-        try {
-          const data = await handleJsonResponse(response);
+    try {
+      const data = await handleJsonResponse(response);
 
-          // Update stored user data
-          if (data.user) {
-              localStorage.setItem('user', JSON.stringify(data.user));
-          }
+      // Update stored user data
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
 
-          return data;
-        } catch (error) {
-          if (error.status === 401) {
-            clearStoredSession();
-          }
-          throw error;
-        }
-    },
+      return data;
+    } catch (error) {
+      if (error.status === 401) {
+        clearStoredSession();
+      }
+      throw error;
+    }
+  },
 
-    // Get stored user from localStorage
-    getStoredUser: () => {
-        const userStr = localStorage.getItem('user');
-        return userStr ? JSON.parse(userStr) : null;
-    },
+  // Get stored user from localStorage
+  getStoredUser: () => {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  },
 
-    // Check if user is authenticated
-    isAuthenticated: () => {
-        return !!localStorage.getItem('access_token');
-    },
+  // Check if user is authenticated
+  isAuthenticated: () => {
+    return !!localStorage.getItem('access_token');
+  },
 };

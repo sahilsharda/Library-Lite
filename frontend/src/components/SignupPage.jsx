@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { authAPI } from '../api/auth';
 import './SignupPage.css';
 
@@ -244,6 +245,13 @@ function SignupPage({ onSwitchToLogin }) {
                 <p className="footer-text">
                     By creating an account, you agree to our Terms & Privacy Policy
                 </p>
+
+                {/* Back to Home Link */}
+                <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    <Link to="/" style={{ color: '#6b7280', textDecoration: 'none', fontSize: '14px' }}>
+                        ← Back to Home
+                    </Link>
+                </div>
             </div>
         </div>
     );
