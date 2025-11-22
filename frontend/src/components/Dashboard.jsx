@@ -222,12 +222,12 @@ function Dashboard() {
             </svg>
             <span>Payments</span>
           </button>
-          <button onClick={() => handlePageChange('settings')} className={`nav-item ${activePage === 'settings' ? 'active' : ''}`}>
+          <button onClick={() => handlePageChange('profile')} className={`nav-item ${activePage === 'profile' ? 'active' : ''}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
             </svg>
-            <span>Settings</span>
+            <span>Profile</span>
           </button>
         </nav>
       </aside>
@@ -241,7 +241,7 @@ function Dashboard() {
             {activePage === 'books' && 'Books'}
             {activePage === 'orders' && 'My Orders'}
             {activePage === 'payments' && 'Payments'}
-            {activePage === 'settings' && 'Settings'}
+            {activePage === 'profile' && 'My Profile'}
           </h1>
           <div className="header-actions">
             {activePage === 'books' && (
@@ -316,8 +316,8 @@ function Dashboard() {
             />
           )}
 
-          {activePage === 'settings' && (
-            <SettingsPage
+          {activePage === 'profile' && (
+            <ProfilePage
               user={user}
               displayName={displayName}
               theme={theme}
@@ -335,6 +335,49 @@ function Dashboard() {
 function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, currencyFormatter, isDemo }) {
   return (
     <>
+      {/* Quick Actions */}
+      <section className="quick-actions">
+        <button className="action-card primary">
+          <div className="action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              <path d="M12 6h6"></path>
+              <path d="M12 10h6"></path>
+            </svg>
+          </div>
+          <span>Browse Books</span>
+        </button>
+        <button className="action-card">
+          <div className="action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+          </div>
+          <span>Request Book</span>
+        </button>
+        <button className="action-card">
+          <div className="action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+          </div>
+          <span>Add Payment</span>
+        </button>
+        <button className="action-card">
+          <div className="action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <span>Support</span>
+        </button>
+      </section>
+
       {/* Stats Cards */}
       <section className="stats-section">
         <div className="stat-card">
@@ -671,107 +714,177 @@ function PaymentsPage({ payments, loading, currencyFormatter, isDemo }) {
 }
 
 // Settings Page Component
-function SettingsPage({ user, displayName, theme, toggleTheme, handleLogout }) {
-  const [editableFields, setEditableFields] = useState({
-    fullName: user?.dbUser?.fullName || '',
+// Profile Page Component
+function ProfilePage({ user, displayName, theme, toggleTheme, handleLogout }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: user?.dbUser?.fullName || displayName || '',
+    bio: 'Avid reader and book enthusiast.',
     phone: user?.dbUser?.phone || '',
     address: user?.dbUser?.address || '',
+    jobTitle: 'Software Engineer',
   });
 
+  const handleSave = async () => {
+    setLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(false);
+    setIsEditing(false);
+  };
+
   return (
-    <>
-      <div className="section-header">
-        <h2>Settings</h2>
-        <p className="section-subtitle">Manage your account and preferences</p>
+    <div className="profile-page-container">
+      {/* Profile Header */}
+      <div className="profile-header-card">
+        <div className="profile-cover"></div>
+        <div className="profile-info-wrapper">
+          <div className="profile-avatar-large">
+            {user?.user_metadata?.avatar_url ? (
+              <img src={user.user_metadata.avatar_url} alt={displayName} />
+            ) : (
+              <span>{displayName?.[0]?.toUpperCase() || 'U'}</span>
+            )}
+          </div>
+          <div className="profile-text">
+            <h2>{displayName}</h2>
+            <p>{user?.email}</p>
+            <span className="profile-badge">Premium Member</span>
+          </div>
+          <div className="profile-header-actions">
+            <button
+              className={`btn-primary ${isEditing ? 'hidden' : ''}`}
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Profile
+            </button>
+            {isEditing && (
+              <div className="edit-actions">
+                <button className="btn-secondary" onClick={() => setIsEditing(false)}>Cancel</button>
+                <button className="btn-primary" onClick={handleSave} disabled={loading}>
+                  {loading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="settings-grid">
-        <div className="settings-card">
-          <h3>Profile Information</h3>
-          <p className="settings-note">You can edit your profile information below:</p>
-          <div className="form-group">
-            <label>Full Name</label>
-            <input
-              type="text"
-              value={editableFields.fullName}
-              onChange={(e) => setEditableFields({ ...editableFields, fullName: e.target.value })}
-              placeholder="Enter your full name"
-            />
+      <div className="profile-content-grid">
+        {/* Left Column - Personal Info */}
+        <div className="profile-card">
+          <div className="card-header">
+            <h3>Personal Information</h3>
           </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input type="email" value={user?.email || ''} disabled />
-            <span className="field-note">Email cannot be changed</span>
-          </div>
-          <div className="form-group">
-            <label>Phone</label>
-            <input
-              type="tel"
-              value={editableFields.phone}
-              onChange={(e) => setEditableFields({ ...editableFields, phone: e.target.value })}
-              placeholder="Enter your phone number"
-            />
-          </div>
-          <div className="form-group">
-            <label>Address</label>
-            <textarea
-              value={editableFields.address}
-              onChange={(e) => setEditableFields({ ...editableFields, address: e.target.value })}
-              placeholder="Enter your address"
-              rows="3"
-            />
-          </div>
-          <button className="btn-primary">Save Changes</button>
-        </div>
-
-        <div className="settings-card">
-          <h3>Appearance</h3>
-          <div className="form-group">
-            <label>Theme</label>
-            <div className="theme-toggle">
-              <button
-                className={`theme-option ${theme === 'light' ? 'active' : ''}`}
-                onClick={() => theme !== 'light' && toggleTheme()}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="5"></circle>
-                  <line x1="12" y1="1" x2="12" y2="3"></line>
-                  <line x1="12" y1="21" x2="12" y2="23"></line>
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                  <line x1="1" y1="12" x2="3" y2="12"></line>
-                  <line x1="21" y1="12" x2="23" y2="12"></line>
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
-                Light
-              </button>
-              <button
-                className={`theme-option ${theme === 'dark' ? 'active' : ''}`}
-                onClick={() => theme !== 'dark' && toggleTheme()}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-                Dark
-              </button>
+          <div className="profile-form">
+            <div className="form-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                value={formData.fullName}
+                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                disabled={!isEditing}
+                className={isEditing ? 'editable' : ''}
+              />
+            </div>
+            <div className="form-group">
+              <label>Bio</label>
+              <textarea
+                value={formData.bio}
+                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                disabled={!isEditing}
+                className={isEditing ? 'editable' : ''}
+                rows="3"
+              />
+            </div>
+            <div className="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                value={user?.email || ''}
+                disabled
+                className="read-only"
+              />
+              <span className="helper-text">Email cannot be changed</span>
+            </div>
+            <div className="form-group">
+              <label>Phone Number</label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                disabled={!isEditing}
+                className={isEditing ? 'editable' : ''}
+                placeholder="+1 (555) 000-0000"
+              />
+            </div>
+            <div className="form-group">
+              <label>Address</label>
+              <input
+                type="text"
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                disabled={!isEditing}
+                className={isEditing ? 'editable' : ''}
+                placeholder="123 Book Street, Library City"
+              />
             </div>
           </div>
         </div>
 
-        <div className="settings-card danger">
-          <h3>Account Actions</h3>
-          <button className="btn-danger" onClick={handleLogout}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-            Logout
-          </button>
+        {/* Right Column - Settings & Preferences */}
+        <div className="profile-right-col">
+          <div className="profile-card">
+            <div className="card-header">
+              <h3>Preferences</h3>
+            </div>
+            <div className="preferences-list">
+              <div className="preference-item">
+                <div className="pref-info">
+                  <h4>Dark Mode</h4>
+                  <p>Switch between light and dark themes</p>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={theme === 'dark'}
+                    onChange={toggleTheme}
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </div>
+              <div className="preference-item">
+                <div className="pref-info">
+                  <h4>Email Notifications</h4>
+                  <p>Receive updates about your loans</p>
+                </div>
+                <label className="toggle-switch">
+                  <input type="checkbox" defaultChecked />
+                  <span className="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="profile-card danger-zone">
+            <div className="card-header">
+              <h3>Account Actions</h3>
+            </div>
+            <div className="danger-actions">
+              <button className="btn-danger full-width" onClick={handleLogout}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Log Out
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
