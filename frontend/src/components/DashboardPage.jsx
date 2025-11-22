@@ -16,35 +16,36 @@ function DashboardPage({ onLogout, user }) {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('books'); // books, loans, members
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Fetch all data in parallel
-      const [booksData, loansData, dashboardStats] = await Promise.all([
-        booksAPI.getAllBooks(),
-        loansAPI.getAllLoans(),
-        adminAPI.getDashboardStats().catch(() => null) // Admin stats might fail for non-admin
-      ]);
+      // Fetch books (public access)
+      const booksData = await booksAPI.getAllBooks();
+      setBooks(booksData.data || booksData);
 
-      setBooks(booksData);
-      setLoans(loansData);
+      // Try to fetch loans (requires librarian/admin role)
+      try {
+        const loansData = await loansAPI.getAllLoans();
+        setLoans(loansData.data || loansData);
+      } catch (loansErr) {
+        console.log('Could not fetch all loans (requires librarian role):', loansErr);
+        setLoans([]);
+      }
 
-      if (dashboardStats) {
-        setStats(dashboardStats);
-      } else {
+      // Try to fetch dashboard stats (requires admin role)
+      try {
+        const dashboardStats = await adminAPI.getDashboardStats();
+        setStats(dashboardStats.data?.overview || dashboardStats.overview);
+      } catch (statsErr) {
+        console.log('Could not fetch admin stats (requires admin role):', statsErr);
         // Calculate basic stats from available data
+        const booksArray = booksData.data || booksData;
         setStats({
-          totalBooks: booksData.length,
-          activeLoans: loansData.filter(loan => !loan.returnDate).length,
-          overdueLoans: loansData.filter(loan =>
-            !loan.returnDate && new Date(loan.dueDate) < new Date()
-          ).length,
+          totalBooks: booksArray.length,
+          activeLoans: 0,
+          overdueLoans: 0,
           totalMembers: 0
         });
       }
@@ -55,6 +56,10 @@ function DashboardPage({ onLogout, user }) {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    fetchDashboardData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   const renderBooksList = () => (
     <div className="content-section">

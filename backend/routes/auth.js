@@ -276,32 +276,60 @@ router.post("/signup", async (req, res) => {
     // Create user record in database using Prisma
     if (data.user) {
       try {
-        const newUser = await prisma.user.create({
-          data: {
-            authId: data.user.id,
-            email: data.user.email,
-            fullName: fullName.trim(),
-            name: fullName.trim().split(" ")[0], // Use first name
-            role: userRole,
-            phone: phone || null,
-            address: address || null,
-          },
+        // Check if user already exists in database
+        let newUser = await prisma.user.findUnique({
+          where: { email: data.user.email }
         });
+
+        if (!newUser) {
+          // Create new user if doesn't exist
+          newUser = await prisma.user.create({
+            data: {
+              authId: data.user.id,
+              email: data.user.email,
+              fullName: fullName.trim(),
+              name: fullName.trim().split(" ")[0], // Use first name
+              role: userRole,
+              phone: phone || null,
+              address: address || null,
+            },
+          });
+        } else {
+          // Update existing user if found
+          newUser = await prisma.user.update({
+            where: { email: data.user.email },
+            data: {
+              authId: data.user.id,
+              fullName: fullName.trim(),
+              name: fullName.trim().split(" ")[0],
+              role: userRole,
+              phone: phone || null,
+              address: address || null,
+            },
+          });
+        }
 
         // Create member record if role is member
         if (userRole === 'member') {
           const thirtyDaysFromNow = new Date();
           thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
           
-          await prisma.member.create({
-            data: {
-              userId: newUser.id,
-              membershipType: 'basic',
-              startDate: new Date(),
-              expiryDate: thirtyDaysFromNow,
-              status: 'active',
-            },
+          // Check if member record already exists
+          const existingMember = await prisma.member.findUnique({
+            where: { userId: newUser.id }
           });
+
+          if (!existingMember) {
+            await prisma.member.create({
+              data: {
+                userId: newUser.id,
+                membershipType: 'basic',
+                startDate: new Date(),
+                expiryDate: thirtyDaysFromNow,
+                status: 'active',
+              },
+            });
+          }
         }
 
         const enrichedUser = await attachDashboardToUser(data.user);

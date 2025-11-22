@@ -3,7 +3,7 @@ import { apiClient } from './client';
 export const adminAPI = {
   // Get dashboard statistics
   getDashboardStats: () => {
-    return apiClient.get('/api/admin/dashboard');
+    return apiClient.get('/api/admin/reports');
   },
 
   // Get all users
