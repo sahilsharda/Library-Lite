@@ -224,7 +224,7 @@ const attachDashboardToUser = async (authUser) => {
 // Signup route
 router.post("/signup", async (req, res) => {
   try {
-    const { email, password, fullName, confirmPassword } = req.body;
+    const { email, password, fullName, confirmPassword, role, phone, address } = req.body;
 
     // Validate required fields
     if (!email || !password) {
@@ -254,6 +254,9 @@ router.post("/signup", async (req, res) => {
       });
     }
 
+    // Validate role (default to member if not provided)
+    const userRole = role && ['admin', 'librarian', 'member'].includes(role) ? role : 'member';
+
     // Create user in Supabase Auth
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -261,6 +264,7 @@ router.post("/signup", async (req, res) => {
       options: {
         data: {
           full_name: fullName.trim(),
+          role: userRole,
         },
       },
     });
@@ -272,14 +276,33 @@ router.post("/signup", async (req, res) => {
     // Create user record in database using Prisma
     if (data.user) {
       try {
-        await prisma.user.create({
+        const newUser = await prisma.user.create({
           data: {
             authId: data.user.id,
             email: data.user.email,
             fullName: fullName.trim(),
             name: fullName.trim().split(" ")[0], // Use first name
+            role: userRole,
+            phone: phone || null,
+            address: address || null,
           },
         });
+
+        // Create member record if role is member
+        if (userRole === 'member') {
+          const thirtyDaysFromNow = new Date();
+          thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+          
+          await prisma.member.create({
+            data: {
+              userId: newUser.id,
+              membershipType: 'basic',
+              startDate: new Date(),
+              expiryDate: thirtyDaysFromNow,
+              status: 'active',
+            },
+          });
+        }
 
         const enrichedUser = await attachDashboardToUser(data.user);
 

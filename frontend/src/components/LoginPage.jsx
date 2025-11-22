@@ -4,7 +4,7 @@ import { authAPI } from '../api/auth';
 import { useAuth } from '../context/AuthContext.jsx';
 import './LoginPage.css';
 
-function LoginPage({ onSwitchToSignup, onLogin }) {
+function LoginPage({ onSwitchToSignup, onLogin, onLoginSuccess }) {
     const navigate = useNavigate();
     const { refreshUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
@@ -31,10 +31,15 @@ function LoginPage({ onSwitchToSignup, onLogin }) {
                 console.error('Unable to refresh user session:', refreshError);
             }
 
-            if (onLogin) {
+            // Call the new callback if provided (from App.jsx)
+            if (onLoginSuccess) {
+                onLoginSuccess(result.user);
+            } else if (onLogin) {
+                // Fallback to old callback
                 onLogin(result);
             }
 
+            // Redirect to dashboard
             navigate('/dashboard');
         } catch (err) {
             setError(err.message || 'Login failed. Please check your credentials.');
@@ -84,7 +89,7 @@ function LoginPage({ onSwitchToSignup, onLogin }) {
                         <div className="input-group">
                             <label className="input-label">Password</label>
                             <div className="input-wrapper">
-                                <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <svg  className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
@@ -132,6 +137,7 @@ function LoginPage({ onSwitchToSignup, onLogin }) {
 
                         {/* Submit Button */}
                         <button
+                            type="button"
                             onClick={handleSubmit}
                             className="btn btn-primary"
                             disabled={loading}
@@ -149,7 +155,7 @@ function LoginPage({ onSwitchToSignup, onLogin }) {
                     </div>
 
                     {/* Switch to Signup */}
-                    <button onClick={onSwitchToSignup} className="btn btn-secondary">
+                    <button type="button" onClick={onSwitchToSignup} className="btn btn-secondary">
                         Create Account
                     </button>
                 </div>

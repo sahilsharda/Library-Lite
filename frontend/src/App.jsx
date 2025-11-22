@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useSearchParams, useNavigate } from "react-router-dom";
 import BackgroundVideo from "./components/BackgroundVideo";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import UserProfile from "./components/UserProfile";
 import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
+import DashboardPage from "./components/DashboardPage";
 
-function AuthWrapper() {
+
+function AuthWrapper({ onLoginSuccess }) {
   const [searchParams] = useSearchParams();
   const mode = searchParams.get('mode');
   const [isLogin, setIsLogin] = useState(mode === 'signup' ? false : true);
@@ -18,15 +20,52 @@ function AuthWrapper() {
     <>
       <BackgroundVideo />
       {isLogin ? (
-        <LoginPage onSwitchToSignup={handleSwitch} />
+        <LoginPage onSwitchToSignup={handleSwitch} onLoginSuccess={onLoginSuccess} />
       ) : (
-        <SignupPage onSwitchToLogin={handleSwitch} />
+        <SignupPage onSwitchToLogin={handleSwitch} onSignupSuccess={onLoginSuccess} />
       )}
     </>
   );
 }
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already logged in (from localStorage or session)
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (err) {
+        console.error('Error parsing stored user:', err);
+        localStorage.removeItem('user');
+      }
+    }
+    setIsLoading(false);
+  }, []);
+
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+    navigate('/dashboard');
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    navigate('/');
+  };
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden" }}>
@@ -35,10 +74,31 @@ function App() {
         <Route path="/" element={<LandingPage />} />
 
         {/* Auth Routes with Background Video */}
-        <Route path="/auth" element={<AuthWrapper />} />
+        <Route path="/auth" element={<AuthWrapper onLoginSuccess={handleLoginSuccess} />} />
 
-        {/* User Profile Route */}
-        <Route path="/userprofile" element={<UserProfile />} />
+        {/* Dashboard - Protected Route */}
+        <Route
+          path="/dashboard"
+          element={
+            user ? (
+              <DashboardPage user={user} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/auth" replace />
+            )
+          }
+        />
+
+        {/* User Profile Route - Protected */}
+        <Route
+          path="/userprofile"
+          element={
+            user ? (
+              <UserProfile user={user} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/auth" replace />
+            )
+          }
+        />
 
         {/* Dashboard Route */}
         <Route path="/dashboard" element={<Dashboard />} />

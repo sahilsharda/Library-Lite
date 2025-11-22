@@ -1,0 +1,398 @@
+{
+  "tables": {
+    "User": {
+      "name": "User",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "comment": null,
+          "check": null
+        },
+        "fullName": {
+          "name": "fullName",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "comment": null,
+          "check": null
+        },
+        "membership": {
+          "name": "membership",
+          "type": "text",
+          "default": "regular",
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "authId": {
+          "name": "authId",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp(3)",
+          "default": "CURRENT_TIMESTAMP",
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp(3)",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        }
+      },
+      "comment": null,
+      "indexes": {
+        "User_pkey": {
+          "name": "User_pkey",
+          "unique": true,
+          "columns": [
+            "id"
+          ],
+          "type": ""
+        },
+        "User_email_key": {
+          "name": "User_email_key",
+          "unique": true,
+          "columns": [
+            "email"
+          ],
+          "type": ""
+        },
+        "User_authId_key": {
+          "name": "User_authId_key",
+          "unique": true,
+          "columns": [
+            "authId"
+          ],
+          "type": ""
+        }
+      },
+      "constraints": {
+        "PRIMARY_id": {
+          "type": "PRIMARY KEY",
+          "name": "PRIMARY_id",
+          "columnNames": [
+            "id"
+          ]
+        },
+        "UNIQUE_email": {
+          "type": "UNIQUE",
+          "name": "UNIQUE_email",
+          "columnNames": [
+            "email"
+          ]
+        },
+        "UNIQUE_authId": {
+          "type": "UNIQUE",
+          "name": "UNIQUE_authId",
+          "columnNames": [
+            "authId"
+          ]
+        }
+      }
+    },
+    "Author": {
+      "name": "Author",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "bio": {
+          "name": "bio",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        }
+      },
+      "comment": null,
+      "indexes": {
+        "Author_pkey": {
+          "name": "Author_pkey",
+          "unique": true,
+          "columns": [
+            "id"
+          ],
+          "type": ""
+        }
+      },
+      "constraints": {
+        "PRIMARY_id": {
+          "type": "PRIMARY KEY",
+          "name": "PRIMARY_id",
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    },
+    "Book": {
+      "name": "Book",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "isbn": {
+          "name": "isbn",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "publishedAt": {
+          "name": "publishedAt",
+          "type": "timestamp(3)",
+          "default": null,
+          "notNull": false,
+          "comment": null,
+          "check": null
+        },
+        "available": {
+          "name": "available",
+          "type": "boolean",
+          "default": true,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "authorId": {
+          "name": "authorId",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        }
+      },
+      "comment": null,
+      "indexes": {
+        "Book_pkey": {
+          "name": "Book_pkey",
+          "unique": true,
+          "columns": [
+            "id"
+          ],
+          "type": ""
+        },
+        "Book_isbn_key": {
+          "name": "Book_isbn_key",
+          "unique": true,
+          "columns": [
+            "isbn"
+          ],
+          "type": ""
+        }
+      },
+      "constraints": {
+        "PRIMARY_id": {
+          "type": "PRIMARY KEY",
+          "name": "PRIMARY_id",
+          "columnNames": [
+            "id"
+          ]
+        },
+        "UNIQUE_isbn": {
+          "type": "UNIQUE",
+          "name": "UNIQUE_isbn",
+          "columnNames": [
+            "isbn"
+          ]
+        },
+        "AuthorToBook": {
+          "type": "FOREIGN KEY",
+          "name": "AuthorToBook",
+          "columnNames": [
+            "authorId"
+          ],
+          "targetTableName": "Author",
+          "targetColumnNames": [
+            "id"
+          ],
+          "updateConstraint": "NO_ACTION",
+          "deleteConstraint": "NO_ACTION"
+        }
+      }
+    },
+    "Borrow": {
+      "name": "Borrow",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "bookId": {
+          "name": "bookId",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "borrowDate": {
+          "name": "borrowDate",
+          "type": "timestamp(3)",
+          "default": "CURRENT_TIMESTAMP",
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "dueDate": {
+          "name": "dueDate",
+          "type": "timestamp(3)",
+          "default": null,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "returnDate": {
+          "name": "returnDate",
+          "type": "timestamp(3)",
+          "default": null,
+          "notNull": false,
+          "comment": null,
+          "check": null
+        },
+        "returned": {
+          "name": "returned",
+          "type": "boolean",
+          "default": false,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "fine": {
+          "name": "fine",
+          "type": "double precision",
+          "default": 0,
+          "notNull": true,
+          "comment": null,
+          "check": null
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "default": "borrowed",
+          "notNull": true,
+          "comment": null,
+          "check": null
+        }
+      },
+      "comment": null,
+      "indexes": {
+        "Borrow_pkey": {
+          "name": "Borrow_pkey",
+          "unique": true,
+          "columns": [
+            "id"
+          ],
+          "type": ""
+        }
+      },
+      "constraints": {
+        "PRIMARY_id": {
+          "type": "PRIMARY KEY",
+          "name": "PRIMARY_id",
+          "columnNames": [
+            "id"
+          ]
+        },
+        "BorrowToUser": {
+          "type": "FOREIGN KEY",
+          "name": "BorrowToUser",
+          "columnNames": [
+            "userId"
+          ],
+          "targetTableName": "User",
+          "targetColumnNames": [
+            "id"
+          ],
+          "updateConstraint": "NO_ACTION",
+          "deleteConstraint": "NO_ACTION"
+        },
+        "BookToBorrow": {
+          "type": "FOREIGN KEY",
+          "name": "BookToBorrow",
+          "columnNames": [
+            "bookId"
+          ],
+          "targetTableName": "Book",
+          "targetColumnNames": [
+            "id"
+          ],
+          "updateConstraint": "NO_ACTION",
+          "deleteConstraint": "NO_ACTION"
+        }
+      }
+    }
+  },
+  "enums": {},
+  "extensions": {}
+}

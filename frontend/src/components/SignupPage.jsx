@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { authAPI } from '../api/auth';
 import './SignupPage.css';
 
-function SignupPage({ onSwitchToLogin }) {
+function SignupPage({ onSwitchToLogin, onSignupSuccess }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -48,12 +48,19 @@ function SignupPage({ onSwitchToLogin }) {
             console.log('Signup successful:', result);
             setSuccess(true);
 
-            // Redirect to login page after 2 seconds
-            setTimeout(() => {
-                if (onSwitchToLogin) {
-                    onSwitchToLogin();
-                }
-            }, 2000);
+            // If onSignupSuccess is provided, call it and redirect to dashboard
+            if (onSignupSuccess && result.user) {
+                setTimeout(() => {
+                    onSignupSuccess(result.user);
+                }, 1500);
+            } else {
+                // Otherwise, redirect to login page after 2 seconds
+                setTimeout(() => {
+                    if (onSwitchToLogin) {
+                        onSwitchToLogin();
+                    }
+                }, 2000);
+            }
         } catch (err) {
             setError(err.message || 'Signup failed. Please try again.');
             console.error('Signup error:', err);
