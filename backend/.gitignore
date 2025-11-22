@@ -13,10 +13,13 @@ pnpm-debug.log*
 .env.production.local
 
 # Prisma
-prisma/migrations/
 /generated/prisma
 *.db
 *.db-journal
+prisma.config.js
+prisma.config.mjs
+prisma/prisma.config.js
+src/generated/
 
 # Logs
 logs/
