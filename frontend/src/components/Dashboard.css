@@ -17,8 +17,8 @@
 /* Dark Theme */
 .dashboard-container.dark,
 .dashboard-container[data-theme="dark"] {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: var(--bg-gradient);
+  color: var(--text-primary);
 }
 
 /* Sidebar */
@@ -42,8 +42,10 @@
 
 .dashboard-container.dark .dashboard-sidebar,
 .dashboard-container[data-theme="dark"] .dashboard-sidebar {
-  background: #1e293b;
-  border-right: 1px solid #334155;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-right: var(--glass-border);
 }
 
 .sidebar-header {
@@ -59,7 +61,7 @@
 
 .dashboard-container.dark .sidebar-header,
 .dashboard-container[data-theme="dark"] .sidebar-header {
-  border-color: #334155;
+  border-color: rgba(255, 255, 255, 0.05);
 }
 
 .sidebar-logo {
@@ -363,8 +365,11 @@
 
 .dashboard-container.dark .stat-card,
 .dashboard-container[data-theme="dark"] .stat-card {
-  background: #1e293b;
-  border-color: #334155;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .stat-card:hover {
@@ -521,8 +526,9 @@
 
 .dashboard-container.dark .reminder-card.overdue,
 .dashboard-container[data-theme="dark"] .reminder-card.overdue {
-  background: rgba(220, 38, 38, 0.1);
-  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(220, 38, 38, 0.3);
 }
 
 .reminder-card.warning {
@@ -532,8 +538,9 @@
 
 .dashboard-container.dark .reminder-card.warning,
 .dashboard-container[data-theme="dark"] .reminder-card.warning {
-  background: rgba(245, 158, 11, 0.1);
-  border-color: rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .reminder-icon {
@@ -628,8 +635,10 @@
 
 .dashboard-container.dark .book-card,
 .dashboard-container[data-theme="dark"] .book-card {
-  background: #1e293b;
-  border-color: #334155;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .book-card:hover {
@@ -1067,8 +1076,10 @@
 
 .dashboard-container.dark .order-card,
 .dashboard-container[data-theme="dark"] .order-card {
-  background: #1e293b;
-  border-color: #334155;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .order-header {
@@ -1704,14 +1715,14 @@
   .profile-content-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .profile-info-wrapper {
     flex-direction: column;
     align-items: center;
     text-align: center;
     margin-top: -60px;
   }
-  
+
   .profile-text {
     width: 100%;
   }
@@ -1898,11 +1909,11 @@
   transition: .4s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #667eea;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(24px);
 }
 

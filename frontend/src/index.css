@@ -14,11 +14,28 @@
 }
 
 :root[data-theme="dark"] {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --text-primary: #e2e8f0;
+  --bg-primary: #000000;
+  /* Pure Black base */
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+  /* Deep Nebula Gradient */
+  --bg-secondary: rgba(30, 41, 59, 0.4);
+  /* Glassy Card Background */
+  --text-primary: #ffffff;
+  /* Pure White */
   --text-secondary: #94a3b8;
-  --border-color: #334155;
+  /* Slate 400 */
+  --border-color: rgba(255, 255, 255, 0.08);
+  /* Subtle Glass Border */
+  --accent-color: #818cf8;
+  /* Fallback accent */
+  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  /* Neon Purple Gradient */
+  --card-bg: rgba(30, 41, 59, 0.4);
+  /* Glassy Card */
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  /* Subtle Hover */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 body {
