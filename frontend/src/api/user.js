@@ -22,6 +22,18 @@ const handleJsonResponse = async (response) => {
 };
 
 export const userAPI = {
+  // Get user's dashboard data
+  getDashboard: async () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user?.dbUser?.id;
+    if (!userId) throw new Error('User not found');
+
+    const response = await fetch(`${API_BASE_URL}/dashboard/user/${userId}`, {
+      headers: getAuthHeaders(),
+    });
+    return handleJsonResponse(response);
+  },
+
   // Get user's borrowed books
   getMyBooks: async () => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -90,6 +102,20 @@ export const userAPI = {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ loanId }),
+    });
+    return handleJsonResponse(response);
+  },
+
+  // Update user profile
+  updateProfile: async (profileData) => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user?.dbUser?.id;
+    if (!userId) throw new Error('User not found');
+
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(profileData),
     });
     return handleJsonResponse(response);
   },

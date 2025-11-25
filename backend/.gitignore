@@ -4,9 +4,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+package-lock.json
 
 # Environment variables
 .env
+.env.*
+!.env.example
 .env.local
 .env.development.local
 .env.test.local
@@ -20,10 +23,16 @@ prisma.config.js
 prisma.config.mjs
 prisma/prisma.config.js
 src/generated/
+prisma/migrations/*_dev/
 
 # Logs
 logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # OS files
 .DS_Store
@@ -33,6 +42,7 @@ logs/
 .Trashes
 ehthumbs.db
 Thumbs.db
+desktop.ini
 
 # IDE
 .vscode/
@@ -44,17 +54,34 @@ Thumbs.db
 .classpath
 .settings/
 *.sublime-*
+.history/
 
 # Build outputs
 dist/
 build/
 *.tsbuildinfo
+.cache/
 
 # Test coverage
 coverage/
 .nyc_output/
+*.lcov
 
 # Temporary files
 tmp/
 temp/
 *.tmp
+*.bak
+*.backup
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache

@@ -6,7 +6,6 @@ import SignupPage from "./components/SignupPage";
 import UserProfile from "./components/UserProfile";
 import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
-import DashboardPage from "./components/DashboardPage";
 
 
 function AuthWrapper({ onLoginSuccess }) {
@@ -81,7 +80,7 @@ function App() {
           path="/dashboard"
           element={
             user ? (
-              <DashboardPage user={user} onLogout={handleLogout} />
+              <Dashboard user={user} onLogout={handleLogout} />
             ) : (
               <Navigate to="/auth" replace />
             )
@@ -99,9 +98,6 @@ function App() {
             )
           }
         />
-
-        {/* Dashboard Route */}
-        <Route path="/dashboard" element={<Dashboard />} />
 
         {/* Redirect any unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />

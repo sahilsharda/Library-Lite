@@ -14,6 +14,7 @@ function Dashboard() {
   const [activePage, setActivePage] = useState('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [dashboardData, setDashboardData] = useState(null);
   const [books, setBooks] = useState([]);
   const [myBooks, setMyBooks] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -73,11 +74,12 @@ function Dashboard() {
   const user = isDemo ? demoUser : authUser;
   const isLoading = isDemo ? false : authLoading;
 
-  const dashboard = user?.dashboard ?? {};
-  const stats = dashboard.stats ?? {};
-  const loans = dashboard.loans ?? [];
-  const purchases = dashboard.purchases ?? [];
-  const userPayments = dashboard.payments ?? [];
+  // Use demo data or real dashboard data
+  const dashboard = isDemo ? user?.dashboard : dashboardData;
+  const stats = dashboard?.stats ?? {};
+  const loans = dashboard?.loans ?? [];
+  const purchases = dashboard?.purchases ?? [];
+  const userPayments = dashboard?.payments ?? [];
 
   const currencyFormatter = useMemo(
     () =>
@@ -119,7 +121,23 @@ function Dashboard() {
     return loans.filter((loan) => loan.daysRemaining !== null && loan.daysRemaining >= 0 && loan.daysRemaining <= 3);
   }, [loans]);
 
-  // Load data
+  // Load dashboard data on mount
+  useEffect(() => {
+    if (isDemo || !authUser) return;
+
+    const loadDashboard = async () => {
+      try {
+        const response = await userAPI.getDashboard();
+        setDashboardData(response.data);
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+      }
+    };
+
+    loadDashboard();
+  }, [isDemo, authUser]);
+
+  // Load page-specific data
   useEffect(() => {
     if (isDemo) return;
     const loadData = async () => {
@@ -431,9 +449,9 @@ function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, cu
             </svg>
           </div>
           <div className="stat-content">
-            <p className="stat-label">Purchased Books</p>
-            <p className="stat-value">{stats.totalPurchases ?? purchases.length}</p>
-            <span className="stat-sub">{stats.activePurchases ?? purchases.filter(p => p.daysRemaining > 0).length} active</span>
+            <p className="stat-label">Returned Books</p>
+            <p className="stat-value">{stats.returnedBorrows ?? loans.filter(l => l.status === 'returned').length}</p>
+            <span className="stat-sub">{stats.totalBorrows ?? loans.length} total borrows</span>
           </div>
         </div>
 
@@ -445,9 +463,9 @@ function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, cu
             </svg>
           </div>
           <div className="stat-content">
-            <p className="stat-label">Total Spent</p>
-            <p className="stat-value">{currencyFormatter.format(stats.totalSpent ?? 0)}</p>
-            <span className="stat-sub">Wallet: {currencyFormatter.format(stats.walletBalance ?? 0)}</span>
+            <p className="stat-label">Total Fines</p>
+            <p className="stat-value">{currencyFormatter.format(stats.totalFines ?? 0)}</p>
+            <span className="stat-sub">Paid: {currencyFormatter.format(stats.paidFines ?? 0)}</span>
           </div>
         </div>
 
@@ -756,10 +774,19 @@ function ProfilePage({ user, displayName, theme, toggleTheme, handleLogout }) {
 
   const handleSave = async () => {
     setLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setLoading(false);
-    setIsEditing(false);
+    try {
+      await userAPI.updateProfile({
+        fullName: formData.fullName,
+        phone: formData.phone,
+        address: formData.address,
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      alert('Failed to update profile. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

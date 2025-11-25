@@ -7,6 +7,8 @@ import membersRoutes from './routes/members.js';
 import loansRoutes from './routes/loans.js';
 import paymentsRoutes from './routes/payments.js';
 import adminRoutes from './routes/admin.js';
+import dashboardRoutes from './routes/dashboard.js';
+import usersRoutes from './routes/users.js';
 
 dotenv.config();
 
@@ -24,6 +26,8 @@ app.use('/api/members', membersRoutes);
 app.use('/api/loans', loansRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/users', usersRoutes);
 
 // Health check route
 app.get('/health', (req, res) => {

@@ -156,6 +156,27 @@
   height: 20px;
 }
 
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid;
+  transition: border-color 0.3s ease;
+}
+
+.dashboard-container.light .sidebar-footer,
+.dashboard-container[data-theme="light"] .sidebar-footer {
+  border-color: #e2e8f0;
+}
+
+.dashboard-container.dark .sidebar-footer,
+.dashboard-container[data-theme="dark"] .sidebar-footer {
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.back-home-btn {
+  width: 100%;
+}
+
 /* Main Content */
 .dashboard-main {
   flex: 1;
