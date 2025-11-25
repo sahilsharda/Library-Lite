@@ -1,329 +1,413 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link} from 'react-router-dom';
 import './LandingPage.css';
-import { useAuth } from '../context/AuthContext.jsx';
 
-function LandingPage() {
-  const navigate = useNavigate();
-  const { user, loading, logout } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
+const LandingPage = () => {
+  // const navigate = useNavigate();
+  const [cart, setCart] = useState([]);
 
-  const displayName = useMemo(() => {
-    if (!user) return '';
-    return (
-      user?.dbUser?.fullName ||
-      user?.dbUser?.name ||
-      user?.user_metadata?.full_name ||
-      user?.email?.split('@')[0] ||
-      ''
-    );
-  }, [user]);
-
-  const membershipLabel = useMemo(() => {
-    if (!user) return 'Guest';
-    return (
-      user?.dashboard?.subscription?.membershipType ||
-      user?.dbUser?.member?.membershipType ||
-      'Member'
-    );
-  }, [user]);
-
-  const initials = useMemo(() => {
-    if (!displayName) return 'U';
-    const nameParts = displayName.trim().split(' ').filter(Boolean);
-    if (!nameParts.length) return displayName[0]?.toUpperCase() || 'U';
-    const chars = nameParts.slice(0, 2).map((part) => part[0]?.toUpperCase() || '');
-    return chars.join('');
-  }, [displayName]);
-
-  const avatarUrl =
-    user?.user_metadata?.avatar_url ||
-    user?.dbUser?.avatarUrl ||
-    null;
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleLogout = async () => {
-    await logout();
-    setMenuOpen(false);
-    navigate('/');
+  const addToCart = (book) => {
+    setCart([...cart, book]);
+    alert(`${book.title} added to cart!`);
   };
+
+  const featuredBooks = [
+    {
+      id: 1,
+      title: 'All Of Twenty Nine',
+      author: 'Ancy Johny',
+      price: 65.99,
+      rating: 4,
+      image: 'fb/pb1.jpg',
+    },
+    {
+      id: 2,
+      title: 'To Kill a Mockingbird',
+      author: 'Harper Lee',
+      price: 45.99,
+      rating: 5,
+      image: 'fb/pb2.jpeg',
+    },
+    {
+      id: 3,
+      title: 'Pride and Prejudice',
+      author: 'Jane Austen',
+      price: 55.99,
+      rating: 4,
+      image: 'fb/pb3.jpg',
+    },
+    {
+      id: 4,
+      title: 'The Catcher in the Rye',
+      author: 'J. D. Salinger',
+      price: 55.99,
+      rating: 4,
+      image: 'fb/pb4.jpeg',
+    },
+    
+  ];
+
+  const bestCollection = [
+    {
+      id: 4,
+      title: 'The Spirit Catches You',
+      author: 'Anne Fadiman',
+      price: 85.99,
+      rating: 5,
+      image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400',
+    },
+    {
+      id: 5,
+      title: 'Alice Feeney - His & Hers',
+      author: 'Alice Feeney',
+      price: 55.99,
+      rating: 4,
+      image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400',
+    },
+    {
+      id: 6,
+      title: 'Scholar Select Premium',
+      author: 'Premium Edition',
+      price: 85.99,
+      rating: 4,
+      image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400',
+    },
+    {
+      id: 7,
+      title: 'Select Title',
+      author: 'Various Authors',
+      price: 95.99,
+      rating: 5,
+      image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400',
+    },
+  ];
+
+  const bestSelling = [
+    {
+      id: 8,
+      title: 'Sometimes I Lie',
+      author: 'Alice Feeney',
+      price: 85.99,
+      rating: 4,
+      image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400',
+    },
+    {
+      id: 9,
+      title: 'The Book Eaters',
+      author: 'Sunyi Dean',
+      price: 85.99,
+      rating: 4,
+      image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400',
+    },
+    {
+      id: 10,
+      title: 'I Know Who You Are',
+      author: 'Alice Feeney',
+      price: 85.99,
+      rating: 4,
+      image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400',
+    },
+    {
+      id: 11,
+      title: 'White Stone Gate',
+      author: 'Various Authors',
+      price: 85.99,
+      rating: 5,
+      image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400',
+    },
+  ];
+
+  const newArrivals = [
+    {
+      id: 12,
+      title: 'The Midnight Library',
+      author: 'Matt Haig',
+      price: 72.99,
+      rating: 5,
+      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400',
+    },
+    {
+      id: 13,
+      title: 'Atomic Habits',
+      author: 'James Clear',
+      price: 68.99,
+      rating: 5,
+      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400',
+    },
+    {
+      id: 14,
+      title: 'The Seven Husbands',
+      author: 'Taylor Jenkins Reid',
+      price: 78.99,
+      rating: 4,
+      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400',
+    },
+    {
+      id: 15,
+      title: 'Project Hail Mary',
+      author: 'Andy Weir',
+      price: 82.99,
+      rating: 5,
+      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400',
+    },
+  ];
 
   return (
     <div className="landing-page">
-      {/* Navigation Bar */}
-      <nav className="navbar">
-        <div className="nav-container">
-          <div className="nav-brand">
-            <svg className="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-            </svg>
-            <span className="brand-name">Library Lite</span>
-          </div>
-
-          <div className="nav-links">
-            <a href="#features" className="nav-link">Features</a>
-            <a href="#about" className="nav-link">About</a>
-            <a href="#contact" className="nav-link">Contact</a>
-          </div>
-
-          <div className="nav-actions">
-            {loading ? (
-              <div className="nav-loading-state">
-                <span className="loading-dot" />
-                <span className="loading-dot" />
-                <span className="loading-dot" />
-              </div>
-            ) : user ? (
-              <div className="nav-profile-menu" ref={menuRef}>
-                <button
-                  className="profile-chip"
-                  onClick={() => setMenuOpen((prev) => !prev)}
-                  aria-haspopup="menu"
-                  aria-expanded={menuOpen}
-                >
-                  <div className="profile-avatar">
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt={displayName} />
-                    ) : (
-                      <span>{initials}</span>
-                    )}
-                  </div>
-                  <div className="profile-copy">
-                    <span className="profile-name">{displayName}</span>
-                    <span className="profile-role">{membershipLabel}</span>
-                  </div>
-                  <svg
-                    className={`profile-chevron ${menuOpen ? 'open' : ''}`}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </button>
-                {menuOpen && (
-                  <div className="profile-dropdown" role="menu">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        navigate('/dashboard');
-                      }}
-                    >
-                      View Dashboard
-                    </button>
-                    <button type="button" onClick={handleLogout}>
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <>
-
-                <button className="nav-btn login-btn" onClick={() => navigate('/auth?mode=login')}>
-                  Login
-                </button>
-                <button className="nav-btn signup-btn" onClick={() => navigate('/auth?mode=signup')}>
-                  Sign Up
-                </button>
-              </>
-            )}
+      {/* Header */}
+      <header className="header">
+        <div className="container">
+          <Link to="/" className="logo">BestBook.com</Link>
+          <nav className="nav">
+            <Link to="/">Home</Link>
+            <Link to="/shop">Shop</Link>
+            <Link to="/about">About us</Link>
+            <Link to="/blog">Blog</Link>
+          </nav>
+          <div className="header-actions">
+            <button className="search-btn">🔍</button>
+            <Link to="/cart" className="cart-btn">
+              🛒 {cart.length > 0 && <span className="cart-badge">{cart.length}</span>}
+            </Link>
+            <button className="user-btn">👤</button>
           </div>
         </div>
-      </nav>
+      </header>
 
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-container">
+      <section className="hero">
+        <div className="container">
           <div className="hero-content">
-            <div className="hero-badge">
-              <svg className="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-              </svg>
-              <span>Your Digital Library Companion</span>
+            <div className="hero-text">
+              <h1>Experience our New Exclusive Books</h1>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+              <Link to="/shop" className="cta-button">Shop Now →</Link>
             </div>
-            <h1 className="hero-title">
-              Discover, Borrow, and
-              <span className="hero-title-gradient"> Manage Books</span>
-              <br />With Ease
-            </h1>
-            <p className="hero-description">
-              Experience a seamless library management system. Browse thousands of books,
-              track your reading journey, and never miss a return date.
-            </p>
-            <div className="hero-buttons">
-              <button className="hero-btn primary-btn" onClick={() => navigate('/auth?mode=signup')}>
-                <span>Get Started Free</span>
-                <svg className="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
-              <button className="hero-btn secondary-btn" onClick={() => navigate('/auth?mode=login')}>
-                <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <polygon points="10 8 16 12 10 16 10 8" />
-                </svg>
-                <span>Watch Demo</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="hero-visual">
-            <div className="visual-card card-1">
-              <div className="card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                </svg>
-              </div>
-              <div className="card-title">Easy Browsing</div>
-              <div className="card-subtitle">Find any book instantly</div>
-            </div>
-            <div className="visual-card card-2">
-              <div className="card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-              </div>
-              <div className="card-title">Smart Reminders</div>
-              <div className="card-subtitle">Never miss a due date</div>
-            </div>
-            <div className="visual-card card-3">
-              <div className="card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="18" y1="20" x2="18" y2="10"></line>
-                  <line x1="12" y1="20" x2="12" y2="4"></line>
-                  <line x1="6" y1="20" x2="6" y2="14"></line>
-                </svg>
-              </div>
-              <div className="card-title">Track Progress</div>
-              <div className="card-subtitle">Monitor your reading</div>
+            <div className="hero-video">
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="hero-video-element"
+              >
+                <source src="/library_bg.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section" id="features">
-        <div className="features-container">
+      {/* Features */}
+      <section className="features">
+        <div className="container">
+          <div className="feature-card">
+            <span className="feature-icon">📋</span>
+            <h3>Certified</h3>
+            <p>Exclusive certificate of authenticity</p>
+          </div>
+          <div className="feature-card">
+            <span className="feature-icon">↩️</span>
+            <h3>Returns</h3>
+            <p>Return available within 30 days</p>
+          </div>
+          <div className="feature-card">
+            <span className="feature-icon">🚚</span>
+            <h3>Free Shipping</h3>
+            <p>Free shipping on orders over $50</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Books Section */}
+      <section className="popular-books">
+        <div className="container">
           <div className="section-header">
-            <span className="section-badge">Features</span>
-            <h2 className="section-title">Everything You Need in One Place</h2>
-            <p className="section-description">
-              Powerful features designed to make library management effortless
-            </p>
+            <h2>Our Popular Books</h2>
+            <Link to="/shop" className="see-all">See all →</Link>
           </div>
-
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
-                <svg className="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                  <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                  <line x1="12" y1="22.08" x2="12" y2="12" />
-                </svg>
+          <div className="books-grid">
+            {featuredBooks.map((book) => (
+              <div key={book.id} className="book-card">
+                <div className="book-image">
+                  <img src={book.image} alt={book.title} />
+                </div>
+                <h3>{book.title}</h3>
+                <p className="author">By {book.author}</p>
+                <div className="book-footer">
+                  <div className="rating">
+                    {'⭐'.repeat(book.rating)}
+                    <span>{book.rating} Star</span>
+                  </div>
+                  <p className="price">${book.price}</p>
+                </div>
+                <button 
+                  className="add-cart-btn"
+                  onClick={() => addToCart(book)}
+                >
+                  ADD TO CART →
+                </button>
               </div>
-              <h3 className="feature-title">Smart Cataloging</h3>
-              <p className="feature-description">
-                Organize your entire collection with intelligent categorization and search capabilities.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
-                <svg className="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-              </div>
-              <h3 className="feature-title">Due Date Tracking</h3>
-              <p className="feature-description">
-                Automated reminders ensure you never pay a late fee again with smart notifications.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
-                <svg className="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-              </div>
-              <h3 className="feature-title">User Management</h3>
-              <p className="feature-description">
-                Manage multiple users, track borrowing history, and maintain member profiles seamlessly.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="cta-container">
-          <div className="cta-content">
-            <h2 className="cta-title">Ready to Transform Your Library Experience?</h2>
-            <p className="cta-description">
-              Join thousands of readers who are already managing their reading journey efficiently.
-            </p>
-            <div className="cta-buttons">
-              <button className="cta-btn primary" onClick={() => navigate('/auth?mode=signup')}>
-                Start Your Journey
-              </button>
-              <button className="cta-btn secondary" onClick={() => navigate('/auth?mode=login')}>
-                Sign In
-              </button>
-            </div>
+      {/* Best Collection Section */}
+      <section className="best-collection">
+        <div className="container">
+          <div className="section-header">
+            <h2>Best Collection</h2>
+            <Link to="/shop" className="see-all">See all →</Link>
+          </div>
+          <div className="books-grid-4">
+            {bestCollection.map((book) => (
+              <div key={book.id} className="book-card-small">
+                <div className="book-image-small">
+                  <img src={book.image} alt={book.title} />
+                </div>
+                <div className="book-info">
+                  <h4>{book.title}</h4>
+                  <p className="author-small">{book.author}</p>
+                  <div className="rating-small">
+                    {'⭐'.repeat(book.rating)}
+                  </div>
+                  <div className="price-action">
+                    <span className="price">${book.price}</span>
+                    <button 
+                      className="quick-add"
+                      onClick={() => addToCart(book)}
+                    >
+                      ADD TO CART →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Best Selling Books */}
+      <section className="best-selling">
+        <div className="container">
+          <div className="section-header">
+            <h2>Our Best Selling Books</h2>
+            <Link to="/shop" className="see-all">See all →</Link>
+          </div>
+          <div className="books-grid-4">
+            {bestSelling.map((book) => (
+              <div key={book.id} className="book-card-vertical">
+                <div className="book-cover">
+                  <img src={book.image} alt={book.title} />
+                </div>
+                <h4>{book.title}</h4>
+                <div className="rating">
+                  {'⭐'.repeat(book.rating)}
+                  <span>{book.rating}</span>
+                </div>
+                <p className="author">{book.author}</p>
+                <div className="book-bottom">
+                  <span className="price">${book.price}</span>
+                  <button 
+                    className="add-btn"
+                    onClick={() => addToCart(book)}
+                  >
+                    ADD TO CART →
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* New Arrivals Section */}
+      <section className="new-arrivals">
+        <div className="container">
+          <div className="section-header">
+            <h2>New Arrivals</h2>
+            <Link to="/shop" className="see-all">See all →</Link>
+          </div>
+          <div className="books-grid-4">
+            {newArrivals.map((book) => (
+              <div key={book.id} className="book-card-vertical">
+                <div className="book-cover">
+                  <img src={book.image} alt={book.title} />
+                </div>
+                <h4>{book.title}</h4>
+                <div className="rating">
+                  {'⭐'.repeat(book.rating)}
+                  <span>{book.rating}</span>
+                </div>
+                <p className="author">{book.author}</p>
+                <div className="book-bottom">
+                  <span className="price">${book.price}</span>
+                  <button 
+                    className="add-btn"
+                    onClick={() => addToCart(book)}
+                  >
+                    ADD TO CART →
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="footer">
-        <div className="footer-container">
+        <div className="container">
           <div className="footer-content">
-            <div className="footer-brand">
-              <svg className="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-              </svg>
-              <span>Library Lite</span>
+            <div className="footer-section">
+              <h3>SHOP WITH US</h3>
+              <ul>
+                <li><Link to="/books">All Books</Link></li>
+                <li><Link to="/bestsellers">Bestsellers</Link></li>
+                <li><Link to="/new">New Arrivals</Link></li>
+                <li><Link to="/ebooks">eBooks</Link></li>
+              </ul>
             </div>
-            <p className="footer-text">© 2025 Library Lite. All rights reserved.</p>
-            <p className="footer-credit">
-              Made with{' '}
-              <svg className="heart-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-              </svg>
-              {' '}by Team Ungrateful Potatoes
-            </p>
+            <div className="footer-section">
+              <h3>SHOP POPULAR</h3>
+              <ul>
+                <li><Link to="/fiction">Fiction</Link></li>
+                <li><Link to="/nonfiction">Non-Fiction</Link></li>
+                <li><Link to="/children">Children's Books</Link></li>
+                <li><Link to="/textbooks">Textbooks</Link></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h3>ABOUT</h3>
+              <ul>
+                <li><Link to="/about">About Us</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
+                <li><Link to="/privacy">Privacy Policy</Link></li>
+                <li><Link to="/terms">Terms & Conditions</Link></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h3>HELP</h3>
+              <ul>
+                <li><Link to="/shipping">Shipping Info</Link></li>
+                <li><Link to="/returns">Returns</Link></li>
+                <li><Link to="/faq">FAQ</Link></li>
+                <li><Link to="/support">Support</Link></li>
+              </ul>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <p>&copy; 2024 BestBook.com. All rights reserved.</p>
           </div>
         </div>
       </footer>
     </div>
   );
-}
+};
 
 export default LandingPage;
