@@ -5,10 +5,16 @@ import './LandingPage.css';
 const LandingPage = () => {
   // const navigate = useNavigate();
   const [cart, setCart] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const addToCart = (book) => {
     setCart([...cart, book]);
     alert(`${book.title} added to cart!`);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    alert("Searching for: " + searchQuery);
   };
 
   const featuredBooks = [
@@ -85,70 +91,70 @@ const LandingPage = () => {
   const bestSelling = [
     {
       id: 8,
-      title: 'Sometimes I Lie',
-      author: 'Alice Feeney',
+      title: 'A Tale of Two Cities',
+      author: 'Charles Dickens',
       price: 85.99,
       rating: 4,
-      image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400',
+      image: 'bs/bs1.jpg',
     },
     {
       id: 9,
-      title: 'The Book Eaters',
-      author: 'Sunyi Dean',
+      title: 'The Little Prince',
+      author: 'Antoine de Saint-Exupéry',
       price: 85.99,
       rating: 4,
-      image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400',
+      image: 'bs/bs2.jpeg',
     },
     {
       id: 10,
-      title: 'I Know Who You Are',
-      author: 'Alice Feeney',
+      title: 'The Alchemist',
+      author: 'Paulo Coelho',
       price: 85.99,
       rating: 4,
-      image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400',
+      image: 'bs/bs3.jpg',
     },
     {
       id: 11,
-      title: 'White Stone Gate',
-      author: 'Various Authors',
+      title: 'And Then There Were None',
+      author: 'Agatha Christie',
       price: 85.99,
       rating: 5,
-      image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400',
+      image: 'bs/bs4.jpg',
     },
   ];
 
   const newArrivals = [
     {
       id: 12,
-      title: 'The Midnight Library',
-      author: 'Matt Haig',
+      title: 'Great Big Beautiful Life',
+      author: 'Emily Henry',
       price: 72.99,
       rating: 5,
-      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400',
+      image: 'na/na1.jpg',
     },
     {
       id: 13,
-      title: 'Atomic Habits',
-      author: 'James Clear',
+      title: 'In Your Dreams',
+      author: 'Sarah Adams',
       price: 68.99,
       rating: 5,
-      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400',
+      image: 'na/na2.jpg',
     },
     {
       id: 14,
-      title: 'The Seven Husbands',
-      author: 'Taylor Jenkins Reid',
+      title: 'Brimstone',
+      author: 'Callie Hart',
       price: 78.99,
       rating: 4,
-      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400',
+      image: 'na/na3.jpg',
     },
     {
       id: 15,
-      title: 'Project Hail Mary',
-      author: 'Andy Weir',
+      title: 'Watch Me',
+      author: 'Tahereh Mafi',
       price: 82.99,
       rating: 5,
-      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400',
+      image: 'na/na4.jpg',
     },
   ];
 
@@ -165,7 +171,21 @@ const LandingPage = () => {
             <Link to="/blog">Blog</Link>
           </nav>
           <div className="header-actions">
-            <button className="search-btn">🔍</button>
+            <form onSubmit={handleSearch} className="header-search">
+              <input
+                type="text"
+                placeholder="Search books..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="header-search-input"
+              />
+              <button type="submit" className="header-search-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </button>
+            </form>
             <Link to="/cart" className="cart-btn">
               🛒 {cart.length > 0 && <span className="cart-badge">{cart.length}</span>}
             </Link>
@@ -181,8 +201,11 @@ const LandingPage = () => {
             <div className="hero-text">
               <h1>Experience our New Exclusive Books</h1>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Dive into a curated collection of timeless classics, contemporary bestsellers, 
+                and hidden literary gems. Whether you're seeking knowledge, adventure, or 
+                inspiration, our exclusive selection brings the world's finest literature 
+                right to your doorstep. Discover stories that transform, educate, and 
+                captivate readers of all ages.
               </p>
               <Link to="/shop" className="cta-button">Shop Now →</Link>
             </div>
@@ -301,26 +324,27 @@ const LandingPage = () => {
           </div>
           <div className="books-grid-4">
             {bestSelling.map((book) => (
-              <div key={book.id} className="book-card-vertical">
-                <div className="book-cover">
-                  <img src={book.image} alt={book.title} />
-                </div>
-                <h4>{book.title}</h4>
-                <div className="rating">
+             <div key={book.id} className="book-card-vertical">
+              <div className="book-cover">
+                <img src={book.image} alt={book.title} />
+              </div>
+              <h4>{book.title}</h4>
+              <div className="book-meta-inline">
+                <span className="author-inline">{book.author}</span>
+                <div className="rating-inline">
                   {'⭐'.repeat(book.rating)}
-                  <span>{book.rating}</span>
-                </div>
-                <p className="author">{book.author}</p>
-                <div className="book-bottom">
-                  <span className="price">${book.price}</span>
-                  <button 
-                    className="add-btn"
-                    onClick={() => addToCart(book)}
-                  >
-                    ADD TO CART →
-                  </button>
                 </div>
               </div>
+              <div className="book-bottom">
+                <span className="price">${book.price}</span>
+                <button 
+                  className="add-btn"
+                  onClick={() => addToCart(book)}
+                >
+                  ADD TO CART →
+                </button>
+              </div>
+            </div>
             ))}
           </div>
         </div>
@@ -340,11 +364,12 @@ const LandingPage = () => {
                   <img src={book.image} alt={book.title} />
                 </div>
                 <h4>{book.title}</h4>
-                <div className="rating">
-                  {'⭐'.repeat(book.rating)}
-                  <span>{book.rating}</span>
+                <div className="book-meta-inline">
+                  <span className="author-inline">{book.author}</span>
+                  <div className="rating-inline">
+                    {'⭐'.repeat(book.rating)}
+                  </div>
                 </div>
-                <p className="author">{book.author}</p>
                 <div className="book-bottom">
                   <span className="price">${book.price}</span>
                   <button 
