@@ -1,20 +1,30 @@
 import React, { useState } from 'react';
-import { Link} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 import './LandingPage.css';
 
 const LandingPage = () => {
-  // const navigate = useNavigate();
-  const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
+  const { cartItems, addToCart } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const addToCart = (book) => {
-    setCart([...cart, book]);
+  const handleAddToCart = (book) => {
+    addToCart(book);
     alert(`${book.title} added to cart!`);
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
     alert("Searching for: " + searchQuery);
+  };
+
+  const handleProfileClick = () => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
   };
 
   const featuredBooks = [
@@ -50,7 +60,7 @@ const LandingPage = () => {
       rating: 4,
       image: 'fb/pb4.jpeg',
     },
-    
+
   ];
 
   const bestCollection = [
@@ -187,9 +197,9 @@ const LandingPage = () => {
               </button>
             </form>
             <Link to="/cart" className="cart-btn">
-              🛒 {cart.length > 0 && <span className="cart-badge">{cart.length}</span>}
+              🛒 {cartItems.length > 0 && <span className="cart-badge">{cartItems.length}</span>}
             </Link>
-            <button className="user-btn">👤</button>
+            <button className="user-btn" onClick={handleProfileClick}>👤</button>
           </div>
         </div>
       </header>
@@ -201,19 +211,19 @@ const LandingPage = () => {
             <div className="hero-text">
               <h1>Experience our New Exclusive Books</h1>
               <p>
-                Dive into a curated collection of timeless classics, contemporary bestsellers, 
-                and hidden literary gems. Whether you're seeking knowledge, adventure, or 
-                inspiration, our exclusive selection brings the world's finest literature 
-                right to your doorstep. Discover stories that transform, educate, and 
+                Dive into a curated collection of timeless classics, contemporary bestsellers,
+                and hidden literary gems. Whether you're seeking knowledge, adventure, or
+                inspiration, our exclusive selection brings the world's finest literature
+                right to your doorstep. Discover stories that transform, educate, and
                 captivate readers of all ages.
               </p>
               <Link to="/shop" className="cta-button">Shop Now →</Link>
             </div>
             <div className="hero-video">
-              <video 
-                autoPlay 
-                loop 
-                muted 
+              <video
+                autoPlay
+                loop
+                muted
                 playsInline
                 className="hero-video-element"
               >
@@ -268,9 +278,9 @@ const LandingPage = () => {
                   </div>
                   <p className="price">${book.price}</p>
                 </div>
-                <button 
+                <button
                   className="add-cart-btn"
-                  onClick={() => addToCart(book)}
+                  onClick={() => handleAddToCart(book)}
                 >
                   ADD TO CART →
                 </button>
@@ -301,9 +311,9 @@ const LandingPage = () => {
                   </div>
                   <div className="price-action">
                     <span className="price">${book.price}</span>
-                    <button 
+                    <button
                       className="quick-add"
-                      onClick={() => addToCart(book)}
+                      onClick={() => handleAddToCart(book)}
                     >
                       ADD TO CART →
                     </button>
@@ -324,27 +334,27 @@ const LandingPage = () => {
           </div>
           <div className="books-grid-4">
             {bestSelling.map((book) => (
-             <div key={book.id} className="book-card-vertical">
-              <div className="book-cover">
-                <img src={book.image} alt={book.title} />
-              </div>
-              <h4>{book.title}</h4>
-              <div className="book-meta-inline">
-                <span className="author-inline">{book.author}</span>
-                <div className="rating-inline">
-                  {'⭐'.repeat(book.rating)}
+              <div key={book.id} className="book-card-vertical">
+                <div className="book-cover">
+                  <img src={book.image} alt={book.title} />
+                </div>
+                <h4>{book.title}</h4>
+                <div className="book-meta-inline">
+                  <span className="author-inline">{book.author}</span>
+                  <div className="rating-inline">
+                    {'⭐'.repeat(book.rating)}
+                  </div>
+                </div>
+                <div className="book-bottom">
+                  <span className="price">${book.price}</span>
+                  <button
+                    className="add-btn"
+                    onClick={() => handleAddToCart(book)}
+                  >
+                    ADD TO CART →
+                  </button>
                 </div>
               </div>
-              <div className="book-bottom">
-                <span className="price">${book.price}</span>
-                <button 
-                  className="add-btn"
-                  onClick={() => addToCart(book)}
-                >
-                  ADD TO CART →
-                </button>
-              </div>
-            </div>
             ))}
           </div>
         </div>
@@ -372,7 +382,7 @@ const LandingPage = () => {
                 </div>
                 <div className="book-bottom">
                   <span className="price">${book.price}</span>
-                  <button 
+                  <button
                     className="add-btn"
                     onClick={() => addToCart(book)}
                   >
