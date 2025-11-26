@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
     }
 
     if (genre) {
-      where.genre = { has: genre };
+      where.genre = { contains: genre };
     }
 
     if (author) {
