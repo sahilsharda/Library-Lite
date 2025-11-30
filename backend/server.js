@@ -30,12 +30,12 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/users', usersRoutes);
 
 // Health check route
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   console.error('Error:', err);
   res.status(500).json({ error: 'Internal server error' });
 });

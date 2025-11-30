@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Routes, Route, Navigate, useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import BackgroundVideo from "./components/BackgroundVideo";
@@ -34,7 +34,7 @@ function App() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  const handleLoginSuccess = (userData) => {
+  const handleLoginSuccess = () => {
     navigate('/dashboard');
   };
 
@@ -49,19 +49,19 @@ function App() {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%)'
+        background: 'linear-gradient(135deg, #0f172a 0%, #020617 100%)'
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{
             width: '50px',
             height: '50px',
-            border: '4px solid #e0d5c7',
-            borderTop: '4px solid #a89070',
+            border: '4px solid rgba(255, 255, 255, 0.1)',
+            borderTop: '4px solid #818cf8',
             borderRadius: '50%',
             animation: 'spin 1s linear infinite',
             margin: '0 auto 16px'
           }}></div>
-          <p style={{ color: '#2c1810', fontSize: '16px' }}>Loading Library Lite...</p>
+          <p style={{ color: '#ffffff', fontSize: '16px' }}>Loading Library Lite...</p>
         </div>
         <style>{`
           @keyframes spin {

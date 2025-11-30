@@ -6,10 +6,9 @@ import { userAPI } from '../api/user.js';
 import './Dashboard.css';
 
 function Dashboard() {
-  const { user: authUser, loading: authLoading, refreshUser, logout } = useAuth();
+  const { user: authUser, loading: authLoading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [searchParams] = useSearchParams();
-  const location = useLocation();
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,7 +19,6 @@ function Dashboard() {
   const [orders, setOrders] = useState([]);
   const [payments, setPayments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
 
   const isDemo = searchParams.get('demo') === '1';
 
@@ -367,7 +365,7 @@ function Dashboard() {
 }
 
 // Dashboard Home Component
-function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, currencyFormatter, isDemo, onNavigate }) {
+function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, currencyFormatter, onNavigate }) {
   const navigateTo = (page) => {
     // Find the parent component's handlePageChange or use a passed callback
     // Since we can't easily pass the setter down without prop drilling, 
