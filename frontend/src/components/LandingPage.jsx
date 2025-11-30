@@ -1,30 +1,14 @@
-import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { FiSearch, FiShoppingCart, FiUser, FiAward, FiRotateCcw, FiTruck, FiStar, FiArrowRight } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
 import './LandingPage.css';
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const { cartItems, addToCart } = useCart();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { user } = useAuth();
 
   const handleAddToCart = (book) => {
-    addToCart(book);
     alert(`${book.title} added to cart!`);
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    alert("Searching for: " + searchQuery);
-  };
-
-  const handleProfileClick = () => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      navigate('/auth');
-    }
   };
 
   const featuredBooks = [
@@ -68,25 +52,31 @@ const LandingPage = () => {
             <Link to="/blog">Blog</Link>
           </nav>
           <div className="header-actions">
-            <form onSubmit={handleSearch} className="header-search">
-              <input
-                type="text"
-                placeholder="Search books..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="header-search-input"
-              />
-              <button type="submit" className="header-search-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-              </button>
-            </form>
-            <Link to="/cart" className="cart-btn">
-              🛒 {cartItems.length > 0 && <span className="cart-badge">{cartItems.length}</span>}
+            <button type="button" className="search-btn" aria-label="Search">
+              <FiSearch size={20} />
+            </button>
+            <Link to="/cart" className="cart-btn" aria-label="Shopping Cart">
+              <FiShoppingCart size={20} />
             </Link>
-            <button className="user-btn" onClick={handleProfileClick}>👤</button>
+            {user ? (
+              <button
+                type="button"
+                className="dashboard-btn"
+                onClick={() => navigate('/dashboard')}
+              >
+                <FiUser size={18} />
+                <span>Dashboard</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="login-btn"
+                onClick={() => navigate('/auth')}
+              >
+                <FiUser size={18} />
+                <span>Login</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -104,7 +94,15 @@ const LandingPage = () => {
                 right to your doorstep. Discover stories that transform, educate, and
                 captivate readers of all ages.
               </p>
-              <Link to="/shop" className="cta-button">Shop Now →</Link>
+              {user ? (
+                <Link to="/dashboard" className="cta-button">
+                  Go to Dashboard <FiArrowRight />
+                </Link>
+              ) : (
+                <Link to="/auth" className="cta-button">
+                  Get Started <FiArrowRight />
+                </Link>
+              )}
             </div>
             <div className="hero-video">
               <video
@@ -126,17 +124,23 @@ const LandingPage = () => {
       <section className="features">
         <div className="container">
           <div className="feature-card">
-            <span className="feature-icon">📋</span>
+            <span className="feature-icon">
+              <FiAward size={32} />
+            </span>
             <h3>Certified</h3>
             <p>Exclusive certificate of authenticity</p>
           </div>
           <div className="feature-card">
-            <span className="feature-icon">↩️</span>
+            <span className="feature-icon">
+              <FiRotateCcw size={32} />
+            </span>
             <h3>Returns</h3>
             <p>Return available within 30 days</p>
           </div>
           <div className="feature-card">
-            <span className="feature-icon">🚚</span>
+            <span className="feature-icon">
+              <FiTruck size={32} />
+            </span>
             <h3>Free Shipping</h3>
             <p>Free shipping on orders over $50</p>
           </div>
@@ -160,12 +164,20 @@ const LandingPage = () => {
                 <p className="author">By {book.author}</p>
                 <div className="book-footer">
                   <div className="rating">
-                    {'⭐'.repeat(book.rating)}
+                    {[...Array(5)].map((_, i) => (
+                      <FiStar
+                        key={i}
+                        size={16}
+                        fill={i < book.rating ? '#fbbf24' : 'none'}
+                        stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                      />
+                    ))}
                     <span>{book.rating} Star</span>
                   </div>
                   <p className="price">${book.price}</p>
                 </div>
                 <button
+                  type="button"
                   className="add-cart-btn"
                   onClick={() => handleAddToCart(book)}
                 >
@@ -194,11 +206,19 @@ const LandingPage = () => {
                   <h4>{book.title}</h4>
                   <p className="author-small">{book.author}</p>
                   <div className="rating-small">
-                    {'⭐'.repeat(book.rating)}
+                    {[...Array(5)].map((_, i) => (
+                      <FiStar
+                        key={i}
+                        size={14}
+                        fill={i < book.rating ? '#fbbf24' : 'none'}
+                        stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                      />
+                    ))}
                   </div>
                   <div className="price-action">
                     <span className="price">${book.price}</span>
                     <button
+                      type="button"
                       className="quick-add"
                       onClick={() => handleAddToCart(book)}
                     >
@@ -226,15 +246,21 @@ const LandingPage = () => {
                   <img src={book.image} alt={book.title} />
                 </div>
                 <h4>{book.title}</h4>
-                <div className="book-meta-inline">
-                  <span className="author-inline">{book.author}</span>
-                  <div className="rating-inline">
-                    {'⭐'.repeat(book.rating)}
-                  </div>
+                <div className="rating">
+                  {[...Array(5)].map((_, i) => (
+                    <FiStar
+                      key={i}
+                      size={14}
+                      fill={i < book.rating ? '#fbbf24' : 'none'}
+                      stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                    />
+                  ))}
+                  <span>{book.rating}</span>
                 </div>
                 <div className="book-bottom">
                   <span className="price">${book.price}</span>
                   <button
+                    type="button"
                     className="add-btn"
                     onClick={() => handleAddToCart(book)}
                   >
@@ -261,17 +287,23 @@ const LandingPage = () => {
                   <img src={book.image} alt={book.title} />
                 </div>
                 <h4>{book.title}</h4>
-                <div className="book-meta-inline">
-                  <span className="author-inline">{book.author}</span>
-                  <div className="rating-inline">
-                    {'⭐'.repeat(book.rating)}
-                  </div>
+                <div className="rating">
+                  {[...Array(5)].map((_, i) => (
+                    <FiStar
+                      key={i}
+                      size={14}
+                      fill={i < book.rating ? '#fbbf24' : 'none'}
+                      stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                    />
+                  ))}
+                  <span>{book.rating}</span>
                 </div>
                 <div className="book-bottom">
                   <span className="price">${book.price}</span>
                   <button
+                    type="button"
                     className="add-btn"
-                    onClick={() => addToCart(book)}
+                    onClick={() => handleAddToCart(book)}
                   >
                     ADD TO CART →
                   </button>

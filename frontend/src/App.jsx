@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useSearchParams, useNavigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import BackgroundVideo from "./components/BackgroundVideo";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
@@ -30,40 +31,44 @@ function AuthWrapper({ onLoginSuccess }) {
 }
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user is already logged in (from localStorage or session)
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error('Error parsing stored user:', err);
-        localStorage.removeItem('user');
-      }
-    }
-    setIsLoading(false);
-  }, []);
-
   const handleLoginSuccess = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
     navigate('/dashboard');
   };
 
   const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
     navigate('/');
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        Loading...
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%)'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: '50px',
+            height: '50px',
+            border: '4px solid #e0d5c7',
+            borderTop: '4px solid #a89070',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 16px'
+          }}></div>
+          <p style={{ color: '#2c1810', fontSize: '16px' }}>Loading Library Lite...</p>
+        </div>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }

@@ -58,13 +58,66 @@ body {
 .header-actions {
   display: flex;
   gap: 20px;
+  align-items: center;
 }
 
-.header-actions button {
+.header-actions button,
+.header-actions .cart-btn {
   background: none;
   border: none;
   font-size: 20px;
   cursor: pointer;
+  color: #2c1810;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-actions button:hover,
+.header-actions .cart-btn:hover {
+  background: rgba(168, 144, 112, 0.1);
+  color: #a89070;
+  transform: translateY(-2px);
+}
+
+/* Login and Dashboard Buttons */
+.login-btn,
+.dashboard-btn {
+  background: #a89070 !important;
+  color: white !important;
+  border: none;
+  padding: 10px 20px !important;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(168, 144, 112, 0.3);
+}
+
+.login-btn:hover,
+.dashboard-btn:hover {
+  background: #8f7a5e !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 144, 112, 0.4);
+}
+
+.login-btn:active,
+.dashboard-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(168, 144, 112, 0.3);
+}
+
+.login-btn span,
+.dashboard-btn span {
+  font-family: 'Inter', sans-serif;
 }
 
 .header-search {
@@ -155,15 +208,21 @@ body {
   padding: 16px 40px;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(168, 144, 112, 0.3);
 }
 
 .cta-button:hover {
   background: #8f7a5e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(168, 144, 112, 0.4);
 }
 
 /* Hero Video Styles */
@@ -231,18 +290,28 @@ body {
   padding: 60px 0;
 }
 
-.features .container {
-  display: flex;
-  justify-content: space-around;
-  gap: 40px;
-}
-
 .feature-card {
   text-align: center;
   flex: 1;
   padding: 30px;
   background: white;
   border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: #a89070;
 }
 
 .feature-icon {
@@ -332,18 +401,23 @@ body {
   color: #6b5d54;
   font-size: 14px;
   margin-bottom: 16px;
-  font-family: 'Inter', sans-serif;
-}
-
-.book-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
 .rating {
   display: flex;
+  gap: 2px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.rating svg {
+  transition: all 0.2s ease;
+}
+
+.rating span {
+  margin-left: 8px;
+  color: #6b5d54;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+} display: flex;
   gap: 4px;
   align-items: center;
   font-size: 14px;
@@ -415,10 +489,13 @@ body {
 
 .book-info {
   padding: 20px;
-}
-
-.book-info h4 {
-  font-size: 16px;
+.rating-small {
+  margin-bottom: 12px;
+  font-size: 14px;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+} font-size: 16px;
   margin-bottom: 8px;
   color: #2c1810;
 }
