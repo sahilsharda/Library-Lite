@@ -85,7 +85,6 @@ async function main() {
 
   console.log(`Created ${authors.length} authors`);
 
-  console.log('Creating books...');
   const books = await Promise.all([
     prisma.book.create({
       data: {
@@ -97,12 +96,12 @@ async function main() {
         edition: '1st Edition',
         language: 'English',
         pages: 223,
-        genre: ['Fantasy', 'Young Adult', 'Adventure'],
+        genre: 'Fantasy, Young Adult, Adventure',
         totalCopies: 5,
         availableCopies: 5,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780747532699-L.jpg',
         description: 'The first novel in the Harry Potter series follows Harry Potter, a young wizard who discovers his magical heritage.',
-        tags: ['bestseller', 'award-winning', 'series']
+        tags: 'bestseller, award-winning, series'
       }
     }),
     prisma.book.create({
@@ -115,12 +114,12 @@ async function main() {
         edition: 'Reprint Edition',
         language: 'English',
         pages: 328,
-        genre: ['Dystopian', 'Science Fiction', 'Political Fiction'],
+        genre: 'Dystopian, Science Fiction, Political Fiction',
         totalCopies: 4,
         availableCopies: 3,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780452284234-L.jpg',
         description: 'A dystopian social science fiction novel set in a totalitarian society ruled by Big Brother.',
-        tags: ['classic', 'dystopian', 'must-read']
+        tags: 'classic, dystopian, must-read'
       }
     }),
     prisma.book.create({
@@ -133,12 +132,12 @@ async function main() {
         edition: 'Penguin Classics',
         language: 'English',
         pages: 432,
-        genre: ['Romance', 'Classic', 'Fiction'],
+        genre: 'Romance, Classic, Fiction',
         totalCopies: 3,
         availableCopies: 2,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg',
         description: 'A romantic novel of manners following the character development of Elizabeth Bennet.',
-        tags: ['classic', 'romance', 'british-literature']
+        tags: 'classic, romance, british-literature'
       }
     }),
     prisma.book.create({
@@ -151,12 +150,12 @@ async function main() {
         edition: 'Scribner',
         language: 'English',
         pages: 180,
-        genre: ['Fiction', 'Classic', 'Literary Fiction'],
+        genre: 'Fiction, Classic, Literary Fiction',
         totalCopies: 4,
         availableCopies: 4,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780743273565-L.jpg',
         description: 'A novel set in the Jazz Age that tells the story of Jay Gatsby and his unrequited love.',
-        tags: ['classic', 'american-literature', '1920s']
+        tags: 'classic, american-literature, 1920s'
       }
     }),
     prisma.book.create({
@@ -169,12 +168,12 @@ async function main() {
         edition: 'Harper Perennial Modern Classics',
         language: 'English',
         pages: 324,
-        genre: ['Fiction', 'Classic', 'Historical Fiction'],
+        genre: 'Fiction, Classic, Historical Fiction',
         totalCopies: 3,
         availableCopies: 1,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780061120084-L.jpg',
         description: 'A novel about racial injustice and childhood innocence in the American South.',
-        tags: ['classic', 'pulitzer', 'civil-rights']
+        tags: 'classic, pulitzer, civil-rights'
       }
     }),
     prisma.book.create({
@@ -187,12 +186,12 @@ async function main() {
         edition: 'Mariner Books',
         language: 'English',
         pages: 398,
-        genre: ['Fantasy', 'Adventure', 'Epic'],
+        genre: 'Fantasy, Adventure, Epic',
         totalCopies: 5,
         availableCopies: 3,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780618574980-L.jpg',
         description: 'The first volume of the epic fantasy trilogy following Frodo Baggins.',
-        tags: ['epic', 'fantasy', 'series', 'adventure']
+        tags: 'epic, fantasy, series, adventure'
       }
     }),
     prisma.book.create({
@@ -205,12 +204,12 @@ async function main() {
         edition: 'William Morrow',
         language: 'English',
         pages: 256,
-        genre: ['Mystery', 'Crime', 'Detective Fiction'],
+        genre: 'Mystery, Crime, Detective Fiction',
         totalCopies: 3,
         availableCopies: 3,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780062073488-L.jpg',
         description: 'Detective Hercule Poirot investigates a murder aboard the famous train.',
-        tags: ['mystery', 'detective', 'classic']
+        tags: 'mystery, detective, classic'
       }
     }),
     prisma.book.create({
@@ -223,12 +222,12 @@ async function main() {
         edition: 'Harper Perennial',
         language: 'English',
         pages: 417,
-        genre: ['Literary Fiction', 'Magical Realism', 'Classic'],
+        genre: 'Literary Fiction, Magical Realism, Classic',
         totalCopies: 2,
         availableCopies: 2,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780060883287-L.jpg',
         description: 'A landmark novel chronicling seven generations of the Buendía family.',
-        tags: ['magical-realism', 'classic', 'latin-american']
+        tags: 'magical-realism, classic, latin-american'
       }
     }),
     prisma.book.create({
@@ -241,12 +240,12 @@ async function main() {
         edition: 'Scribner',
         language: 'English',
         pages: 127,
-        genre: ['Fiction', 'Classic', 'Adventure'],
+        genre: 'Fiction, Classic, Adventure',
         totalCopies: 3,
         availableCopies: 3,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780684801223-L.jpg',
         description: 'The story of an aging Cuban fisherman and his epic battle with a giant marlin.',
-        tags: ['classic', 'pulitzer', 'novella']
+        tags: 'classic, pulitzer, novella'
       }
     }),
     prisma.book.create({
@@ -259,12 +258,12 @@ async function main() {
         edition: 'Harcourt',
         language: 'English',
         pages: 194,
-        genre: ['Literary Fiction', 'Modernist', 'Classic'],
+        genre: 'Literary Fiction, Modernist, Classic',
         totalCopies: 2,
         availableCopies: 2,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780156628709-L.jpg',
         description: 'A modernist novel detailing a day in the life of Clarissa Dalloway in post-WWI England.',
-        tags: ['modernist', 'stream-of-consciousness', 'classic']
+        tags: 'modernist, stream-of-consciousness, classic'
       }
     }),
     prisma.book.create({
@@ -277,12 +276,12 @@ async function main() {
         edition: 'Signet Classics',
         language: 'English',
         pages: 112,
-        genre: ['Political Fiction', 'Satire', 'Allegory'],
+        genre: 'Political Fiction, Satire, Allegory',
         totalCopies: 4,
         availableCopies: 4,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780452284241-L.jpg',
         description: 'An allegorical novella reflecting events leading up to the Russian Revolution.',
-        tags: ['classic', 'political', 'satire']
+        tags: 'classic, political, satire'
       }
     }),
     prisma.book.create({
@@ -295,12 +294,12 @@ async function main() {
         edition: 'Scholastic',
         language: 'English',
         pages: 251,
-        genre: ['Fantasy', 'Young Adult', 'Adventure'],
+        genre: 'Fantasy, Young Adult, Adventure',
         totalCopies: 4,
         availableCopies: 3,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780439064866-L.jpg',
         description: 'Harry returns to Hogwarts for his second year to face a mysterious monster.',
-        tags: ['bestseller', 'series', 'young-adult']
+        tags: 'bestseller, series, young-adult'
       }
     }),
     prisma.book.create({
@@ -313,12 +312,12 @@ async function main() {
         edition: 'Mariner Books',
         language: 'English',
         pages: 310,
-        genre: ['Fantasy', 'Adventure', 'Children\'s Literature'],
+        genre: 'Fantasy, Adventure, Children\'s Literature',
         totalCopies: 4,
         availableCopies: 4,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780618002214-L.jpg',
         description: 'Bilbo Baggins embarks on an unexpected journey to reclaim treasure from a dragon.',
-        tags: ['fantasy', 'adventure', 'prequel']
+        tags: 'fantasy, adventure, prequel'
       }
     }),
     prisma.book.create({
@@ -331,12 +330,12 @@ async function main() {
         edition: 'Penguin Classics',
         language: 'English',
         pages: 409,
-        genre: ['Romance', 'Classic', 'Fiction'],
+        genre: 'Romance, Classic, Fiction',
         totalCopies: 2,
         availableCopies: 2,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780141439662-L.jpg',
         description: 'A story about the Dashwood sisters navigating love, heartbreak, and society.',
-        tags: ['classic', 'romance', 'british-literature']
+        tags: 'classic, romance, british-literature'
       }
     }),
     prisma.book.create({
@@ -349,12 +348,12 @@ async function main() {
         edition: 'William Morrow',
         language: 'English',
         pages: 272,
-        genre: ['Mystery', 'Crime', 'Thriller'],
+        genre: 'Mystery, Crime, Thriller',
         totalCopies: 3,
         availableCopies: 2,
         coverUrl: 'https://covers.openlibrary.org/b/isbn/9780062073495-L.jpg',
         description: 'Ten strangers are lured to an island where they are mysteriously murdered one by one.',
-        tags: ['mystery', 'thriller', 'bestseller']
+        tags: 'mystery, thriller, bestseller'
       }
     })
   ]);
@@ -363,18 +362,18 @@ async function main() {
 
   console.log('Creating test users...');
   const testUsers = [];
-  
+
   // Helper function to create or get user
   const createOrGetUser = async (userData) => {
     const existing = await prisma.user.findUnique({
       where: { email: userData.email }
     });
-    
+
     if (existing) {
       console.log(`User ${userData.email} already exists`);
       return existing;
     }
-    
+
     return await prisma.user.create({ data: userData });
   };
 
@@ -460,7 +459,7 @@ async function main() {
 
   console.log('Creating loans...');
   const loans = [];
-  
+
   // Create some active loans
   const loan1 = await prisma.loan.create({
     data: {
@@ -623,7 +622,7 @@ async function main() {
 
   console.log('Creating activity logs...');
   const activityLogs = [];
-  
+
   for (const loan of loans) {
     if (loan.status === 'borrowed') {
       const book = books.find(b => b.id === loan.bookId);
@@ -703,7 +702,7 @@ async function main() {
   console.log(`   - ${reservations.length} reservations`);
   console.log(`   - ${payments.length} payments`);
   console.log(`   - ${activityLogs.length} activity logs`);
-  
+
   console.log('\nTest User Emails:');
   console.log('   Admin: admin@library.com');
   console.log('   Librarian: librarian@library.com');

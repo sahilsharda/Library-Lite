@@ -606,8 +606,11 @@ function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, is
                   </div>
                   <p className="book-author">{book.author?.name || book.author}</p>
                   <div className="book-tags">
-                    {(book.genre || book.category || []).map((tag, i) => (
-                      <span key={i} className="tag">{tag}</span>
+                    {(Array.isArray(book.genre)
+                      ? book.genre
+                      : (book.genre || book.category || '').toString().split(',')
+                    ).filter(t => t && t.trim()).map((tag, i) => (
+                      <span key={i} className="tag">{tag.trim()}</span>
                     ))}
                   </div>
                   <div className="book-actions">

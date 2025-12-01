@@ -1,14 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { useCart } from '../App';
-import Footer from './Footer';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 import './Shop.css';
 
 const Shop = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const category = searchParams.get('category');
   const search = searchParams.get('search');
-  
+
   const { cartItems, addToCart } = useCart();
   const [selectedCategory, setSelectedCategory] = useState(category || 'all');
   const [searchQuery, setSearchQuery] = useState(search || '');
@@ -22,6 +22,15 @@ const Shop = () => {
   const handleAddToCart = (book) => {
     addToCart(book);
     alert(`✓ ${book.title} added to cart!`);
+  };
+
+  const handleProfileClick = () => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
   };
 
   const scroll = (ref, direction) => {
@@ -73,7 +82,7 @@ const Shop = () => {
     return allBooks[selectedCategory] || [];
   };
 
-  const displayBooks = getDisplayBooks().filter(book => 
+  const displayBooks = getDisplayBooks().filter(book =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     book.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -94,7 +103,7 @@ const Shop = () => {
             <Link to="/cart" className="cart-btn">
               🛒 {cartItems.length > 0 && <span className="cart-badge">{cartItems.length}</span>}
             </Link>
-            <button className="user-btn">👤</button>
+            <button className="user-btn" onClick={handleProfileClick}>👤</button>
           </div>
         </div>
       </header>
@@ -154,7 +163,7 @@ const Shop = () => {
               <div className="shop-category-section">
                 <h2 className="category-section-title">Popular Books</h2>
                 <div className="slider-container">
-                  <button 
+                  <button
                     className="slider-btn left"
                     onClick={() => scroll(popularRef, 'left')}
                   >
@@ -185,7 +194,7 @@ const Shop = () => {
                       </div>
                     ))}
                   </div>
-                  <button 
+                  <button
                     className="slider-btn right"
                     onClick={() => scroll(popularRef, 'right')}
                   >
@@ -198,7 +207,7 @@ const Shop = () => {
               <div className="shop-category-section">
                 <h2 className="category-section-title">Best Collection</h2>
                 <div className="slider-container">
-                  <button 
+                  <button
                     className="slider-btn left"
                     onClick={() => scroll(collectionRef, 'left')}
                   >
@@ -229,7 +238,7 @@ const Shop = () => {
                       </div>
                     ))}
                   </div>
-                  <button 
+                  <button
                     className="slider-btn right"
                     onClick={() => scroll(collectionRef, 'right')}
                   >
@@ -242,7 +251,7 @@ const Shop = () => {
               <div className="shop-category-section">
                 <h2 className="category-section-title">Best Selling Books</h2>
                 <div className="slider-container">
-                  <button 
+                  <button
                     className="slider-btn left"
                     onClick={() => scroll(bestsellingRef, 'left')}
                   >
@@ -273,7 +282,7 @@ const Shop = () => {
                       </div>
                     ))}
                   </div>
-                  <button 
+                  <button
                     className="slider-btn right"
                     onClick={() => scroll(bestsellingRef, 'right')}
                   >
@@ -286,7 +295,7 @@ const Shop = () => {
               <div className="shop-category-section">
                 <h2 className="category-section-title">New Arrivals</h2>
                 <div className="slider-container">
-                  <button 
+                  <button
                     className="slider-btn left"
                     onClick={() => scroll(newRef, 'left')}
                   >
@@ -317,7 +326,7 @@ const Shop = () => {
                       </div>
                     ))}
                   </div>
-                  <button 
+                  <button
                     className="slider-btn right"
                     onClick={() => scroll(newRef, 'right')}
                   >
@@ -362,8 +371,6 @@ const Shop = () => {
           )}
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

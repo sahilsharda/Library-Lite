@@ -6,7 +6,9 @@ import SignupPage from "./components/SignupPage";
 import UserProfile from "./components/UserProfile";
 import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
-
+import Cart from "./components/Cart";
+import Shop from "./components/Shop";
+import { CartProvider } from "./context/CartContext";
 
 function AuthWrapper({ onLoginSuccess }) {
   const [searchParams] = useSearchParams();
@@ -67,42 +69,48 @@ function App() {
   }
 
   return (
-    <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden" }}>
-      <Routes>
-        {/* Landing Page */}
-        <Route path="/" element={<LandingPage />} />
+    <CartProvider>
+      <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden" }}>
+        <Routes>
+          {/* Landing Page */}
+          <Route path="/" element={<LandingPage />} />
 
-        {/* Auth Routes with Background Video */}
-        <Route path="/auth" element={<AuthWrapper onLoginSuccess={handleLoginSuccess} />} />
+          {/* Shop & Cart Routes */}
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/cart" element={<Cart />} />
 
-        {/* Dashboard - Protected Route */}
-        <Route
-          path="/dashboard"
-          element={
-            user ? (
-              <Dashboard user={user} onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/auth" replace />
-            )
-          }
-        />
+          {/* Auth Routes with Background Video */}
+          <Route path="/auth" element={<AuthWrapper onLoginSuccess={handleLoginSuccess} />} />
 
-        {/* User Profile Route - Protected */}
-        <Route
-          path="/userprofile"
-          element={
-            user ? (
-              <UserProfile user={user} onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/auth" replace />
-            )
-          }
-        />
+          {/* Dashboard - Protected Route */}
+          <Route
+            path="/dashboard"
+            element={
+              user ? (
+                <Dashboard user={user} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/auth" replace />
+              )
+            }
+          />
 
-        {/* Redirect any unknown routes to home */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </div>
+          {/* User Profile Route - Protected */}
+          <Route
+            path="/userprofile"
+            element={
+              user ? (
+                <UserProfile user={user} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/auth" replace />
+              )
+            }
+          />
+
+          {/* Redirect any unknown routes to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </CartProvider>
   );
 }
 
