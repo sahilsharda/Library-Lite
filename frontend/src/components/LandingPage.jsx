@@ -166,7 +166,7 @@ const LandingPage = () => {
                   <div className="rating">
                     {[...Array(5)].map((_, i) => (
                       <FiStar
-                        key={i}
+                        key={`${book.id}-star-${i}`}
                         size={16}
                         fill={i < book.rating ? '#fbbf24' : 'none'}
                         stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
@@ -208,7 +208,7 @@ const LandingPage = () => {
                   <div className="rating-small">
                     {[...Array(5)].map((_, i) => (
                       <FiStar
-                        key={i}
+                        key={`${book.id}-star-${i}`}
                         size={14}
                         fill={i < book.rating ? '#fbbf24' : 'none'}
                         stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
@@ -249,7 +249,7 @@ const LandingPage = () => {
                 <div className="rating">
                   {[...Array(5)].map((_, i) => (
                     <FiStar
-                      key={i}
+                      key={`${book.id}-star-${i}`}
                       size={14}
                       fill={i < book.rating ? '#fbbf24' : 'none'}
                       stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
@@ -290,7 +290,7 @@ const LandingPage = () => {
                 <div className="rating">
                   {[...Array(5)].map((_, i) => (
                     <FiStar
-                      key={i}
+                      key={`${book.id}-star-${i}`}
                       size={14}
                       fill={i < book.rating ? '#fbbf24' : 'none'}
                       stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}

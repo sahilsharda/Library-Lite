@@ -166,7 +166,7 @@ export const sendDueReminders = async (loans) => {
 export const sendOverdueNotices = async (loans) => {
   const results = await Promise.allSettled(
     loans.map(loan => {
-      const daysOverdue = Math.ceil((new Date() - new Date(loan.dueDate)) / (1000 * 60 * 60 * 24));
+      const daysOverdue = Math.ceil((Date.now() - new Date(loan.dueDate)) / (1000 * 60 * 60 * 24));
       return sendEmail('bookOverdue', {
         memberEmail: loan.user.email,
         bookTitle: loan.book.title,

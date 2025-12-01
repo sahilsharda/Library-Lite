@@ -183,12 +183,12 @@ async function runTests() {
   totalTests++;
   log('🔄 Testing CORS Configuration...', 'blue');
   try {
-    const corsTest = await fetch(`${API_BASE}/health`, {
+    await fetch(`${API_BASE}/health`, {
       method: 'OPTIONS',
     });
     log('  ✅ CORS is properly configured', 'green');
     passedTests++;
-  } catch (error) {
+  } catch {
     log('  ⚠️  CORS test inconclusive', 'yellow');
     passedTests++; // Count as pass since CORS works if other tests pass
   }

@@ -3,6 +3,7 @@
 ## 🚀 Quick Start (2 Minutes)
 
 ### Prerequisites
+
 - Node.js (v18 or higher)
 - npm or yarn
 - Supabase account (optional - works with mock auth)
@@ -25,6 +26,7 @@ npm run dev
 ```
 
 **Expected Output:**
+
 ```
 ⚠️  Using MOCK Supabase Auth (Local Development Mode) ⚠️
 Server is running on port 3000
@@ -50,6 +52,7 @@ npm run dev
 ```
 
 **Expected Output:**
+
 ```
 VITE v7.x.x  ready in xxx ms
 
@@ -64,15 +67,18 @@ VITE v7.x.x  ready in xxx ms
 ## 🎯 Accessing the Application
 
 ### Public Pages (No Login Required)
+
 1. **Landing Page**: http://localhost:5174/
 2. **Shop**: http://localhost:5174/shop
 3. **Cart**: http://localhost:5174/cart
 
 ### Authentication
+
 - **Login/Signup**: http://localhost:5174/auth
 - **Demo Mode**: http://localhost:5174/auth?mode=signup
 
 ### Protected Pages (Login Required)
+
 - **Dashboard**: http://localhost:5174/dashboard
 - **User Profile**: http://localhost:5174/userprofile
 
@@ -116,6 +122,7 @@ VITE v7.x.x  ready in xxx ms
 ## 🔧 Configuration
 
 ### Backend Configuration
+
 **File**: `backend/.env`
 
 ```env
@@ -131,6 +138,7 @@ DATABASE_URL=your-postgres-connection-string
 ```
 
 ### Frontend Configuration
+
 **File**: `frontend/.env`
 
 ```env
@@ -149,6 +157,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 ### ✅ Implemented & Connected
 
 #### Frontend Features
+
 - [x] **Landing Page** - Hero section with features showcase
 - [x] **Shop Page** - Browse books with categories and search
 - [x] **Cart System** - Add/remove items, view cart
@@ -159,6 +168,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 - [x] **Responsive Design** - Mobile-friendly UI
 
 #### Backend Features
+
 - [x] **Auth API** - Login, Signup, Logout endpoints
 - [x] **Books API** - CRUD operations for books
 - [x] **Dashboard API** - User dashboard data
@@ -168,6 +178,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 - [x] **CORS** - Configured for frontend access
 
 #### State Management
+
 - [x] **AuthContext** - User authentication state
 - [x] **CartContext** - Shopping cart state
 - [x] **ThemeContext** - Light/Dark theme switching
@@ -177,12 +188,14 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 ## 🔗 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/signup` - Create new account
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
 - `GET /api/auth/user` - Get current user
 
 ### Books
+
 - `GET /api/books` - Get all books
 - `GET /api/books/:id` - Get book by ID
 - `POST /api/books` - Create book (Librarian)
@@ -190,9 +203,11 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 - `DELETE /api/books/:id` - Delete book (Admin)
 
 ### Dashboard
+
 - `GET /api/dashboard/user/:userId` - Get user dashboard
 
 ### Users
+
 - `GET /api/users/:userId` - Get user profile
 - `PUT /api/users/:userId` - Update user profile
 
@@ -201,7 +216,9 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 ## 🛠️ Troubleshooting
 
 ### Issue: Backend won't start
+
 **Solution**: Check if port 3000 is already in use
+
 ```bash
 # Kill process on port 3000 (macOS/Linux)
 lsof -ti:3000 | xargs kill -9
@@ -211,19 +228,25 @@ PORT=3001
 ```
 
 ### Issue: Frontend can't connect to backend
+
 **Solution**: Verify API_BASE_URL
+
 1. Check `frontend/.env` has correct URL
 2. Ensure backend is running on same port
 3. Check browser console for CORS errors
 
 ### Issue: Login/Signup not working
+
 **Solution**: Check backend logs
+
 1. Ensure backend shows "Using MOCK Supabase Auth"
 2. Check browser Network tab for API errors
 3. Verify password is at least 6 characters
 
 ### Issue: Cart not updating
+
 **Solution**: Check CartProvider
+
 1. Verify CartProvider wraps App in main.jsx
 2. Check browser console for errors
 3. Clear localStorage and refresh
@@ -254,23 +277,27 @@ Landing Page (/)
 ## 🎯 Key Features Connected
 
 ### ✅ Authentication Flow
+
 - Landing Page → Login/Signup → Dashboard
 - Protected routes redirect to auth if not logged in
 - Logout returns to landing page
 
 ### ✅ Shopping Flow
+
 - Browse books on Landing/Shop pages
 - Add to cart (tracked in CartContext)
 - View cart with item management
 - Cart persists across page navigation
 
 ### ✅ Dashboard Integration
+
 - User-specific data from backend
 - Demo mode for testing without login
 - Profile editing with API updates
 - Navigation between all sections
 
 ### ✅ Theme Consistency
+
 - Dark gradient theme across all pages
 - Glassmorphic UI components
 - Purple/blue accent colors
@@ -281,16 +308,21 @@ Landing Page (/)
 ## 🚦 Health Check
 
 ### Backend Health Check
+
 ```bash
 curl http://localhost:3000/health
 ```
+
 **Expected Response:**
+
 ```json
-{"status":"OK","message":"Server is running"}
+{ "status": "OK", "message": "Server is running" }
 ```
 
 ### Frontend Health Check
+
 Open browser and check:
+
 1. Landing page loads without errors
 2. Can navigate to /shop
 3. Can open /auth page
@@ -301,6 +333,7 @@ Open browser and check:
 ## 📊 Project Status
 
 ### ✅ Fully Functional
+
 - User authentication
 - Shopping cart
 - Page navigation
@@ -309,6 +342,7 @@ Open browser and check:
 - Theme system
 
 ### 🔄 Ready for Enhancement
+
 - Real Supabase integration
 - Payment processing
 - Book borrowing system
@@ -320,6 +354,7 @@ Open browser and check:
 ## 🎓 Demo Credentials
 
 When using mock auth, any credentials work:
+
 - **Email**: any-email@example.com
 - **Password**: any-password (min 6 chars)
 
@@ -328,6 +363,7 @@ When using mock auth, any credentials work:
 ## 📞 Support
 
 If you encounter issues:
+
 1. Check both terminal windows for errors
 2. Review browser console for frontend errors
 3. Verify `.env` files are configured

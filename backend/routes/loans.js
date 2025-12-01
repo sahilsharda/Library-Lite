@@ -77,7 +77,7 @@ router.get('/', isLibrarian, async (req, res) => {
 });
 
 // Get overdue loans
-router.get('/overdue', isLibrarian, async (req, res) => {
+router.get('/overdue', isLibrarian, async (_req, res) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -286,7 +286,7 @@ router.post('/return', isLibrarian, async (req, res) => {
       fine = daysOverdue * FINE_PER_DAY;
     }
 
-    const [updatedLoan, updatedBook] = await prisma.$transaction([
+    const [updatedLoan] = await prisma.$transaction([
       prisma.loan.update({
         where: { id: loanId },
         data: {

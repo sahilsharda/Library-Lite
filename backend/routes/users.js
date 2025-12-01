@@ -8,7 +8,7 @@ const router = express.Router();
 router.put('/:userId', authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
-    const { fullName, phone, address, bio } = req.body;
+    const { fullName, phone, address } = req.body;
 
     // Get database user from Supabase auth ID
     const dbUser = await prisma.user.findUnique({

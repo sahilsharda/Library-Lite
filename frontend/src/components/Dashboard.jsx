@@ -200,6 +200,7 @@ function Dashboard() {
         <div className="sidebar-header">
           <div className="sidebar-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <title>Library Logo</title>
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             </svg>
@@ -209,6 +210,7 @@ function Dashboard() {
         <nav className="sidebar-nav">
           <button onClick={() => handlePageChange('dashboard')} className={`nav-item ${activePage === 'dashboard' ? 'active' : ''}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <title>Dashboard Icon</title>
               <rect x="3" y="3" width="7" height="7"></rect>
               <rect x="14" y="3" width="7" height="7"></rect>
               <rect x="14" y="14" width="7" height="7"></rect>
@@ -218,6 +220,7 @@ function Dashboard() {
           </button>
           <button onClick={() => handlePageChange('books')} className={`nav-item ${activePage === 'books' ? 'active' : ''}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <title>Books Icon</title>
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             </svg>
@@ -225,6 +228,7 @@ function Dashboard() {
           </button>
           <button onClick={() => handlePageChange('orders')} className={`nav-item ${activePage === 'orders' ? 'active' : ''}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <title>Orders Icon</title>
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -233,6 +237,7 @@ function Dashboard() {
           </button>
           <button onClick={() => handlePageChange('payments')} className={`nav-item ${activePage === 'payments' ? 'active' : ''}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <title>Payments Icon</title>
               <line x1="12" y1="1" x2="12" y2="23"></line>
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
@@ -240,6 +245,7 @@ function Dashboard() {
           </button>
           <button onClick={() => handlePageChange('profile')} className={`nav-item ${activePage === 'profile' ? 'active' : ''}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <title>Profile Icon</title>
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
             </svg>
@@ -249,6 +255,7 @@ function Dashboard() {
         <div className="sidebar-footer">
           <button onClick={() => navigate('/')} className="nav-item back-home-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <title>Home Icon</title>
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
@@ -604,11 +611,8 @@ function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, is
                   </div>
                   <p className="book-author">{book.author?.name || book.author}</p>
                   <div className="book-tags">
-                    {(Array.isArray(book.genre)
-                      ? book.genre
-                      : (book.genre || book.category || '').toString().split(',')
-                    ).filter(t => t && t.trim()).map((tag, i) => (
-                      <span key={i} className="tag">{tag.trim()}</span>
+                    {(book.genre || book.category || []).map((tag, i) => (
+                      <span key={i} className="tag">{tag}</span>
                     ))}
                   </div>
                   <div className="book-actions">

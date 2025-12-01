@@ -419,7 +419,7 @@ router.post("/login", async (req, res) => {
 });
 
 // Logout route
-router.post("/logout", async (req, res) => {
+router.post("/logout", async (_req, res) => {
   try {
     const { error } = await supabase.auth.signOut();
 
