@@ -1,14 +1,34 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import './Cart.css';
 
 const Cart = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + shipping;
+
+  const handleProfileClick = () => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
+  };
+
+  const handleCheckout = () => {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    // TODO: Implement actual checkout logic
+    alert("Checkout functionality coming soon!");
+  };
 
   return (
     <div className="cart-page">
@@ -26,7 +46,7 @@ const Cart = () => {
             <Link to="/cart" className="cart-btn">
               🛒 {cartItems.length > 0 && <span className="cart-badge">{cartItems.length}</span>}
             </Link>
-            <button className="user-btn">👤</button>
+            <button className="user-btn" onClick={handleProfileClick}>👤</button>
           </div>
         </div>
       </header>
@@ -116,7 +136,7 @@ const Cart = () => {
                 <span>Total:</span>
                 <span>${total.toFixed(2)}</span>
               </div>
-              <button className="checkout-btn">Proceed to Checkout</button>
+              <button className="checkout-btn" onClick={handleCheckout}>Proceed to Checkout</button>
               <Link to="/shop" className="continue-link">← Continue Shopping</Link>
             </div>
           </div>

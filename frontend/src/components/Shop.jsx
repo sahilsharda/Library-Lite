@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import './Shop.css';
 
 const Shop = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const category = searchParams.get('category');
   const search = searchParams.get('search');
 
@@ -21,6 +22,15 @@ const Shop = () => {
   const handleAddToCart = (book) => {
     addToCart(book);
     alert(`✓ ${book.title} added to cart!`);
+  };
+
+  const handleProfileClick = () => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
   };
 
   const scroll = (ref, direction) => {
@@ -93,7 +103,7 @@ const Shop = () => {
             <Link to="/cart" className="cart-btn">
               🛒 {cartItems.length > 0 && <span className="cart-badge">{cartItems.length}</span>}
             </Link>
-            <button className="user-btn">👤</button>
+            <button className="user-btn" onClick={handleProfileClick}>👤</button>
           </div>
         </div>
       </header>
