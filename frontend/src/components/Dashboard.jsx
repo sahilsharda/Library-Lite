@@ -648,49 +648,31 @@ function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, is
           ) : (
             <div className="books-grid">
               {displayBooks.map((book) => (
-                <div key={book.id} className="book-card">
-                  {book.coverUrl && (
-                    <div className="book-cover">
-                      <img src={book.coverUrl} alt={book.title || book.name} />
+                <div key={book.id} className="shop-book-card">
+                  <div className="shop-book-image">
+                    <img src={book.coverUrl || '/placeholder-book.jpg'} alt={book.title || book.name} />
+                  </div>
+                  <h3>{book.title || book.name}</h3>
+                  <div className="shop-book-meta">
+                    <span className="shop-author">{book.author?.name || book.author || 'Unknown Author'}</span>
+                    <div className="shop-rating">
+                      {'⭐'.repeat(Math.floor(book.rating || 4))}
                     </div>
-                  )}
-                  <div className="book-card-content">
-                    <div className="book-card-header">
-                      <h3>{book.title || book.name}</h3>
-                    </div>
-                    <p className="book-author">by {book.author?.name || book.author || 'Unknown Author'}</p>
-                    {book.publisher && (
-                      <p className="book-publisher">{book.publisher}</p>
-                    )}
-                    {book.publishedYear && (
-                      <p className="book-year">Published: {book.publishedYear}</p>
-                    )}
-                    {book.pages && (
-                      <p className="book-pages">{book.pages} pages</p>
-                    )}
-                    {book.description && (
-                      <p className="book-description">{book.description.substring(0, 150)}...</p>
-                    )}
-                    <div className="book-tags">
-                      {(book.genre || book.category || []).slice(0, 3).map((tag, i) => (
-                        <span key={i} className="tag">{tag}</span>
-                      ))}
-                    </div>
-                    <div className="book-availability">
-                      <span className={book.availableCopies > 0 ? 'available' : 'unavailable'}>
-                        {book.availableCopies > 0 ? `${book.availableCopies} available` : 'Not available'}
-                      </span>
-                    </div>
-                    <div className="book-actions">
-                      <button
-                        className="btn-primary"
-                        disabled={book.availableCopies === 0 || isDemo}
-                        onClick={() => !isDemo && onBorrowBook(book.id)}
-                      >
-                        {book.availableCopies > 0 ? 'Borrow' : 'Unavailable'}
-                      </button>
-                      <button className="btn-secondary">View Details</button>
-                    </div>
+                  </div>
+                  <div className="book-availability">
+                    <span className={book.availableCopies > 0 ? 'available' : 'unavailable'}>
+                      {book.availableCopies > 0 ? `${book.availableCopies} available` : 'Not available'}
+                    </span>
+                  </div>
+                  <div className="shop-book-footer">
+                    <button
+                      type="button"
+                      className="shop-add-btn"
+                      disabled={book.availableCopies === 0 || isDemo}
+                      onClick={() => !isDemo && onBorrowBook(book.id)}
+                    >
+                      {book.availableCopies > 0 ? 'BORROW' : 'UNAVAILABLE'}
+                    </button>
                   </div>
                 </div>
               ))}

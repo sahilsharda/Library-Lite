@@ -3,6 +3,136 @@
   background: #f5f1e8;
 }
 
+/* Header - Consistent with other pages */
+.header {
+  background: #f5f1e8;
+  padding: 20px 0;
+  border-bottom: 1px solid #e0d5c7;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c1810;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.logo:hover {
+  color: #a89070;
+}
+
+.nav {
+  display: flex;
+  gap: 40px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #6b5d54;
+  font-size: 16px;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav a:hover,
+.nav a.active {
+  color: #2c1810;
+}
+
+.nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #a89070;
+}
+
+.header-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.search-btn,
+.cart-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #2c1810;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-decoration: none;
+}
+
+.search-btn:hover,
+.cart-btn:hover {
+  background: rgba(168, 144, 112, 0.1);
+  color: #a89070;
+  transform: translateY(-2px);
+}
+
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #a89070;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.login-btn,
+.dashboard-btn {
+  background: #a89070 !important;
+  color: white !important;
+  border: none;
+  padding: 10px 20px !important;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(168, 144, 112, 0.3);
+}
+
+.login-btn:hover,
+.dashboard-btn:hover {
+  background: #8f7a5e !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 144, 112, 0.4);
+}
+
 .shop-container {
   padding: 60px 0;
 }
@@ -159,12 +289,21 @@
   margin-bottom: 16px;
   border-radius: 8px;
   overflow: hidden;
+  background: #f5f1e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .shop-book-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.shop-book-card:hover .shop-book-image img {
+  transform: scale(1.02);
 }
 
 .shop-book-card h3 {

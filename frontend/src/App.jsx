@@ -9,6 +9,8 @@ import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
 import Cart from "./components/Cart";
 import Shop from "./components/Shop";
+import AboutUs from "./components/AboutUs";
+import Blog from "./components/Blog";
 import { CartProvider } from "./context/CartContext";
 
 function AuthWrapper({ onLoginSuccess }) {
@@ -83,6 +85,8 @@ function App() {
           {/* Shop & Cart Routes */}
           <Route path="/shop" element={<Shop />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/blog" element={<Blog />} />
 
           {/* Auth Routes with Background Video */}
           <Route path="/auth" element={<AuthWrapper onLoginSuccess={handleLoginSuccess} />} />
