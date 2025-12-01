@@ -72,14 +72,14 @@ const Shop = () => {
       {id: 28,title: 'The Gruffalo',author: '	Julia Donaldson',price: 85.99,rating: 5,image: 'bs/bs8.jpg'},
     ],
     new: [
-      {id: 12,title: 'Great Big Beautiful Life',author: 'Emily Henry',price: 72.99,rating: 5,image: 'na/na1.jpg'},
-      {id: 13,title: 'In Your Dreams',author: 'Sarah Adams',price: 68.99,rating: 5,image: 'na/na2.jpg'},
-      {id: 14,title: 'Brimstone',author: 'Callie Hart',price: 78.99,rating: 4,image: 'na/na3.jpg'},
-      {id: 15,title: 'Watch Me',author: 'Tahereh Mafi',price: 82.99,rating: 5,image: 'na/na4.jpg'},
-      {id: 16,title: 'And Now, Back to You',author: 'B.K. Borison',price: 95.99,rating: 5,image: 'na/na5.jpg'},
-      {id: 17,title: 'Wild Reverence',author: 'Rebecca Ross',price: 80.99,rating: 4.5,image: 'na/na6.jpg'},
-      {id: 18,title: 'Alchemised',author: 'SenLinYu',price: 90.99,rating: 4,image: 'na/na7.jpg'},
-      {id: 19,title: 'Heartstopper',author: 'Alice Oseman',price: 75.99,rating: 5,image: 'na/na8.jpg'},
+      {id: 31,title: 'Great Big Beautiful Life',author: 'Emily Henry',price: 72.99,rating: 5,image: 'na/na1.jpg'},
+      {id: 32,title: 'In Your Dreams',author: 'Sarah Adams',price: 68.99,rating: 5,image: 'na/na2.jpg'},
+      {id: 33,title: 'Brimstone',author: 'Callie Hart',price: 78.99,rating: 4,image: 'na/na3.jpg'},
+      {id: 34,title: 'Watch Me',author: 'Tahereh Mafi',price: 82.99,rating: 5,image: 'na/na4.jpg'},
+      {id: 35,title: 'And Now, Back to You',author: 'B.K. Borison',price: 95.99,rating: 5,image: 'na/na5.jpg'},
+      {id: 36,title: 'Wild Reverence',author: 'Rebecca Ross',price: 80.99,rating: 4.5,image: 'na/na6.jpg'},
+      {id: 37,title: 'Alchemised',author: 'SenLinYu',price: 90.99,rating: 4,image: 'na/na7.jpg'},
+      {id: 38,title: 'Heartstopper',author: 'Alice Oseman',price: 75.99,rating: 5,image: 'na/na8.jpg'},
     ],
   };
 

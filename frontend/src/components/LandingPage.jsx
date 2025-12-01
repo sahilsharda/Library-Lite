@@ -28,143 +28,31 @@ const LandingPage = () => {
   };
 
   const featuredBooks = [
-    {
-      id: 1,
-      title: 'All Of Twenty Nine',
-      author: 'Ancy Johny',
-      price: 65.99,
-      rating: 4,
-      image: 'fb/pb1.jpg',
-    },
-    {
-      id: 2,
-      title: 'To Kill a Mockingbird',
-      author: 'Harper Lee',
-      price: 45.99,
-      rating: 5,
-      image: 'fb/pb2.jpeg',
-    },
-    {
-      id: 3,
-      title: 'Pride and Prejudice',
-      author: 'Jane Austen',
-      price: 55.99,
-      rating: 4,
-      image: 'fb/pb3.jpg',
-    },
-    {
-      id: 4,
-      title: 'The Catcher in the Rye',
-      author: 'J. D. Salinger',
-      price: 55.99,
-      rating: 4,
-      image: 'fb/pb4.jpeg',
-    },
+    {id: 1,title: 'All Of Twenty Nine',author: 'Ancy Johny',price: 65.99,rating: 4,image: 'fb/pb1.jpg'},
+    {id: 2,title: 'To Kill a Mockingbird',author: 'Harper Lee',price: 45.99,rating: 5,image: 'fb/pb2.jpeg'},
+    {id: 3,title: 'Pride and Prejudice',author: 'Jane Austen',price: 58.99,rating: 4,image: 'fb/pb3.jpg'},
+    {id: 4,title: 'The Catcher in the Rye',author: 'J. D. Salinger',price: 55.99,rating: 4,image: 'fb/pb4.jpeg'},
   ];
 
   const bestCollection = [
-    {
-      id: 4,
-      title: 'The City of Brass',
-      author: 'S.A. Chakraborty',
-      price: 85.99,
-      rating: 5,
-      image: 'bc/bc1.jpg',
-    },
-    {
-      id: 5,
-      title: 'Harry Potter',
-      author: 'J.K Rowling',
-      price: 55.99,
-      rating: 4,
-      image: 'bc/bc2.jpg',
-    },
-    {
-      id: 6,
-      title: 'I Am Number Four',
-      author: 'Pittacus Lore',
-      price: 85.99,
-      rating: 4,
-      image: 'bc/bc3.jpg',
-    },
-    {
-      id: 7,
-      title: 'The 100',
-      author: 'Kass Morgan',
-      price: 95.99,
-      rating: 5,
-      image: 'bc/bc4.jpg',
-    },
+    {id: 11,title: 'The City of Brass',author: 'S.A. Chakraborty',price: 85.99,rating: 5,image: 'bc/bc1.jpg'},
+    {id: 12,title: 'Harry Potter',author: 'J.K Rowling',price: 55.99,rating: 4,image: 'bc/bc2.jpg'},
+    {id: 13,title: 'I Am Number Four',author: 'Pittacus Lore',price: 85.99,rating: 4,image: 'bc/bc3.jpg'},
+    {id: 14,title: 'The 100',author: 'Kass Morgan',price: 95.99,rating: 5,image: 'bc/bc4.jpg'},
   ];
 
   const bestSelling = [
-    {
-      id: 8,
-      title: 'A Tale of Two Cities',
-      author: 'Charles Dickens',
-      price: 85.99,
-      rating: 4,
-      image: 'bs/bs1.jpg',
-    },
-    {
-      id: 9,
-      title: 'The Little Prince',
-      author: 'Antoine de Saint-Exupéry',
-      price: 85.99,
-      rating: 4,
-      image: 'bs/bs2.jpeg',
-    },
-    {
-      id: 10,
-      title: 'The Alchemist',
-      author: 'Paulo Coelho',
-      price: 85.99,
-      rating: 4,
-      image: 'bs/bs3.jpg',
-    },
-    {
-      id: 11,
-      title: 'And Then There Were None',
-      author: 'Agatha Christie',
-      price: 85.99,
-      rating: 5,
-      image: 'bs/bs4.jpg',
-    },
+    {id: 21,title: 'A Tale of Two Cities',author: 'Charles Dickens',price: 85.99,rating: 4,image: 'bs/bs1.jpg'},
+    {id: 22,title: 'The Little Prince',author: 'Antoine de Saint-Exupéry',price: 65.99,rating: 4,image: 'bs/bs2.jpeg'},
+    {id: 23,title: 'The Alchemist',author: 'Paulo Coelho',price: 75.99,rating: 4,image: 'bs/bs3.jpg'},
+    {id: 24,title: 'And Then There Were None',author: 'Agatha Christie',price: 55.99,rating: 5,image: 'bs/bs4.jpg'},
   ];
 
   const newArrivals = [
-    {
-      id: 12,
-      title: 'Great Big Beautiful Life',
-      author: 'Emily Henry',
-      price: 72.99,
-      rating: 5,
-      image: 'na/na1.jpg',
-    },
-    {
-      id: 13,
-      title: 'In Your Dreams',
-      author: 'Sarah Adams',
-      price: 68.99,
-      rating: 5,
-      image: 'na/na2.jpg',
-    },
-    {
-      id: 14,
-      title: 'Brimstone',
-      author: 'Callie Hart',
-      price: 78.99,
-      rating: 4,
-      image: 'na/na3.jpg',
-    },
-    {
-      id: 15,
-      title: 'Watch Me',
-      author: 'Tahereh Mafi',
-      price: 82.99,
-      rating: 5,
-      image: 'na/na4.jpg',
-    },
+    {id: 31,title: 'Great Big Beautiful Life',author: 'Emily Henry',price: 72.99,rating: 5,image: 'na/na1.jpg'},
+    {id: 32,title: 'In Your Dreams',author: 'Sarah Adams',price: 68.99,rating: 5,image: 'na/na2.jpg'},
+    {id: 33,title: 'Brimstone',author: 'Callie Hart',price: 78.99,rating: 4,image: 'na/na3.jpg'},
+    {id: 34,title: 'Watch Me',author: 'Tahereh Mafi',price: 82.99,rating: 5,image: 'na/na4.jpg'},
   ];
 
   return (
