@@ -42,36 +42,44 @@ const Shop = () => {
 
   const allBooks = {
     popular: [
-      { id: 1, title: 'All Of Twenty Nine', author: 'Amy Johns', price: 65.99, rating: 4, image: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400' },
-      { id: 2, title: 'Scholar Select', author: 'John Smith', price: 45.99, rating: 5, image: 'https://images.unsplash.com/photo-1589998059171-988d887df646?w=400' },
-      { id: 3, title: 'A Short History of English Poetry', author: 'Heinemann', price: 55.99, rating: 4, image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400' },
-      { id: 16, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', price: 42.99, rating: 5, image: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400' },
-      { id: 17, title: '1984', author: 'George Orwell', price: 48.99, rating: 5, image: 'https://images.unsplash.com/photo-1589998059171-988d887df646?w=400' },
-      { id: 18, title: 'To Kill a Mockingbird', author: 'Harper Lee', price: 52.99, rating: 5, image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400' },
+      {id: 1,title: 'All Of Twenty Nine',author: 'Ancy Johny',price: 65.99,rating: 4,image: 'fb/pb1.jpg'},
+      {id: 2,title: 'To Kill a Mockingbird',author: 'Harper Lee',price: 45.99,rating: 5,image: 'fb/pb2.jpeg'},
+      {id: 3,title: 'Pride and Prejudice',author: 'Jane Austen',price: 58.99,rating: 4,image: 'fb/pb3.jpg'},
+      {id: 4,title: 'The Catcher in the Rye',author: 'J. D. Salinger',price: 55.99,rating: 4,image: 'fb/pb4.jpeg'},
+      {id: 5,title: 'Atomic Habits',author: 'James Clear',price: 85.99,rating: 4.5,image: 'fb/pb5.jpg'},
+      {id: 6,title: 'Moby-Dick',author: 'Herman Melville',price: 59.99,rating: 3.5,image: 'fb/pb6.jpeg'},
+      {id: 7,title: 'The Hunger Games',author: 'Suzanne Collins',price: 65.99,rating: 4.2,image: 'fb/pb7.jpeg'},
+      {id: 8,title: 'Fourth Wing',author: 'Rebecca Yarros',price: 75.99,rating: 5,image: 'fb/pb8.jpeg'},
     ],
     collection: [
-      { id: 4, title: 'The Spirit Catches You', author: 'Anne Fadiman', price: 85.99, rating: 5, image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400' },
-      { id: 5, title: 'Alice Feeney - His & Hers', author: 'Alice Feeney', price: 55.99, rating: 4, image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400' },
-      { id: 6, title: 'Scholar Select Premium', author: 'Premium Edition', price: 85.99, rating: 4, image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400' },
-      { id: 7, title: 'Select Title', author: 'Various Authors', price: 95.99, rating: 5, image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400' },
-      { id: 19, title: 'Pride and Prejudice', author: 'Jane Austen', price: 58.99, rating: 5, image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400' },
-      { id: 20, title: 'The Catcher in the Rye', author: 'J.D. Salinger', price: 62.99, rating: 4, image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400' },
+      {id: 11,title: 'The City of Brass',author: 'S.A. Chakraborty',price: 85.99,rating: 5,image: 'bc/bc1.jpg'},
+      {id: 12,title: 'Harry Potter',author: 'J.K Rowling',price: 55.99,rating: 4,image: 'bc/bc2.jpg'},
+      {id: 13,title: 'I Am Number Four',author: 'Pittacus Lore',price: 85.99,rating: 4,image: 'bc/bc3.jpg'},
+      {id: 14,title: 'The 100',author: 'Kass Morgan',price: 95.99,rating: 5,image: 'bc/bc4.jpg'},
+      {id: 15,title: 'The Mirror Visitor',author: 'Christelle Dabos',price: 97.99,rating: 4.7,image: 'bc/bc5.jpg'},
+      {id: 16,title: 'Inkworld Trilogy',author: 'Cornelia Funke',price: 75.99,rating: 4.5,image: 'bc/bc6.jpg'},
+      {id: 17,title: 'Magyk and Flyte',author: 'Angie Sage',price: 78.99,rating: 4,image: 'bc/bc7.jpg'},
+      {id: 18,title: "Man's Search For Meaning",author: 'Viktor E. Frankl',price: 90.99,rating: 5,image: 'bc/bc8.webp'},
     ],
     bestselling: [
-      { id: 8, title: 'Sometimes I Lie', author: 'Alice Feeney', price: 85.99, rating: 4, image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400' },
-      { id: 9, title: 'The Book Eaters', author: 'Sunyi Dean', price: 85.99, rating: 4, image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400' },
-      { id: 10, title: 'I Know Who You Are', author: 'Alice Feeney', price: 85.99, rating: 4, image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400' },
-      { id: 11, title: 'White Stone Gate', author: 'Various Authors', price: 85.99, rating: 5, image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400' },
-      { id: 21, title: 'Where the Crawdads Sing', author: 'Delia Owens', price: 78.99, rating: 5, image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400' },
-      { id: 22, title: 'The Silent Patient', author: 'Alex Michaelides', price: 72.99, rating: 4, image: 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400' },
+      {id: 21,title: 'A Tale of Two Cities',author: 'Charles Dickens',price: 85.99,rating: 4,image: 'bs/bs1.jpg'},
+      {id: 22,title: 'The Little Prince',author: 'Antoine de Saint-Exupéry',price: 65.99,rating: 4,image: 'bs/bs2.jpeg'},
+      {id: 23,title: 'The Alchemist',author: 'Paulo Coelho',price: 75.99,rating: 4,image: 'bs/bs3.jpg'},
+      {id: 24,title: 'And Then There Were None',author: 'Agatha Christie',price: 55.99,rating: 5,image: 'bs/bs4.jpg'},
+      {id: 25,title: 'Black Beauty',author: 'Anna Sewell',price: 95.99,rating: 5,image: 'bs/bs5.jpeg'},
+      {id: 26,title: 'The Kite Runner',author: 'Khaled Hosseini',price: 80.99,rating: 5,image: 'bs/bs6.jpg'},
+      {id: 27,title: 'Me Before You',author: 'Jojo Moyes',price: 90.99,rating: 5,image: 'bs/bs7.jpg'},
+      {id: 28,title: 'The Gruffalo',author: '	Julia Donaldson',price: 85.99,rating: 5,image: 'bs/bs8.jpg'},
     ],
     new: [
-      { id: 12, title: 'The Midnight Library', author: 'Matt Haig', price: 72.99, rating: 5, image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400' },
-      { id: 13, title: 'Atomic Habits', author: 'James Clear', price: 68.99, rating: 5, image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400' },
-      { id: 14, title: 'The Seven Husbands', author: 'Taylor Jenkins Reid', price: 78.99, rating: 4, image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400' },
-      { id: 15, title: 'Project Hail Mary', author: 'Andy Weir', price: 82.99, rating: 5, image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400' },
-      { id: 23, title: 'The Push', author: 'Ashley Audrain', price: 69.99, rating: 4, image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400' },
-      { id: 24, title: 'Klara and the Sun', author: 'Kazuo Ishiguro', price: 74.99, rating: 5, image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400' },
+      {id: 12,title: 'Great Big Beautiful Life',author: 'Emily Henry',price: 72.99,rating: 5,image: 'na/na1.jpg'},
+      {id: 13,title: 'In Your Dreams',author: 'Sarah Adams',price: 68.99,rating: 5,image: 'na/na2.jpg'},
+      {id: 14,title: 'Brimstone',author: 'Callie Hart',price: 78.99,rating: 4,image: 'na/na3.jpg'},
+      {id: 15,title: 'Watch Me',author: 'Tahereh Mafi',price: 82.99,rating: 5,image: 'na/na4.jpg'},
+      {id: 16,title: 'And Now, Back to You',author: 'B.K. Borison',price: 82.99,rating: 5,image: 'na/na5.jpg'},
+      {id: 17,title: 'Wild Reverence',author: 'Rebecca Ross',price: 82.99,rating: 5,image: 'na/na6.jpg'},
+      {id: 18,title: 'Alchemised',author: 'SenLinYu',price: 82.99,rating: 5,image: 'na/na7.jpg'},
+      {id: 19,title: 'Heartstopper',author: 'Alice Oseman',price: 82.99,rating: 5,image: 'na/na8.jpg'},
     ],
   };
 
@@ -92,7 +100,7 @@ const Shop = () => {
       {/* Header */}
       <header className="header">
         <div className="container">
-          <Link to="/" className="logo">BestBook.com</Link>
+          <Link to="/" className="logo">Library Lite</Link>
           <nav className="nav">
             <Link to="/">Home</Link>
             <Link to="/shop">Shop</Link>

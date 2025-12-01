@@ -35,7 +35,7 @@ const Cart = () => {
       {/* Header */}
       <header className="header">
         <div className="container">
-          <Link to="/" className="logo">BestBook.com</Link>
+          <Link to="/" className="logo">Library Lite</Link>
           <nav className="nav">
             <Link to="/">Home</Link>
             <Link to="/shop">Shop</Link>

@@ -60,7 +60,6 @@ const LandingPage = () => {
       rating: 4,
       image: 'fb/pb4.jpeg',
     },
-
   ];
 
   const bestCollection = [
