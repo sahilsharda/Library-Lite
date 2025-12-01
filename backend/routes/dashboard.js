@@ -23,17 +23,13 @@ router.get('/user/:userId', authenticateToken, async (req, res) => {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    // Get member data
+    // Get member data (optional - user might not have a member record yet)
     const member = await prisma.member.findUnique({
       where: { userId },
       include: {
         user: true
       }
     });
-
-    if (!member) {
-      return res.status(404).json({ error: 'Member not found' });
-    }
 
     // Get loans with calculated fields
     const loans = await prisma.loan.findMany({
@@ -130,7 +126,7 @@ router.get('/user/:userId', authenticateToken, async (req, res) => {
       .reduce((sum, p) => sum + p.amount, 0);
 
     // Calculate wallet balance (if membership has initial balance)
-    const walletBalance = (member.membership?.initialBalance || 0) - totalFines + paidFines;
+    const walletBalance = (member?.membership?.initialBalance || 0) - totalFines + paidFines;
 
     const dashboardData = {
       stats: {
@@ -141,17 +137,17 @@ router.get('/user/:userId', authenticateToken, async (req, res) => {
         totalFines,
         paidFines,
         walletBalance,
-        membershipType: member.membershipType || 'standard',
-        memberStatus: member.status
+        membershipType: member?.membershipType || 'standard',
+        memberStatus: member?.status || 'active'
       },
       loans: enrichedLoans,
       payments: enrichedPayments,
-      member: {
+      member: member ? {
         id: member.id,
         joinDate: member.createdAt,
         membershipType: member.membershipType,
         status: member.status
-      }
+      } : null
     };
 
     res.status(200).json({

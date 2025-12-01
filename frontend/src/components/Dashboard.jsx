@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import { userAPI } from '../api/user.js';
+import { loansAPI } from '../api/loans.js';
+import { booksAPI } from '../api/books.js';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -129,6 +131,12 @@ function Dashboard() {
         setDashboardData(response.data);
       } catch (error) {
         console.error('Error loading dashboard:', error);
+        // If Member doesn't exist, set empty dashboard data
+        setDashboardData({
+          stats: { totalLoans: 0, activeLoans: 0, totalFines: 0, totalPurchases: 0 },
+          loans: [],
+          purchases: []
+        });
       }
     };
 
@@ -142,9 +150,9 @@ function Dashboard() {
       setLoading(true);
       try {
         if (activePage === 'books') {
-          const booksData = await userAPI.getBooks(searchQuery, currentPage);
+          const booksData = await booksAPI.getAllBooks({ search: searchQuery, page: currentPage });
           setBooks(booksData.data || []);
-          const myBooksData = await userAPI.getMyBooks();
+          const myBooksData = await loansAPI.getMyLoans();
           setMyBooks(myBooksData.data || []);
         } else if (activePage === 'orders') {
           const ordersData = await userAPI.getMyOrders();
@@ -171,6 +179,40 @@ function Dashboard() {
     setActivePage(page);
     setSearchQuery('');
     setCurrentPage(1);
+  };
+
+  const handleBorrowBook = async (bookId) => {
+    try {
+      const response = await loansAPI.borrowBook(bookId);
+      if (response.success) {
+        alert(response.message || 'Book borrowed successfully!');
+        // Refresh books list to update available copies
+        if (activePage === 'books') {
+          const booksData = await booksAPI.getAllBooks({ search: searchQuery, page: currentPage });
+          setBooks(booksData.data || []);
+          const myBooksData = await loansAPI.getMyLoans();
+          setMyBooks(myBooksData.data || []);
+        }
+      }
+    } catch (error) {
+      alert(error.message || 'Failed to borrow book');
+    }
+  };
+
+  const handleReturnBook = async (loanId) => {
+    if (!confirm('Are you sure you want to return this book?')) return;
+
+    try {
+      const response = await loansAPI.returnBook(loanId);
+      if (response.success) {
+        alert(response.message || 'Book returned successfully!');
+        // Refresh my books list
+        const myBooksData = await loansAPI.getMyLoans();
+        setMyBooks(myBooksData.data || []);
+      }
+    } catch (error) {
+      alert(error.message || 'Failed to return book');
+    }
   };
 
   if (isLoading) {
@@ -331,6 +373,8 @@ function Dashboard() {
               searchQuery={searchQuery}
               currencyFormatter={currencyFormatter}
               isDemo={isDemo}
+              onBorrowBook={handleBorrowBook}
+              onReturnBook={handleReturnBook}
             />
           )}
 
@@ -569,7 +613,7 @@ function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, cu
 }
 
 // Books Page Component
-function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, isDemo }) {
+function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, isDemo, onBorrowBook, onReturnBook }) {
   const [viewMode, setViewMode] = useState('catalog'); // 'catalog' or 'mybooks'
   const demoBooks = [
     { id: 1, title: 'The Great Gatsby', author: { name: 'F. Scott Fitzgerald' }, genre: ['Fiction'], price: 599, availableCopies: 5 },
@@ -638,7 +682,11 @@ function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, is
                       </span>
                     </div>
                     <div className="book-actions">
-                      <button className="btn-primary" disabled={book.availableCopies === 0}>
+                      <button
+                        className="btn-primary"
+                        disabled={book.availableCopies === 0 || isDemo}
+                        onClick={() => !isDemo && onBorrowBook(book.id)}
+                      >
                         {book.availableCopies > 0 ? 'Borrow' : 'Unavailable'}
                       </button>
                       <button className="btn-secondary">View Details</button>
@@ -683,7 +731,14 @@ function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, is
                   <td><span className={`status-badge ${loan.status}`}>{loan.status}</span></td>
                   <td>
                     <div className="action-buttons">
-                      <button className="action-btn edit" title="Return Book">Return</button>
+                      <button
+                        className="action-btn edit"
+                        title="Return Book"
+                        disabled={loan.status === 'returned' || isDemo}
+                        onClick={() => !isDemo && loan.status !== 'returned' && onReturnBook(loan.id)}
+                      >
+                        {loan.status === 'returned' ? 'Returned' : 'Return'}
+                      </button>
                     </div>
                   </td>
                 </tr>

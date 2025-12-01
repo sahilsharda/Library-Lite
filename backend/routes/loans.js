@@ -1,6 +1,7 @@
 import express from 'express';
 import prisma from '../prisma/prismaClient.js';
 import { isLibrarian } from '../middleware/roleCheck.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -138,19 +139,72 @@ router.get('/overdue', isLibrarian, async (_req, res) => {
   }
 });
 
-// Borrow a book
-router.post('/borrow', isLibrarian, async (req, res) => {
+// Get my loans (for authenticated members)
+router.get('/my-loans', authenticateToken, async (req, res) => {
   try {
-    const { userId, bookId, dueDate } = req.body;
+    // Get database user from Supabase auth ID
+    const dbUser = await prisma.user.findUnique({
+      where: { authId: req.user.id }
+    });
 
-    if (!userId || !bookId) {
+    if (!dbUser) {
+      return res.status(404).json({ error: 'User not found in database' });
+    }
+
+    const loans = await prisma.loan.findMany({
+      where: { userId: dbUser.id },
+      include: {
+        book: {
+          select: {
+            id: true,
+            title: true,
+            isbn: true,
+            coverUrl: true,
+            author: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: { borrowDate: 'desc' }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: loans
+    });
+  } catch (error) {
+    console.error('Get my loans error:', error);
+    res.status(500).json({ error: 'Failed to fetch loans' });
+  }
+});
+
+// Member borrow a book (authenticated member can borrow for themselves)
+router.post('/borrow', authenticateToken, async (req, res) => {
+  try {
+    const { bookId, dueDate } = req.body;
+
+    // Get database user from Supabase auth ID
+    const dbUser = await prisma.user.findUnique({
+      where: { authId: req.user.id }
+    });
+
+    if (!dbUser) {
+      return res.status(404).json({ error: 'User not found in database' });
+    }
+
+    const userId = dbUser.id;
+
+    if (!bookId) {
       return res.status(400).json({
-        error: 'User ID and Book ID are required'
+        error: 'Book ID is required'
       });
     }
 
     const book = await prisma.book.findUnique({
-      where: { id: bookId }
+      where: { id: parseInt(bookId) }
     });
 
     if (!book) {
@@ -166,14 +220,14 @@ router.post('/borrow', isLibrarian, async (req, res) => {
     const activeLoans = await prisma.loan.count({
       where: {
         userId,
-        bookId,
+        bookId: parseInt(bookId),
         status: { in: ['borrowed', 'overdue'] }
       }
     });
 
     if (activeLoans > 0) {
       return res.status(400).json({
-        error: 'User already has an active loan for this book'
+        error: 'You already have an active loan for this book'
       });
     }
 
@@ -181,11 +235,11 @@ router.post('/borrow', isLibrarian, async (req, res) => {
       ? new Date(dueDate)
       : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
 
-    const [loan, updatedBook] = await prisma.$transaction([
+    const [loan] = await prisma.$transaction([
       prisma.loan.create({
         data: {
           userId,
-          bookId,
+          bookId: parseInt(bookId),
           dueDate: calculatedDueDate,
           status: 'borrowed'
         },
@@ -213,7 +267,7 @@ router.post('/borrow', isLibrarian, async (req, res) => {
         }
       }),
       prisma.book.update({
-        where: { id: bookId },
+        where: { id: parseInt(bookId) },
         data: {
           availableCopies: {
             decrement: 1
@@ -226,7 +280,8 @@ router.post('/borrow', isLibrarian, async (req, res) => {
       data: {
         userId,
         action: 'BORROW_BOOK',
-        details: `Borrowed book: ${updatedBook.title}`
+        resourceType: 'LOAN',
+        resourceId: loan.id.toString()
       }
     });
 
@@ -241,8 +296,8 @@ router.post('/borrow', isLibrarian, async (req, res) => {
   }
 });
 
-// Return a book
-router.post('/return', isLibrarian, async (req, res) => {
+// Return a book (members can return their own books)
+router.post('/return', authenticateToken, async (req, res) => {
   try {
     const { loanId } = req.body;
 
@@ -252,8 +307,17 @@ router.post('/return', isLibrarian, async (req, res) => {
       });
     }
 
+    // Get database user from Supabase auth ID
+    const dbUser = await prisma.user.findUnique({
+      where: { authId: req.user.id }
+    });
+
+    if (!dbUser) {
+      return res.status(404).json({ error: 'User not found in database' });
+    }
+
     const loan = await prisma.loan.findUnique({
-      where: { id: loanId },
+      where: { id: parseInt(loanId) },
       include: {
         book: true,
         user: {
@@ -269,6 +333,11 @@ router.post('/return', isLibrarian, async (req, res) => {
 
     if (!loan) {
       return res.status(404).json({ error: 'Loan not found' });
+    }
+
+    // Check if user owns this loan (unless they're admin/librarian)
+    if (loan.userId !== dbUser.id && dbUser.role !== 'admin' && dbUser.role !== 'librarian') {
+      return res.status(403).json({ error: 'You can only return your own borrowed books' });
     }
 
     if (loan.status === 'returned') {
@@ -288,7 +357,7 @@ router.post('/return', isLibrarian, async (req, res) => {
 
     const [updatedLoan] = await prisma.$transaction([
       prisma.loan.update({
-        where: { id: loanId },
+        where: { id: parseInt(loanId) },
         data: {
           returnDate: today,
           status: 'returned',
@@ -331,7 +400,8 @@ router.post('/return', isLibrarian, async (req, res) => {
       data: {
         userId: loan.userId,
         action: 'RETURN_BOOK',
-        details: `Returned book: ${loan.book.title}${fine > 0 ? ` - Fine: $${fine}` : ''}`
+        resourceType: 'LOAN',
+        resourceId: loan.id.toString()
       }
     });
 
