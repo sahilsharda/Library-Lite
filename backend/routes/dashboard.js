@@ -27,7 +27,7 @@ router.get('/user/:userId', authenticateToken, async (req, res) => {
     const member = await prisma.member.findUnique({
       where: { userId },
       include: {
-        membership: true
+        user: true
       }
     });
 

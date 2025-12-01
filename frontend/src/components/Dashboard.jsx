@@ -605,19 +605,44 @@ function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, is
             <div className="books-grid">
               {displayBooks.map((book) => (
                 <div key={book.id} className="book-card">
-                  <div className="book-card-header">
-                    <h3>{book.title || book.name}</h3>
-                    <span className="book-price">{currencyFormatter.format(book.price || 0)}</span>
-                  </div>
-                  <p className="book-author">{book.author?.name || book.author}</p>
-                  <div className="book-tags">
-                    {(book.genre || book.category || []).map((tag, i) => (
-                      <span key={i} className="tag">{tag}</span>
-                    ))}
-                  </div>
-                  <div className="book-actions">
-                    <button className="btn-primary">Borrow</button>
-                    <button className="btn-secondary">View Details</button>
+                  {book.coverUrl && (
+                    <div className="book-cover">
+                      <img src={book.coverUrl} alt={book.title || book.name} />
+                    </div>
+                  )}
+                  <div className="book-card-content">
+                    <div className="book-card-header">
+                      <h3>{book.title || book.name}</h3>
+                    </div>
+                    <p className="book-author">by {book.author?.name || book.author || 'Unknown Author'}</p>
+                    {book.publisher && (
+                      <p className="book-publisher">{book.publisher}</p>
+                    )}
+                    {book.publishedYear && (
+                      <p className="book-year">Published: {book.publishedYear}</p>
+                    )}
+                    {book.pages && (
+                      <p className="book-pages">{book.pages} pages</p>
+                    )}
+                    {book.description && (
+                      <p className="book-description">{book.description.substring(0, 150)}...</p>
+                    )}
+                    <div className="book-tags">
+                      {(book.genre || book.category || []).slice(0, 3).map((tag, i) => (
+                        <span key={i} className="tag">{tag}</span>
+                      ))}
+                    </div>
+                    <div className="book-availability">
+                      <span className={book.availableCopies > 0 ? 'available' : 'unavailable'}>
+                        {book.availableCopies > 0 ? `${book.availableCopies} available` : 'Not available'}
+                      </span>
+                    </div>
+                    <div className="book-actions">
+                      <button className="btn-primary" disabled={book.availableCopies === 0}>
+                        {book.availableCopies > 0 ? 'Borrow' : 'Unavailable'}
+                      </button>
+                      <button className="btn-secondary">View Details</button>
+                    </div>
                   </div>
                 </div>
               ))}

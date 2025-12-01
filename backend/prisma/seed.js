@@ -5,11 +5,73 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
+// Google Books API configuration
+const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes';
+const SEARCH_QUERIES = [
+  'fiction', 'science fiction', 'fantasy', 'mystery', 'thriller', 
+  'romance', 'horror', 'biography', 'history', 'science',
+  'technology', 'self help', 'business', 'philosophy', 'psychology'
+];
+
+// Fetch books from Google Books API
+async function fetchBooksFromGoogle(query, maxResults = 10) {
+  try {
+    const url = `${GOOGLE_BOOKS_API}?q=${encodeURIComponent(query)}&maxResults=${maxResults}&orderBy=relevance`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.items || [];
+  } catch (error) {
+    console.error(`Error fetching books for query "${query}":`, error.message);
+    return [];
+  }
+}
+
+// Extract author name from Google Books data
+function extractAuthorName(authors) {
+  if (!authors || authors.length === 0) return 'Unknown Author';
+  return authors[0]; // Use first author
+}
+
+// Extract ISBN from identifiers
+function extractISBN(identifiers) {
+  if (!identifiers || identifiers.length === 0) {
+    return `GBOOK-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+  const isbn13 = identifiers.find(id => id.type === 'ISBN_13');
+  const isbn10 = identifiers.find(id => id.type === 'ISBN_10');
+  return isbn13?.identifier || isbn10?.identifier || `GBOOK-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+}
+
+// Extract year from published date
+function extractYear(publishedDate) {
+  if (!publishedDate) return null;
+  const year = parseInt(publishedDate.split('-')[0]);
+  return isNaN(year) ? null : year;
+}
+
+// Get or create author
+async function getOrCreateAuthor(authorName, bio = null) {
+  let author = await prisma.author.findFirst({
+    where: { name: authorName }
+  });
+
+  if (!author) {
+    author = await prisma.author.create({
+      data: {
+        name: authorName,
+        bio: bio
+      }
+    });
+  }
+
+  return author;
+}
+
 async function main() {
-  console.log('Starting database seeding...');
+  console.log('🚀 Starting database seeding with Google Books API...\n');
 
   // Clear existing data
-  console.log('Clearing existing data...');
+  console.log('🗑️  Clearing existing data...');
   await prisma.activityLog.deleteMany({});
   await prisma.payment.deleteMany({});
   await prisma.reservation.deleteMany({});
@@ -18,6 +80,7 @@ async function main() {
   await prisma.author.deleteMany({});
   await prisma.member.deleteMany({});
   await prisma.user.deleteMany({});
+  console.log('✅ Existing data cleared\n');
 
   console.log('Creating authors...');
   const authors = await Promise.all([
