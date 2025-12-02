@@ -285,31 +285,33 @@ const LandingPage = () => {
           </div>
           <div className="books-grid-4">
             {newArrivals.map((book) => (
-              <div key={book.id} className="book-card-vertical">
-                <div className="book-cover">
+              <div key={book.id} className="book-card-small">
+                <div className="book-image-small">
                   <img src={book.image} alt={book.title} />
                 </div>
-                <h4>{book.title}</h4>
-                <div className="rating">
-                  {[...Array(5)].map((_, i) => (
-                    <FiStar
-                      key={`${book.id}-star-${i}`}
-                      size={14}
-                      fill={i < book.rating ? '#fbbf24' : 'none'}
-                      stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
-                    />
-                  ))}
-                  <span>{book.rating}</span>
-                </div>
-                <div className="book-bottom">
-                  <span className="price">${book.price}</span>
-                  <button
-                    type="button"
-                    className="add-btn"
-                    onClick={() => handleAddToCart(book)}
-                  >
-                    ADD TO CART →
-                  </button>
+                <div className="book-info">
+                  <h4>{book.title}</h4>
+                  <p className="author-small">{book.author}</p>
+                  <div className="rating-small">
+                    {[...Array(5)].map((_, i) => (
+                      <FiStar
+                        key={`${book.id}-star-${i}`}
+                        size={14}
+                        fill={i < book.rating ? '#fbbf24' : 'none'}
+                        stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                      />
+                    ))}
+                  </div>
+                  <div className="price-action">
+                    <span className="price">${book.price}</span>
+                    <button
+                      type="button"
+                      className="quick-add"
+                      onClick={() => handleAddToCart(book)}
+                    >
+                      ADD TO CART →
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
