@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   import.meta.env.API_BASE_URL ||
@@ -11,16 +13,6 @@ const getAuthHeaders = () => {
   };
 };
 
-const handleJsonResponse = async (response) => {
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const error = new Error(data.error || 'Request failed');
-    error.status = response.status;
-    throw error;
-  }
-  return data;
-};
-
 export const userAPI = {
   // Get user's dashboard data
   getDashboard: async () => {
@@ -28,10 +20,14 @@ export const userAPI = {
     const userId = user?.dbUser?.id;
     if (!userId) throw new Error('User not found');
 
-    const response = await fetch(`${API_BASE_URL}/dashboard/user/${userId}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleJsonResponse(response);
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/dashboard/user/${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error || error.message || 'Failed to fetch dashboard');
+    }
   },
 
   // Get user's borrowed books
@@ -40,10 +36,14 @@ export const userAPI = {
     const userId = user?.dbUser?.id;
     if (!userId) throw new Error('User not found');
 
-    const response = await fetch(`${API_BASE_URL}/loans?userId=${userId}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleJsonResponse(response);
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/loans?userId=${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error || error.message || 'Failed to fetch books');
+    }
   },
 
   // Get all available books (catalog)
@@ -51,10 +51,14 @@ export const userAPI = {
     const params = new URLSearchParams({ page, limit: 20 });
     if (search) params.append('search', search);
 
-    const response = await fetch(`${API_BASE_URL}/books?${params}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleJsonResponse(response);
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/books?${params}`, {
+        headers: getAuthHeaders(),
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error || error.message || 'Failed to fetch books');
+    }
   },
 
   // Get user's orders (purchases)
@@ -63,11 +67,14 @@ export const userAPI = {
     const userId = user?.dbUser?.id;
     if (!userId) throw new Error('User not found');
 
-    // Get payments as orders
-    const response = await fetch(`${API_BASE_URL}/payments/user/${userId}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleJsonResponse(response);
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/payments/user/${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error || error.message || 'Failed to fetch orders');
+    }
   },
 
   // Get user's payments
@@ -76,10 +83,14 @@ export const userAPI = {
     const userId = user?.dbUser?.id;
     if (!userId) throw new Error('User not found');
 
-    const response = await fetch(`${API_BASE_URL}/payments/user/${userId}`, {
-      headers: getAuthHeaders(),
-    });
-    return handleJsonResponse(response);
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/payments/user/${userId}`, {
+        headers: getAuthHeaders(),
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error || error.message || 'Failed to fetch payments');
+    }
   },
 
   // Borrow a book
@@ -88,22 +99,28 @@ export const userAPI = {
     const userId = user?.dbUser?.id;
     if (!userId) throw new Error('User not found');
 
-    const response = await fetch(`${API_BASE_URL}/loans/borrow`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ userId, bookId, dueDate }),
-    });
-    return handleJsonResponse(response);
+    try {
+      const { data } = await axios.post(`${API_BASE_URL}/loans/borrow`, 
+        { userId, bookId, dueDate },
+        { headers: getAuthHeaders() }
+      );
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error || error.message || 'Failed to borrow book');
+    }
   },
 
   // Return a book
   returnBook: async (loanId) => {
-    const response = await fetch(`${API_BASE_URL}/loans/return`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ loanId }),
-    });
-    return handleJsonResponse(response);
+    try {
+      const { data } = await axios.post(`${API_BASE_URL}/loans/return`,
+        { loanId },
+        { headers: getAuthHeaders() }
+      );
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error || error.message || 'Failed to return book');
+    }
   },
 
   // Update user profile
@@ -112,12 +129,15 @@ export const userAPI = {
     const userId = user?.dbUser?.id;
     if (!userId) throw new Error('User not found');
 
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-      method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(profileData),
-    });
-    return handleJsonResponse(response);
+    try {
+      const { data } = await axios.put(`${API_BASE_URL}/users/${userId}`,
+        profileData,
+        { headers: getAuthHeaders() }
+      );
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error || error.message || 'Failed to update profile');
+    }
   },
 };
 
