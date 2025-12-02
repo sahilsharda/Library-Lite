@@ -615,13 +615,22 @@ function DashboardHome({ stats, loans, purchases, overdueBooks, dueSoonBooks, cu
 // Books Page Component
 function BooksPage({ books, myBooks, loading, searchQuery, currencyFormatter, isDemo, onBorrowBook, onReturnBook }) {
   const [viewMode, setViewMode] = useState('catalog'); // 'catalog' or 'mybooks'
-  const demoBooks = [
+  const demoBooks = useMemo(() => [
     { id: 1, title: 'The Great Gatsby', author: { name: 'F. Scott Fitzgerald' }, genre: ['Fiction'], price: 599, availableCopies: 5 },
     { id: 2, title: '1984', author: { name: 'George Orwell' }, genre: ['Dystopian'], price: 549, availableCopies: 3 },
     { id: 3, title: 'Pride and Prejudice', author: { name: 'Jane Austen' }, genre: ['Romance'], price: 499, availableCopies: 7 },
-  ];
+  ], []);
 
-  const displayBooks = isDemo ? demoBooks : (viewMode === 'catalog' ? books : myBooks);
+  const displayBooks = useMemo(() => {
+    if (isDemo) {
+      if (!searchQuery) return demoBooks;
+      return demoBooks.filter(book =>
+        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.author.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    return viewMode === 'catalog' ? books : myBooks;
+  }, [isDemo, demoBooks, viewMode, books, myBooks, searchQuery]);
 
   return (
     <>
