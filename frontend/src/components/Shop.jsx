@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { FiSearch, FiShoppingCart, FiUser } from 'react-icons/fi';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/useCart';
 import './Shop.css';
 
 const Shop = () => {

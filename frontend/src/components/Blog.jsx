@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiShoppingCart, FiUser, FiCalendar, FiClock, FiArrowRight } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/useCart';
 import './SharedPages.css';
 
 const Blog = () => {

@@ -361,7 +361,7 @@ body {
 .books-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
+  gap: 30px;
 }
 
 .book-card {
@@ -378,8 +378,8 @@ body {
 }
 
 .book-image {
-  width: 250px;
-  height: 400px;
+  width: 100%;
+  aspect-ratio: 2/3;
   margin-bottom: 20px;
   border-radius: 12px;
   overflow: hidden;
