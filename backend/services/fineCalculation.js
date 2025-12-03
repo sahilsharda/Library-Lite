@@ -16,20 +16,20 @@ const FINE_CONFIG = {
 export const calculateFine = (dueDate, returnDate = null) => {
   const today = returnDate ? new Date(returnDate) : new Date();
   const due = new Date(dueDate);
-  
+
   // Calculate days overdue
   const diffTime = today - due;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
+
   // No fine if not overdue or within grace period
   if (diffDays <= FINE_CONFIG.gracePeriodDays) {
     return 0;
   }
-  
+
   // Calculate fine
   const overdueDays = diffDays - FINE_CONFIG.gracePeriodDays;
   const calculatedFine = overdueDays * FINE_CONFIG.dailyFineRate;
-  
+
   // Apply maximum fine cap
   return Math.min(calculatedFine, FINE_CONFIG.maxFine);
 };
@@ -42,10 +42,10 @@ export const calculateFine = (dueDate, returnDate = null) => {
  */
 export const isOverdue = (dueDate, returnDate = null) => {
   if (returnDate) return false; // Already returned
-  
+
   const today = new Date();
   const due = new Date(dueDate);
-  
+
   return today > due;
 };
 
@@ -57,10 +57,10 @@ export const isOverdue = (dueDate, returnDate = null) => {
 export const getDaysOverdue = (dueDate) => {
   const today = new Date();
   const due = new Date(dueDate);
-  
+
   const diffTime = today - due;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
+
   return Math.max(0, diffDays);
 };
 
@@ -74,12 +74,12 @@ export const updateLoanFine = (loan) => {
     // Loan is returned, calculate final fine
     return calculateFine(loan.dueDate, loan.returnDate);
   }
-  
+
   if (isOverdue(loan.dueDate)) {
     // Loan is overdue, calculate current fine
     return calculateFine(loan.dueDate);
   }
-  
+
   // Loan is not overdue yet
   return 0;
 };
@@ -91,9 +91,9 @@ export const updateLoanFine = (loan) => {
  * @returns {string} - Status: 'returned', 'overdue', or 'borrowed'
  */
 export const getLoanStatus = (dueDate, returnDate) => {
-  if (returnDate) return 'returned';
-  if (isOverdue(dueDate)) return 'overdue';
-  return 'borrowed';
+  if (returnDate) return "returned";
+  if (isOverdue(dueDate)) return "overdue";
+  return "borrowed";
 };
 
 export default {

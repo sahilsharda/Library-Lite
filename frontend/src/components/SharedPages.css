@@ -6,7 +6,7 @@
 }
 
 body {
-  font-family: 'Playfair Display', 'Georgia', serif;
+  font-family: "Playfair Display", "Georgia", serif;
   color: #2c1810;
 }
 
@@ -68,7 +68,7 @@ body {
 }
 
 .nav a.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -5px;
   left: 0;
@@ -163,7 +163,7 @@ body {
 .page-hero p {
   font-size: 20px;
   opacity: 0.95;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* Content Section */
@@ -191,7 +191,7 @@ body {
   line-height: 1.8;
   color: #6b5d54;
   margin-bottom: 20px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .about-image img {
@@ -212,7 +212,9 @@ body {
   padding: 40px 30px;
   border-radius: 16px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   border: 1px solid #e0d5c7;
 }
 
@@ -238,7 +240,7 @@ body {
   font-size: 15px;
   color: #6b5d54;
   line-height: 1.6;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .mission-section {
@@ -260,7 +262,7 @@ body {
   line-height: 1.8;
   color: #6b5d54;
   margin-bottom: 30px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .mission-section ul {
@@ -274,11 +276,11 @@ body {
   padding: 12px 0;
   padding-left: 30px;
   position: relative;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .mission-section ul li::before {
-  content: '✓';
+  content: "✓";
   position: absolute;
   left: 0;
   color: #a89070;
@@ -303,7 +305,7 @@ body {
 .stat-item p {
   font-size: 18px;
   color: #6b5d54;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* Blog Page Specific Styles */
@@ -324,7 +326,7 @@ body {
   font-size: 15px;
   color: #6b5d54;
   transition: all 0.3s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .category-btn:hover {
@@ -376,7 +378,7 @@ body {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .featured-post-content {
@@ -399,7 +401,7 @@ body {
   margin-bottom: 20px;
   font-size: 14px;
   color: #6b5d54;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .post-meta span {
@@ -413,7 +415,7 @@ body {
   line-height: 1.8;
   color: #6b5d54;
   margin-bottom: 30px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .read-more-btn {
@@ -430,7 +432,7 @@ body {
   transition: all 0.3s;
   font-weight: 500;
   align-self: flex-start;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .read-more-btn:hover {
@@ -450,7 +452,9 @@ body {
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   border: 1px solid #e0d5c7;
 }
 
@@ -492,7 +496,7 @@ body {
   line-height: 1.7;
   color: #6b5d54;
   margin-bottom: 25px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .newsletter-section {
@@ -512,7 +516,7 @@ body {
   font-size: 18px;
   margin-bottom: 35px;
   opacity: 0.95;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .newsletter-form {
@@ -528,7 +532,7 @@ body {
   border: none;
   border-radius: 8px;
   font-size: 16px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .newsletter-form button {
@@ -541,7 +545,7 @@ body {
   cursor: pointer;
   transition: all 0.3s;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .newsletter-form button:hover {
@@ -579,7 +583,7 @@ body {
   font-size: 14px;
   line-height: 1.8;
   opacity: 0.8;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .footer-section a {
@@ -590,7 +594,7 @@ body {
   margin-bottom: 12px;
   opacity: 0.8;
   transition: opacity 0.3s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .footer-section a:hover {
@@ -606,7 +610,7 @@ body {
 .footer-bottom p {
   font-size: 14px;
   opacity: 0.6;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* Responsive Design */

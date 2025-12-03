@@ -1,14 +1,14 @@
-import express from 'express';
-import prisma from '../prisma/prismaClient.js';
-import { isLibrarian } from '../middleware/roleCheck.js';
-import { authenticateToken } from '../middleware/authMiddleware.js';
+import express from "express";
+import prisma from "../prisma/prismaClient.js";
+import { isLibrarian } from "../middleware/roleCheck.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 const FINE_PER_DAY = 5;
 
 // Get all loans
-router.get('/', isLibrarian, async (req, res) => {
+router.get("/", isLibrarian, async (req, res) => {
   try {
     const {
       userId,
@@ -16,8 +16,8 @@ router.get('/', isLibrarian, async (req, res) => {
       status,
       page = 1,
       limit = 20,
-      sortBy = 'borrowDate',
-      sortOrder = 'desc'
+      sortBy = "borrowDate",
+      sortOrder = "desc",
     } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -38,8 +38,8 @@ router.get('/', isLibrarian, async (req, res) => {
               email: true,
               fullName: true,
               name: true,
-              phone: true
-            }
+              phone: true,
+            },
           },
           book: {
             select: {
@@ -48,17 +48,17 @@ router.get('/', isLibrarian, async (req, res) => {
               isbn: true,
               author: {
                 select: {
-                  name: true
-                }
-              }
-            }
-          }
+                  name: true,
+                },
+              },
+            },
+          },
         },
         skip,
         take,
-        orderBy: { [sortBy]: sortOrder }
+        orderBy: { [sortBy]: sortOrder },
       }),
-      prisma.loan.count({ where })
+      prisma.loan.count({ where }),
     ]);
 
     res.status(200).json({
@@ -68,27 +68,27 @@ router.get('/', isLibrarian, async (req, res) => {
         total,
         page: parseInt(page),
         limit: parseInt(limit),
-        totalPages: Math.ceil(total / parseInt(limit))
-      }
+        totalPages: Math.ceil(total / parseInt(limit)),
+      },
     });
   } catch (error) {
-    console.error('Get loans error:', error);
-    res.status(500).json({ error: 'Failed to fetch loans' });
+    console.error("Get loans error:", error);
+    res.status(500).json({ error: "Failed to fetch loans" });
   }
 });
 
 // Get overdue loans
-router.get('/overdue', isLibrarian, async (_req, res) => {
+router.get("/overdue", isLibrarian, async (_req, res) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const overdueLoans = await prisma.loan.findMany({
       where: {
-        status: 'borrowed',
+        status: "borrowed",
         dueDate: {
-          lt: today
-        }
+          lt: today,
+        },
       },
       include: {
         user: {
@@ -97,8 +97,8 @@ router.get('/overdue', isLibrarian, async (_req, res) => {
             email: true,
             fullName: true,
             name: true,
-            phone: true
-          }
+            phone: true,
+          },
         },
         book: {
           select: {
@@ -107,48 +107,50 @@ router.get('/overdue', isLibrarian, async (_req, res) => {
             isbn: true,
             author: {
               select: {
-                name: true
-              }
-            }
-          }
-        }
+                name: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
-        dueDate: 'asc'
-      }
+        dueDate: "asc",
+      },
     });
 
-    const loansWithFines = overdueLoans.map(loan => {
-      const daysOverdue = Math.floor((today - loan.dueDate) / (1000 * 60 * 60 * 24));
+    const loansWithFines = overdueLoans.map((loan) => {
+      const daysOverdue = Math.floor(
+        (today - loan.dueDate) / (1000 * 60 * 60 * 24),
+      );
       const calculatedFine = daysOverdue * FINE_PER_DAY;
       return {
         ...loan,
         daysOverdue,
-        calculatedFine
+        calculatedFine,
       };
     });
 
     res.status(200).json({
       success: true,
       data: loansWithFines,
-      total: loansWithFines.length
+      total: loansWithFines.length,
     });
   } catch (error) {
-    console.error('Get overdue loans error:', error);
-    res.status(500).json({ error: 'Failed to fetch overdue loans' });
+    console.error("Get overdue loans error:", error);
+    res.status(500).json({ error: "Failed to fetch overdue loans" });
   }
 });
 
 // Get my loans (for authenticated members)
-router.get('/my-loans', authenticateToken, async (req, res) => {
+router.get("/my-loans", authenticateToken, async (req, res) => {
   try {
     // Get database user from Supabase auth ID
     const dbUser = await prisma.user.findUnique({
-      where: { authId: req.user.id }
+      where: { authId: req.user.id },
     });
 
     if (!dbUser) {
-      return res.status(404).json({ error: 'User not found in database' });
+      return res.status(404).json({ error: "User not found in database" });
     }
 
     const loans = await prisma.loan.findMany({
@@ -162,58 +164,58 @@ router.get('/my-loans', authenticateToken, async (req, res) => {
             coverUrl: true,
             author: {
               select: {
-                name: true
-              }
-            }
-          }
-        }
+                name: true,
+              },
+            },
+          },
+        },
       },
-      orderBy: { borrowDate: 'desc' }
+      orderBy: { borrowDate: "desc" },
     });
 
     res.status(200).json({
       success: true,
-      data: loans
+      data: loans,
     });
   } catch (error) {
-    console.error('Get my loans error:', error);
-    res.status(500).json({ error: 'Failed to fetch loans' });
+    console.error("Get my loans error:", error);
+    res.status(500).json({ error: "Failed to fetch loans" });
   }
 });
 
 // Member borrow a book (authenticated member can borrow for themselves)
-router.post('/borrow', authenticateToken, async (req, res) => {
+router.post("/borrow", authenticateToken, async (req, res) => {
   try {
     const { bookId, dueDate } = req.body;
 
     // Get database user from Supabase auth ID
     const dbUser = await prisma.user.findUnique({
-      where: { authId: req.user.id }
+      where: { authId: req.user.id },
     });
 
     if (!dbUser) {
-      return res.status(404).json({ error: 'User not found in database' });
+      return res.status(404).json({ error: "User not found in database" });
     }
 
     const userId = dbUser.id;
 
     if (!bookId) {
       return res.status(400).json({
-        error: 'Book ID is required'
+        error: "Book ID is required",
       });
     }
 
     const book = await prisma.book.findUnique({
-      where: { id: parseInt(bookId) }
+      where: { id: parseInt(bookId) },
     });
 
     if (!book) {
-      return res.status(404).json({ error: 'Book not found' });
+      return res.status(404).json({ error: "Book not found" });
     }
 
     if (book.availableCopies <= 0) {
       return res.status(400).json({
-        error: 'No copies available for borrowing'
+        error: "No copies available for borrowing",
       });
     }
 
@@ -221,13 +223,13 @@ router.post('/borrow', authenticateToken, async (req, res) => {
       where: {
         userId,
         bookId: parseInt(bookId),
-        status: { in: ['borrowed', 'overdue'] }
-      }
+        status: { in: ["borrowed", "overdue"] },
+      },
     });
 
     if (activeLoans > 0) {
       return res.status(400).json({
-        error: 'You already have an active loan for this book'
+        error: "You already have an active loan for this book",
       });
     }
 
@@ -241,7 +243,7 @@ router.post('/borrow', authenticateToken, async (req, res) => {
           userId,
           bookId: parseInt(bookId),
           dueDate: calculatedDueDate,
-          status: 'borrowed'
+          status: "borrowed",
         },
         include: {
           user: {
@@ -249,8 +251,8 @@ router.post('/borrow', authenticateToken, async (req, res) => {
               id: true,
               email: true,
               fullName: true,
-              name: true
-            }
+              name: true,
+            },
           },
           book: {
             select: {
@@ -259,61 +261,61 @@ router.post('/borrow', authenticateToken, async (req, res) => {
               isbn: true,
               author: {
                 select: {
-                  name: true
-                }
-              }
-            }
-          }
-        }
+                  name: true,
+                },
+              },
+            },
+          },
+        },
       }),
       prisma.book.update({
         where: { id: parseInt(bookId) },
         data: {
           availableCopies: {
-            decrement: 1
-          }
-        }
-      })
+            decrement: 1,
+          },
+        },
+      }),
     ]);
 
     await prisma.activityLog.create({
       data: {
         userId,
-        action: 'BORROW_BOOK',
-        resourceType: 'LOAN',
-        resourceId: loan.id.toString()
-      }
+        action: "BORROW_BOOK",
+        resourceType: "LOAN",
+        resourceId: loan.id.toString(),
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Book borrowed successfully',
-      data: loan
+      message: "Book borrowed successfully",
+      data: loan,
     });
   } catch (error) {
-    console.error('Borrow book error:', error);
-    res.status(500).json({ error: 'Failed to borrow book' });
+    console.error("Borrow book error:", error);
+    res.status(500).json({ error: "Failed to borrow book" });
   }
 });
 
 // Return a book (members can return their own books)
-router.post('/return', authenticateToken, async (req, res) => {
+router.post("/return", authenticateToken, async (req, res) => {
   try {
     const { loanId } = req.body;
 
     if (!loanId) {
       return res.status(400).json({
-        error: 'Loan ID is required'
+        error: "Loan ID is required",
       });
     }
 
     // Get database user from Supabase auth ID
     const dbUser = await prisma.user.findUnique({
-      where: { authId: req.user.id }
+      where: { authId: req.user.id },
     });
 
     if (!dbUser) {
-      return res.status(404).json({ error: 'User not found in database' });
+      return res.status(404).json({ error: "User not found in database" });
     }
 
     const loan = await prisma.loan.findUnique({
@@ -325,24 +327,30 @@ router.post('/return', authenticateToken, async (req, res) => {
             id: true,
             email: true,
             fullName: true,
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     });
 
     if (!loan) {
-      return res.status(404).json({ error: 'Loan not found' });
+      return res.status(404).json({ error: "Loan not found" });
     }
 
     // Check if user owns this loan (unless they're admin/librarian)
-    if (loan.userId !== dbUser.id && dbUser.role !== 'admin' && dbUser.role !== 'librarian') {
-      return res.status(403).json({ error: 'You can only return your own borrowed books' });
+    if (
+      loan.userId !== dbUser.id &&
+      dbUser.role !== "admin" &&
+      dbUser.role !== "librarian"
+    ) {
+      return res
+        .status(403)
+        .json({ error: "You can only return your own borrowed books" });
     }
 
-    if (loan.status === 'returned') {
+    if (loan.status === "returned") {
       return res.status(400).json({
-        error: 'Book has already been returned'
+        error: "Book has already been returned",
       });
     }
 
@@ -351,7 +359,9 @@ router.post('/return', authenticateToken, async (req, res) => {
     let fine = 0;
 
     if (isOverdue) {
-      const daysOverdue = Math.floor((today - loan.dueDate) / (1000 * 60 * 60 * 24));
+      const daysOverdue = Math.floor(
+        (today - loan.dueDate) / (1000 * 60 * 60 * 24),
+      );
       fine = daysOverdue * FINE_PER_DAY;
     }
 
@@ -360,8 +370,8 @@ router.post('/return', authenticateToken, async (req, res) => {
         where: { id: parseInt(loanId) },
         data: {
           returnDate: today,
-          status: 'returned',
-          fine: fine
+          status: "returned",
+          fine: fine,
         },
         include: {
           user: {
@@ -369,8 +379,8 @@ router.post('/return', authenticateToken, async (req, res) => {
               id: true,
               email: true,
               fullName: true,
-              name: true
-            }
+              name: true,
+            },
           },
           book: {
             select: {
@@ -379,76 +389,79 @@ router.post('/return', authenticateToken, async (req, res) => {
               isbn: true,
               author: {
                 select: {
-                  name: true
-                }
-              }
-            }
-          }
-        }
+                  name: true,
+                },
+              },
+            },
+          },
+        },
       }),
       prisma.book.update({
         where: { id: loan.bookId },
         data: {
           availableCopies: {
-            increment: 1
-          }
-        }
-      })
+            increment: 1,
+          },
+        },
+      }),
     ]);
 
     await prisma.activityLog.create({
       data: {
         userId: loan.userId,
-        action: 'RETURN_BOOK',
-        resourceType: 'LOAN',
-        resourceId: loan.id.toString()
-      }
+        action: "RETURN_BOOK",
+        resourceType: "LOAN",
+        resourceId: loan.id.toString(),
+      },
     });
 
     res.status(200).json({
       success: true,
-      message: fine > 0 ? `Book returned with fine: $${fine}` : 'Book returned successfully',
+      message:
+        fine > 0
+          ? `Book returned with fine: $${fine}`
+          : "Book returned successfully",
       data: {
         loan: updatedLoan,
-        fine
-      }
+        fine,
+      },
     });
   } catch (error) {
-    console.error('Return book error:', error);
-    res.status(500).json({ error: 'Failed to return book' });
+    console.error("Return book error:", error);
+    res.status(500).json({ error: "Failed to return book" });
   }
 });
 
 // Reserve a book
-router.post('/reserve', async (req, res) => {
+router.post("/reserve", async (req, res) => {
   try {
     const { userId, bookId, expiryDate } = req.body;
 
     if (!userId || !bookId) {
       return res.status(400).json({
-        error: 'User ID and Book ID are required'
+        error: "User ID and Book ID are required",
       });
     }
 
     const book = await prisma.book.findUnique({
-      where: { id: bookId }
+      where: { id: bookId },
     });
 
     if (!book) {
-      return res.status(404).json({ error: 'Book not found' });
+      return res.status(404).json({ error: "Book not found" });
     }
 
     const existingReservation = await prisma.reservation.findFirst({
       where: {
         userId,
         bookId,
-        status: 'pending'
-      }
+        status: "pending",
+      },
     });
 
     if (existingReservation) {
       return res.status(400).json({
-        error: 'You already have a pending reservation for this book'
+        error: "You already have a pending reservation for this book",
       });
     }
 
@@ -461,7 +474,7 @@ router.post('/reserve', async (req, res) => {
         userId,
         bookId,
         expiryDate: calculatedExpiryDate,
-        status: 'pending'
+        status: "pending",
       },
       include: {
         user: {
@@ -469,8 +482,8 @@ router.post('/reserve', async (req, res) => {
             id: true,
             email: true,
             fullName: true,
-            name: true
-          }
+            name: true,
+          },
         },
         book: {
           select: {
@@ -479,35 +492,35 @@ router.post('/reserve', async (req, res) => {
             isbn: true,
             author: {
               select: {
-                name: true
-              }
-            }
-          }
-        }
-      }
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     await prisma.activityLog.create({
       data: {
         userId,
-        action: 'RESERVE_BOOK',
-        details: `Reserved book: ${book.title}`
-      }
+        action: "RESERVE_BOOK",
+        details: `Reserved book: ${book.title}`,
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Book reserved successfully',
-      data: reservation
+      message: "Book reserved successfully",
+      data: reservation,
     });
   } catch (error) {
-    console.error('Reserve book error:', error);
-    res.status(500).json({ error: 'Failed to reserve book' });
+    console.error("Reserve book error:", error);
+    res.status(500).json({ error: "Failed to reserve book" });
   }
 });
 
 // Get user reservations
-router.get('/reservations/:userId', async (req, res) => {
+router.get("/reservations/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const { status } = req.query;
@@ -526,30 +539,30 @@ router.get('/reservations/:userId', async (req, res) => {
             availableCopies: true,
             author: {
               select: {
-                name: true
-              }
-            }
-          }
-        }
+                name: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
-        reservedDate: 'desc'
-      }
+        reservedDate: "desc",
+      },
     });
 
     res.status(200).json({
       success: true,
       data: reservations,
-      total: reservations.length
+      total: reservations.length,
     });
   } catch (error) {
-    console.error('Get reservations error:', error);
-    res.status(500).json({ error: 'Failed to fetch reservations' });
+    console.error("Get reservations error:", error);
+    res.status(500).json({ error: "Failed to fetch reservations" });
   }
 });
 
 // Cancel reservation
-router.delete('/reservations/:id', async (req, res) => {
+router.delete("/reservations/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -558,38 +571,38 @@ router.delete('/reservations/:id', async (req, res) => {
       include: {
         book: {
           select: {
-            title: true
-          }
-        }
-      }
+            title: true,
+          },
+        },
+      },
     });
 
     if (!reservation) {
-      return res.status(404).json({ error: 'Reservation not found' });
+      return res.status(404).json({ error: "Reservation not found" });
     }
 
     await prisma.reservation.update({
       where: { id },
       data: {
-        status: 'cancelled'
-      }
+        status: "cancelled",
+      },
     });
 
     await prisma.activityLog.create({
       data: {
         userId: reservation.userId,
-        action: 'CANCEL_RESERVATION',
-        details: `Cancelled reservation for: ${reservation.book.title}`
-      }
+        action: "CANCEL_RESERVATION",
+        details: `Cancelled reservation for: ${reservation.book.title}`,
+      },
     });
 
     res.status(200).json({
       success: true,
-      message: 'Reservation cancelled successfully'
+      message: "Reservation cancelled successfully",
     });
   } catch (error) {
-    console.error('Cancel reservation error:', error);
-    res.status(500).json({ error: 'Failed to cancel reservation' });
+    console.error("Cancel reservation error:", error);
+    res.status(500).json({ error: "Failed to cancel reservation" });
   }
 });
 

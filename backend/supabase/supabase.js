@@ -1,19 +1,21 @@
-import { createClient } from '@supabase/supabase-js';
-import 'dotenv/config';
+import { createClient } from "@supabase/supabase-js";
+import "dotenv/config";
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://your-supabase-url.supabase.co';
-const supabaseKey = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
+const supabaseUrl =
+  process.env.SUPABASE_URL || "https://your-supabase-url.supabase.co";
+const supabaseKey = process.env.SUPABASE_ANON_KEY || "your-anon-key";
 
 // Check if we should use mock auth
-const useMockAuth = process.env.MOCK_AUTH === 'true' || 
-                   supabaseUrl === 'https://your-supabase-url.supabase.co' ||
-                   supabaseKey === 'your-anon-key';
+const useMockAuth =
+  process.env.MOCK_AUTH === "true" ||
+  supabaseUrl === "https://your-supabase-url.supabase.co" ||
+  supabaseKey === "your-anon-key";
 
 let supabase;
 
 if (useMockAuth) {
-  console.log('⚠️  Using MOCK Supabase Auth (Local Development Mode) ⚠️');
-  
+  console.log("⚠️  Using MOCK Supabase Auth (Local Development Mode) ⚠️");
+
   // Mock Supabase Client
   supabase = {
     auth: {
@@ -25,7 +27,7 @@ if (useMockAuth) {
               id: `mock-user-${Date.now()}`,
               email,
               user_metadata: options?.data || {},
-              aud: 'authenticated',
+              aud: "authenticated",
               created_at: new Date().toISOString(),
             },
             session: {
@@ -34,10 +36,10 @@ if (useMockAuth) {
               user: {
                 id: `mock-user-${Date.now()}`,
                 email,
-              }
-            }
+              },
+            },
           },
-          error: null
+          error: null,
         };
       },
       signInWithPassword: async ({ email, password }) => {
@@ -46,45 +48,46 @@ if (useMockAuth) {
         if (!email || !password) {
           return {
             data: { user: null, session: null },
-            error: { message: 'Email and password are required' }
+            error: { message: "Email and password are required" },
           };
         }
-        
+
         return {
           data: {
             user: {
-              id: `mock-user-${email.replace(/[^a-zA-Z0-9]/g, '-')}`, // Stable ID for same email
+              id: `mock-user-${email.replace(/[^a-zA-Z0-9]/g, "-")}`, // Stable ID for same email
               email,
-              aud: 'authenticated',
+              aud: "authenticated",
             },
             session: {
               access_token: `mock-access-token-${Date.now()}`,
               refresh_token: `mock-refresh-token-${Date.now()}`,
-            }
+            },
           },
-          error: null
+          error: null,
         };
       },
       signOut: async () => {
-        console.log('[Mock Auth] Signing out');
+        console.log("[Mock Auth] Signing out");
         return { error: null };
       },
       getUser: async (token) => {
         // For mock purposes, we'll just return a generic user if a token exists
-        if (!token) return { data: { user: null }, error: { message: 'No token' } };
-        
+        if (!token)
+          return { data: { user: null }, error: { message: "No token" } };
+
         return {
           data: {
             user: {
               id: `mock-user-current`,
-              email: 'mock@example.com',
-              aud: 'authenticated',
-            }
+              email: "mock@example.com",
+              aud: "authenticated",
+            },
           },
-          error: null
+          error: null,
         };
-      }
-    }
+      },
+    },
   };
 } else {
   supabase = createClient(supabaseUrl, supabaseKey);

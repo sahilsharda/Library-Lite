@@ -1,24 +1,24 @@
-import { apiClient } from './client';
+import { apiClient } from "./client";
 
 export const paymentsAPI = {
   // Get all payments
   getAllPayments: () => {
-    return apiClient.get('/api/payments');
+    return apiClient.get("/payments");
   },
 
   // Get user's payments
   getUserPayments: (userId) => {
-    return apiClient.get(`/api/payments/user/${userId}`);
+    return apiClient.get(`/payments/user/${userId}`);
   },
 
   // Create a new payment
   createPayment: (paymentData) => {
-    return apiClient.post('/api/payments', paymentData);
+    return apiClient.post("/payments", paymentData);
   },
 
   // Update payment status
   updatePaymentStatus: (id, status) => {
-    return apiClient.put(`/api/payments/${id}/status`, { status });
+    return apiClient.put(`/payments/${id}/status`, { status });
   },
 };
 

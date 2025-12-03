@@ -1,11 +1,11 @@
-import express from 'express';
-import prisma from '../prisma/prismaClient.js';
-import { isLibrarian, isAdmin } from '../middleware/roleCheck.js';
+import express from "express";
+import prisma from "../prisma/prismaClient.js";
+import { isLibrarian, isAdmin } from "../middleware/roleCheck.js";
 
 const router = express.Router();
 
 // Get all books with search and filters
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const {
       search,
@@ -15,8 +15,8 @@ router.get('/', async (req, res) => {
       available,
       page = 1,
       limit = 20,
-      sortBy = 'createdAt',
-      sortOrder = 'desc'
+      sortBy = "createdAt",
+      sortOrder = "desc",
     } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -26,10 +26,10 @@ router.get('/', async (req, res) => {
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { isbn: { contains: search, mode: 'insensitive' } },
-        { publisher: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
+        { title: { contains: search, mode: "insensitive" } },
+        { isbn: { contains: search, mode: "insensitive" } },
+        { publisher: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
       ];
     }
 
@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
 
     if (author) {
       where.author = {
-        name: { contains: author, mode: 'insensitive' }
+        name: { contains: author, mode: "insensitive" },
       };
     }
 
@@ -47,7 +47,7 @@ router.get('/', async (req, res) => {
       where.language = language;
     }
 
-    if (available === 'true') {
+    if (available === "true") {
       where.availableCopies = { gt: 0 };
     }
 
@@ -59,15 +59,15 @@ router.get('/', async (req, res) => {
             select: {
               id: true,
               name: true,
-              bio: true
-            }
-          }
+              bio: true,
+            },
+          },
         },
         skip,
         take,
-        orderBy: { [sortBy]: sortOrder }
+        orderBy: { [sortBy]: sortOrder },
       }),
-      prisma.book.count({ where })
+      prisma.book.count({ where }),
     ]);
 
     res.status(200).json({
@@ -77,17 +77,17 @@ router.get('/', async (req, res) => {
         total,
         page: parseInt(page),
         limit: parseInt(limit),
-        totalPages: Math.ceil(total / parseInt(limit))
-      }
+        totalPages: Math.ceil(total / parseInt(limit)),
+      },
     });
   } catch (error) {
-    console.error('Get books error:', error);
-    res.status(500).json({ error: 'Failed to fetch books' });
+    console.error("Get books error:", error);
+    res.status(500).json({ error: "Failed to fetch books" });
   }
 });
 
 // Get book by ID
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -98,11 +98,11 @@ router.get('/:id', async (req, res) => {
           select: {
             id: true,
             name: true,
-            bio: true
-          }
+            bio: true,
+          },
         },
         loans: {
-          where: { status: 'borrowed' },
+          where: { status: "borrowed" },
           select: {
             id: true,
             borrowDate: true,
@@ -111,30 +111,30 @@ router.get('/:id', async (req, res) => {
               select: {
                 id: true,
                 fullName: true,
-                email: true
-              }
-            }
-          }
-        }
-      }
+                email: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!book) {
-      return res.status(404).json({ error: 'Book not found' });
+      return res.status(404).json({ error: "Book not found" });
     }
 
     res.status(200).json({
       success: true,
-      data: book
+      data: book,
     });
   } catch (error) {
-    console.error('Get book error:', error);
-    res.status(500).json({ error: 'Failed to fetch book' });
+    console.error("Get book error:", error);
+    res.status(500).json({ error: "Failed to fetch book" });
   }
 });
 
 // Create new book
-router.post('/', isLibrarian, async (req, res) => {
+router.post("/", isLibrarian, async (req, res) => {
   try {
     const {
       title,
@@ -149,22 +149,22 @@ router.post('/', isLibrarian, async (req, res) => {
       totalCopies,
       coverUrl,
       description,
-      tags
+      tags,
     } = req.body;
 
     if (!title || !isbn || !authorId) {
       return res.status(400).json({
-        error: 'Title, ISBN, and Author ID are required'
+        error: "Title, ISBN, and Author ID are required",
       });
     }
 
     const existingBook = await prisma.book.findUnique({
-      where: { isbn }
+      where: { isbn },
     });
 
     if (existingBook) {
       return res.status(400).json({
-        error: 'Book with this ISBN already exists'
+        error: "Book with this ISBN already exists",
       });
     }
 
@@ -178,33 +178,33 @@ router.post('/', isLibrarian, async (req, res) => {
         publisher,
         publishedYear: publishedYear ? parseInt(publishedYear) : null,
         edition,
-        language: language || 'English',
+        language: language || "English",
         pages: pages ? parseInt(pages) : null,
         genre: genre || [],
         totalCopies: copies,
         availableCopies: copies,
         coverUrl,
         description,
-        tags: tags || []
+        tags: tags || [],
       },
       include: {
-        author: true
-      }
+        author: true,
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Book created successfully',
-      data: book
+      message: "Book created successfully",
+      data: book,
     });
   } catch (error) {
-    console.error('Create book error:', error);
-    res.status(500).json({ error: 'Failed to create book' });
+    console.error("Create book error:", error);
+    res.status(500).json({ error: "Failed to create book" });
   }
 });
 
 // Update book
-router.put('/:id', isLibrarian, async (req, res) => {
+router.put("/:id", isLibrarian, async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -221,24 +221,24 @@ router.put('/:id', isLibrarian, async (req, res) => {
       availableCopies,
       coverUrl,
       description,
-      tags
+      tags,
     } = req.body;
 
     const existingBook = await prisma.book.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(id) },
     });
 
     if (!existingBook) {
-      return res.status(404).json({ error: 'Book not found' });
+      return res.status(404).json({ error: "Book not found" });
     }
 
     if (isbn && isbn !== existingBook.isbn) {
       const duplicateIsbn = await prisma.book.findUnique({
-        where: { isbn }
+        where: { isbn },
       });
       if (duplicateIsbn) {
         return res.status(400).json({
-          error: 'Another book with this ISBN already exists'
+          error: "Another book with this ISBN already exists",
         });
       }
     }
@@ -248,13 +248,16 @@ router.put('/:id', isLibrarian, async (req, res) => {
     if (isbn !== undefined) updateData.isbn = isbn;
     if (authorId !== undefined) updateData.authorId = parseInt(authorId);
     if (publisher !== undefined) updateData.publisher = publisher;
-    if (publishedYear !== undefined) updateData.publishedYear = parseInt(publishedYear);
+    if (publishedYear !== undefined)
+      updateData.publishedYear = parseInt(publishedYear);
     if (edition !== undefined) updateData.edition = edition;
     if (language !== undefined) updateData.language = language;
     if (pages !== undefined) updateData.pages = parseInt(pages);
     if (genre !== undefined) updateData.genre = genre;
-    if (totalCopies !== undefined) updateData.totalCopies = parseInt(totalCopies);
-    if (availableCopies !== undefined) updateData.availableCopies = parseInt(availableCopies);
+    if (totalCopies !== undefined)
+      updateData.totalCopies = parseInt(totalCopies);
+    if (availableCopies !== undefined)
+      updateData.availableCopies = parseInt(availableCopies);
     if (coverUrl !== undefined) updateData.coverUrl = coverUrl;
     if (description !== undefined) updateData.description = description;
     if (tags !== undefined) updateData.tags = tags;
@@ -263,23 +266,23 @@ router.put('/:id', isLibrarian, async (req, res) => {
       where: { id: parseInt(id) },
       data: updateData,
       include: {
-        author: true
-      }
+        author: true,
+      },
     });
 
     res.status(200).json({
       success: true,
-      message: 'Book updated successfully',
-      data: book
+      message: "Book updated successfully",
+      data: book,
     });
   } catch (error) {
-    console.error('Update book error:', error);
-    res.status(500).json({ error: 'Failed to update book' });
+    console.error("Update book error:", error);
+    res.status(500).json({ error: "Failed to update book" });
   }
 });
 
 // Delete book
-router.delete('/:id', isAdmin, async (req, res) => {
+router.delete("/:id", isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -288,33 +291,33 @@ router.delete('/:id', isAdmin, async (req, res) => {
       include: {
         loans: {
           where: {
-            status: { in: ['borrowed', 'overdue'] }
-          }
-        }
-      }
+            status: { in: ["borrowed", "overdue"] },
+          },
+        },
+      },
     });
 
     if (!book) {
-      return res.status(404).json({ error: 'Book not found' });
+      return res.status(404).json({ error: "Book not found" });
     }
 
     if (book.loans.length > 0) {
       return res.status(400).json({
-        error: 'Cannot delete book with active loans'
+        error: "Cannot delete book with active loans",
       });
     }
 
     await prisma.book.delete({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(id) },
     });
 
     res.status(200).json({
       success: true,
-      message: 'Book deleted successfully'
+      message: "Book deleted successfully",
     });
   } catch (error) {
-    console.error('Delete book error:', error);
-    res.status(500).json({ error: 'Failed to delete book' });
+    console.error("Delete book error:", error);
+    res.status(500).json({ error: "Failed to delete book" });
   }
 });
 

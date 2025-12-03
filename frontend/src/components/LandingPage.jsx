@@ -1,7 +1,16 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { FiSearch, FiShoppingCart, FiUser, FiAward, FiRotateCcw, FiTruck, FiStar, FiArrowRight } from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext';
-import './LandingPage.css';
+import { Link, useNavigate } from "react-router-dom";
+import {
+  FiSearch,
+  FiShoppingCart,
+  FiUser,
+  FiAward,
+  FiRotateCcw,
+  FiTruck,
+  FiStar,
+  FiArrowRight,
+} from "react-icons/fi";
+import { useAuth } from "../context/AuthContext";
+import "./LandingPage.css";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -12,31 +21,143 @@ const LandingPage = () => {
   };
 
   const featuredBooks = [
-    { id: 1, title: 'All Of Twenty Nine', author: 'Ancy Johny', price: 65.99, rating: 4, image: 'fb/pb1.jpg' },
-    { id: 2, title: 'To Kill a Mockingbird', author: 'Harper Lee', price: 45.99, rating: 5, image: 'fb/pb2.jpeg' },
-    { id: 3, title: 'Pride and Prejudice', author: 'Jane Austen', price: 58.99, rating: 4, image: 'fb/pb3.jpg' },
-    { id: 4, title: 'The Catcher in the Rye', author: 'J. D. Salinger', price: 55.99, rating: 4, image: 'fb/pb4.jpeg' },
+    {
+      id: 1,
+      title: "All Of Twenty Nine",
+      author: "Ancy Johny",
+      price: 65.99,
+      rating: 4,
+      image: "fb/pb1.jpg",
+    },
+    {
+      id: 2,
+      title: "To Kill a Mockingbird",
+      author: "Harper Lee",
+      price: 45.99,
+      rating: 5,
+      image: "fb/pb2.jpeg",
+    },
+    {
+      id: 3,
+      title: "Pride and Prejudice",
+      author: "Jane Austen",
+      price: 58.99,
+      rating: 4,
+      image: "fb/pb3.jpg",
+    },
+    {
+      id: 4,
+      title: "The Catcher in the Rye",
+      author: "J. D. Salinger",
+      price: 55.99,
+      rating: 4,
+      image: "fb/pb4.jpeg",
+    },
   ];
 
   const bestCollection = [
-    { id: 11, title: 'The City of Brass', author: 'S.A. Chakraborty', price: 85.99, rating: 5, image: 'bc/bc1.jpg' },
-    { id: 12, title: 'Harry Potter', author: 'J.K Rowling', price: 55.99, rating: 4, image: 'bc/bc2.jpg' },
-    { id: 13, title: 'I Am Number Four', author: 'Pittacus Lore', price: 85.99, rating: 4, image: 'bc/bc3.jpg' },
-    { id: 14, title: 'The 100', author: 'Kass Morgan', price: 95.99, rating: 5, image: 'bc/bc4.jpg' },
+    {
+      id: 11,
+      title: "The City of Brass",
+      author: "S.A. Chakraborty",
+      price: 85.99,
+      rating: 5,
+      image: "bc/bc1.jpg",
+    },
+    {
+      id: 12,
+      title: "Harry Potter",
+      author: "J.K Rowling",
+      price: 55.99,
+      rating: 4,
+      image: "bc/bc2.jpg",
+    },
+    {
+      id: 13,
+      title: "I Am Number Four",
+      author: "Pittacus Lore",
+      price: 85.99,
+      rating: 4,
+      image: "bc/bc3.jpg",
+    },
+    {
+      id: 14,
+      title: "The 100",
+      author: "Kass Morgan",
+      price: 95.99,
+      rating: 5,
+      image: "bc/bc4.jpg",
+    },
   ];
 
   const bestSelling = [
-    { id: 21, title: 'A Tale of Two Cities', author: 'Charles Dickens', price: 85.99, rating: 4, image: 'bs/bs1.jpg' },
-    { id: 22, title: 'The Little Prince', author: 'Antoine de Saint-Exupéry', price: 65.99, rating: 4, image: 'bs/bs2.jpeg' },
-    { id: 23, title: 'The Alchemist', author: 'Paulo Coelho', price: 75.99, rating: 4, image: 'bs/bs3.jpg' },
-    { id: 24, title: 'And Then There Were None', author: 'Agatha Christie', price: 55.99, rating: 5, image: 'bs/bs4.jpg' },
+    {
+      id: 21,
+      title: "A Tale of Two Cities",
+      author: "Charles Dickens",
+      price: 85.99,
+      rating: 4,
+      image: "bs/bs1.jpg",
+    },
+    {
+      id: 22,
+      title: "The Little Prince",
+      author: "Antoine de Saint-Exupéry",
+      price: 65.99,
+      rating: 4,
+      image: "bs/bs2.jpeg",
+    },
+    {
+      id: 23,
+      title: "The Alchemist",
+      author: "Paulo Coelho",
+      price: 75.99,
+      rating: 4,
+      image: "bs/bs3.jpg",
+    },
+    {
+      id: 24,
+      title: "And Then There Were None",
+      author: "Agatha Christie",
+      price: 55.99,
+      rating: 5,
+      image: "bs/bs4.jpg",
+    },
   ];
 
   const newArrivals = [
-    { id: 31, title: 'Great Big Beautiful Life', author: 'Emily Henry', price: 72.99, rating: 5, image: 'na/na1.jpg' },
-    { id: 32, title: 'In Your Dreams', author: 'Sarah Adams', price: 68.99, rating: 5, image: 'na/na2.jpg' },
-    { id: 33, title: 'Brimstone', author: 'Callie Hart', price: 78.99, rating: 4, image: 'na/na3.jpg' },
-    { id: 34, title: 'Watch Me', author: 'Tahereh Mafi', price: 82.99, rating: 5, image: 'na/na4.jpg' },
+    {
+      id: 31,
+      title: "Great Big Beautiful Life",
+      author: "Emily Henry",
+      price: 72.99,
+      rating: 5,
+      image: "na/na1.jpg",
+    },
+    {
+      id: 32,
+      title: "In Your Dreams",
+      author: "Sarah Adams",
+      price: 68.99,
+      rating: 5,
+      image: "na/na2.jpg",
+    },
+    {
+      id: 33,
+      title: "Brimstone",
+      author: "Callie Hart",
+      price: 78.99,
+      rating: 4,
+      image: "na/na3.jpg",
+    },
+    {
+      id: 34,
+      title: "Watch Me",
+      author: "Tahereh Mafi",
+      price: 82.99,
+      rating: 5,
+      image: "na/na4.jpg",
+    },
   ];
 
   return (
@@ -44,7 +165,9 @@ const LandingPage = () => {
       {/* Header */}
       <header className="header">
         <div className="container">
-          <Link to="/" className="logo">Library Lite</Link>
+          <Link to="/" className="logo">
+            Library Lite
+          </Link>
           <nav className="nav">
             <Link to="/">Home</Link>
             <Link to="/shop">Shop</Link>
@@ -62,7 +185,7 @@ const LandingPage = () => {
               <button
                 type="button"
                 className="dashboard-btn"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate("/dashboard")}
               >
                 <FiUser size={18} />
                 <span>Dashboard</span>
@@ -71,7 +194,7 @@ const LandingPage = () => {
               <button
                 type="button"
                 className="login-btn"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate("/auth")}
               >
                 <FiUser size={18} />
                 <span>Login</span>
@@ -88,10 +211,11 @@ const LandingPage = () => {
             <div className="hero-text">
               <h1>Experience our New Exclusive Books</h1>
               <p>
-                Dive into a curated collection of timeless classics, contemporary bestsellers,
-                and hidden literary gems. Whether you're seeking knowledge, adventure, or
-                inspiration, our exclusive selection brings the world's finest literature
-                right to your doorstep. Discover stories that transform, educate, and
+                Dive into a curated collection of timeless classics,
+                contemporary bestsellers, and hidden literary gems. Whether
+                you're seeking knowledge, adventure, or inspiration, our
+                exclusive selection brings the world's finest literature right
+                to your doorstep. Discover stories that transform, educate, and
                 captivate readers of all ages.
               </p>
               {user ? (
@@ -152,7 +276,9 @@ const LandingPage = () => {
         <div className="container">
           <div className="section-header">
             <h2>Our Popular Books</h2>
-            <Link to="/shop" className="see-all">See all →</Link>
+            <Link to="/shop" className="see-all">
+              See all →
+            </Link>
           </div>
           <div className="books-grid-4">
             {featuredBooks.map((book) => (
@@ -168,8 +294,8 @@ const LandingPage = () => {
                       <FiStar
                         key={`${book.id}-star-${i}`}
                         size={14}
-                        fill={i < book.rating ? '#fbbf24' : 'none'}
-                        stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                        fill={i < book.rating ? "#fbbf24" : "none"}
+                        stroke={i < book.rating ? "#fbbf24" : "#d1d5db"}
                       />
                     ))}
                   </div>
@@ -195,7 +321,9 @@ const LandingPage = () => {
         <div className="container">
           <div className="section-header">
             <h2>Best Collection</h2>
-            <Link to="/shop" className="see-all">See all →</Link>
+            <Link to="/shop" className="see-all">
+              See all →
+            </Link>
           </div>
           <div className="books-grid-4">
             {bestCollection.map((book) => (
@@ -211,8 +339,8 @@ const LandingPage = () => {
                       <FiStar
                         key={`${book.id}-star-${i}`}
                         size={14}
-                        fill={i < book.rating ? '#fbbf24' : 'none'}
-                        stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                        fill={i < book.rating ? "#fbbf24" : "none"}
+                        stroke={i < book.rating ? "#fbbf24" : "#d1d5db"}
                       />
                     ))}
                   </div>
@@ -238,7 +366,9 @@ const LandingPage = () => {
         <div className="container">
           <div className="section-header">
             <h2>Our Best Selling Books</h2>
-            <Link to="/shop" className="see-all">See all →</Link>
+            <Link to="/shop" className="see-all">
+              See all →
+            </Link>
           </div>
           <div className="books-grid-4">
             {bestSelling.map((book) => (
@@ -254,8 +384,8 @@ const LandingPage = () => {
                       <FiStar
                         key={`${book.id}-star-${i}`}
                         size={14}
-                        fill={i < book.rating ? '#fbbf24' : 'none'}
-                        stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                        fill={i < book.rating ? "#fbbf24" : "none"}
+                        stroke={i < book.rating ? "#fbbf24" : "#d1d5db"}
                       />
                     ))}
                   </div>
@@ -281,7 +411,9 @@ const LandingPage = () => {
         <div className="container">
           <div className="section-header">
             <h2>New Arrivals</h2>
-            <Link to="/shop" className="see-all">See all →</Link>
+            <Link to="/shop" className="see-all">
+              See all →
+            </Link>
           </div>
           <div className="books-grid-4">
             {newArrivals.map((book) => (
@@ -297,8 +429,8 @@ const LandingPage = () => {
                       <FiStar
                         key={`${book.id}-star-${i}`}
                         size={14}
-                        fill={i < book.rating ? '#fbbf24' : 'none'}
-                        stroke={i < book.rating ? '#fbbf24' : '#d1d5db'}
+                        fill={i < book.rating ? "#fbbf24" : "none"}
+                        stroke={i < book.rating ? "#fbbf24" : "#d1d5db"}
                       />
                     ))}
                   </div>
@@ -326,37 +458,69 @@ const LandingPage = () => {
             <div className="footer-section">
               <h3>SHOP WITH US</h3>
               <ul>
-                <li><Link to="/books">All Books</Link></li>
-                <li><Link to="/bestsellers">Bestsellers</Link></li>
-                <li><Link to="/new">New Arrivals</Link></li>
-                <li><Link to="/ebooks">eBooks</Link></li>
+                <li>
+                  <Link to="/books">All Books</Link>
+                </li>
+                <li>
+                  <Link to="/bestsellers">Bestsellers</Link>
+                </li>
+                <li>
+                  <Link to="/new">New Arrivals</Link>
+                </li>
+                <li>
+                  <Link to="/ebooks">eBooks</Link>
+                </li>
               </ul>
             </div>
             <div className="footer-section">
               <h3>SHOP POPULAR</h3>
               <ul>
-                <li><Link to="/fiction">Fiction</Link></li>
-                <li><Link to="/nonfiction">Non-Fiction</Link></li>
-                <li><Link to="/children">Children's Books</Link></li>
-                <li><Link to="/textbooks">Textbooks</Link></li>
+                <li>
+                  <Link to="/fiction">Fiction</Link>
+                </li>
+                <li>
+                  <Link to="/nonfiction">Non-Fiction</Link>
+                </li>
+                <li>
+                  <Link to="/children">Children's Books</Link>
+                </li>
+                <li>
+                  <Link to="/textbooks">Textbooks</Link>
+                </li>
               </ul>
             </div>
             <div className="footer-section">
               <h3>ABOUT</h3>
               <ul>
-                <li><Link to="/about">About Us</Link></li>
-                <li><Link to="/contact">Contact</Link></li>
-                <li><Link to="/privacy">Privacy Policy</Link></li>
-                <li><Link to="/terms">Terms & Conditions</Link></li>
+                <li>
+                  <Link to="/about">About Us</Link>
+                </li>
+                <li>
+                  <Link to="/contact">Contact</Link>
+                </li>
+                <li>
+                  <Link to="/privacy">Privacy Policy</Link>
+                </li>
+                <li>
+                  <Link to="/terms">Terms & Conditions</Link>
+                </li>
               </ul>
             </div>
             <div className="footer-section">
               <h3>HELP</h3>
               <ul>
-                <li><Link to="/shipping">Shipping Info</Link></li>
-                <li><Link to="/returns">Returns</Link></li>
-                <li><Link to="/faq">FAQ</Link></li>
-                <li><Link to="/support">Support</Link></li>
+                <li>
+                  <Link to="/shipping">Shipping Info</Link>
+                </li>
+                <li>
+                  <Link to="/returns">Returns</Link>
+                </li>
+                <li>
+                  <Link to="/faq">FAQ</Link>
+                </li>
+                <li>
+                  <Link to="/support">Support</Link>
+                </li>
               </ul>
             </div>
           </div>

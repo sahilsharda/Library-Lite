@@ -1,10 +1,10 @@
-import { apiClient } from './client';
+import { apiClient } from "./client";
 
 export const booksAPI = {
   // Get all books with optional search and filter
   getAllBooks: (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
-    return apiClient.get(`/books${queryString ? `?${queryString}` : ''}`);
+    return apiClient.get(`/books${queryString ? `?${queryString}` : ""}`);
   },
 
   // Get a single book by ID
@@ -14,7 +14,7 @@ export const booksAPI = {
 
   // Create a new book (admin only)
   createBook: (bookData) => {
-    return apiClient.post('/books', bookData);
+    return apiClient.post("/books", bookData);
   },
 
   // Update a book by ID (admin only)

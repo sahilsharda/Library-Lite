@@ -1,10 +1,10 @@
 // Email notification service using Nodemailer
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 // Create transporter (configure with your SMTP settings)
 const createTransporter = () => {
   return nodemailer.createTransporter({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
     port: parseInt(process.env.SMTP_PORT) || 587,
     secure: false, // true for 465, false for other ports
     auth: {
@@ -17,9 +17,9 @@ const createTransporter = () => {
 // Email templates
 const templates = {
   bookDue: (memberEmail, bookTitle, dueDate) => ({
-    from: process.env.SMTP_FROM || 'library@example.com',
+    from: process.env.SMTP_FROM || "library@example.com",
     to: memberEmail,
-    subject: 'Book Due Reminder - Library Lite',
+    subject: "Book Due Reminder - Library Lite",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #d97706;">Book Due Reminder</h2>
@@ -35,9 +35,9 @@ const templates = {
   }),
 
   bookOverdue: (memberEmail, bookTitle, daysOverdue, fine) => ({
-    from: process.env.SMTP_FROM || 'library@example.com',
+    from: process.env.SMTP_FROM || "library@example.com",
     to: memberEmail,
-    subject: 'Overdue Book Notice - Library Lite',
+    subject: "Overdue Book Notice - Library Lite",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #dc2626;">Overdue Book Notice</h2>
@@ -54,9 +54,9 @@ const templates = {
   }),
 
   bookReserved: (memberEmail, bookTitle) => ({
-    from: process.env.SMTP_FROM || 'library@example.com',
+    from: process.env.SMTP_FROM || "library@example.com",
     to: memberEmail,
-    subject: 'Book Reserved Successfully - Library Lite',
+    subject: "Book Reserved Successfully - Library Lite",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #059669;">Book Reserved!</h2>
@@ -72,9 +72,9 @@ const templates = {
   }),
 
   bookAvailable: (memberEmail, bookTitle, expiryDate) => ({
-    from: process.env.SMTP_FROM || 'library@example.com',
+    from: process.env.SMTP_FROM || "library@example.com",
     to: memberEmail,
-    subject: 'Reserved Book Available - Library Lite',
+    subject: "Reserved Book Available - Library Lite",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #059669;">Your Reserved Book is Available!</h2>
@@ -90,9 +90,9 @@ const templates = {
   }),
 
   membershipExpiring: (memberEmail, expiryDate) => ({
-    from: process.env.SMTP_FROM || 'library@example.com',
+    from: process.env.SMTP_FROM || "library@example.com",
     to: memberEmail,
-    subject: 'Membership Expiring Soon - Library Lite',
+    subject: "Membership Expiring Soon - Library Lite",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #d97706;">Membership Expiring Soon</h2>
@@ -117,7 +117,7 @@ export const sendEmail = async (type, data) => {
   try {
     // Check if SMTP is configured
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      console.warn('SMTP not configured. Email not sent:', type);
+      console.warn("SMTP not configured. Email not sent:", type);
       return false;
     }
 
@@ -134,7 +134,7 @@ export const sendEmail = async (type, data) => {
     console.log(`Email sent successfully: ${type} to ${mailOptions.to}`);
     return true;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error("Error sending email:", error);
     return false;
   }
 };
@@ -145,16 +145,18 @@ export const sendEmail = async (type, data) => {
  */
 export const sendDueReminders = async (loans) => {
   const results = await Promise.allSettled(
-    loans.map(loan =>
-      sendEmail('bookDue', {
+    loans.map((loan) =>
+      sendEmail("bookDue", {
         memberEmail: loan.user.email,
         bookTitle: loan.book.title,
         dueDate: loan.dueDate,
-      })
-    )
+      }),
+    ),
   );
 
-  const sent = results.filter(r => r.status === 'fulfilled' && r.value).length;
+  const sent = results.filter(
+    (r) => r.status === "fulfilled" && r.value,
+  ).length;
   console.log(`Sent ${sent}/${loans.length} due date reminders`);
   return sent;
 };
@@ -165,18 +167,22 @@ export const sendDueReminders = async (loans) => {
  */
 export const sendOverdueNotices = async (loans) => {
   const results = await Promise.allSettled(
-    loans.map(loan => {
-      const daysOverdue = Math.ceil((Date.now() - new Date(loan.dueDate)) / (1000 * 60 * 60 * 24));
-      return sendEmail('bookOverdue', {
+    loans.map((loan) => {
+      const daysOverdue = Math.ceil(
+        (Date.now() - new Date(loan.dueDate)) / (1000 * 60 * 60 * 24),
+      );
+      return sendEmail("bookOverdue", {
         memberEmail: loan.user.email,
         bookTitle: loan.book.title,
         daysOverdue,
         fine: loan.fine || 0,
       });
-    })
+    }),
   );
 
-  const sent = results.filter(r => r.status === 'fulfilled' && r.value).length;
+  const sent = results.filter(
+    (r) => r.status === "fulfilled" && r.value,
+  ).length;
   console.log(`Sent ${sent}/${loans.length} overdue notices`);
   return sent;
 };
@@ -186,7 +192,7 @@ export const sendOverdueNotices = async (loans) => {
  * @param {Object} reservation - Reservation object with user and book
  */
 export const sendReservationConfirmation = async (reservation) => {
-  return await sendEmail('bookReserved', {
+  return await sendEmail("bookReserved", {
     memberEmail: reservation.user.email,
     bookTitle: reservation.book.title,
   });
@@ -197,7 +203,7 @@ export const sendReservationConfirmation = async (reservation) => {
  * @param {Object} reservation - Reservation object when book becomes available
  */
 export const sendBookAvailableNotification = async (reservation) => {
-  return await sendEmail('bookAvailable', {
+  return await sendEmail("bookAvailable", {
     memberEmail: reservation.user.email,
     bookTitle: reservation.book.title,
     expiryDate: reservation.expiresAt,
@@ -209,7 +215,7 @@ export const sendBookAvailableNotification = async (reservation) => {
  * @param {Object} member - Member object with user and expiry date
  */
 export const sendMembershipExpiryReminder = async (member) => {
-  return await sendEmail('membershipExpiring', {
+  return await sendEmail("membershipExpiring", {
     memberEmail: member.user.email,
     expiryDate: member.expiryDate,
   });

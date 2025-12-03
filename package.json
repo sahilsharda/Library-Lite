@@ -8,15 +8,34 @@
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "build": "cd frontend && npm install && npm run build",
-    "db:setup": "cd backend && npx prisma migrate dev && node prisma/seed.js"
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run db:generate",
+    "build": "npm run build:backend && npm run build:frontend",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run preview",
+    "start": "concurrently -n backend,frontend -c blue,green \"npm run start:backend\" \"npm run start:frontend\"",
+    "db:generate": "cd backend && npx prisma generate",
+    "db:migrate": "cd backend && npx prisma migrate deploy",
+    "db:seed": "cd backend && npm run seed",
+    "db:setup": "npm run db:generate && npm run db:migrate && npm run db:seed",
+    "clean": "cd backend && rm -rf node_modules dist && cd ../frontend && rm -rf node_modules dist .vite",
+    "lint": "cd frontend && npm run lint",
+    "lint:fix": "cd frontend && npm run lint:fix"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AmanCrafts/Library-Lite.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "library",
+    "management",
+    "books",
+    "react",
+    "nodejs",
+    "express",
+    "prisma"
+  ],
+  "author": "AmanCrafts",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {

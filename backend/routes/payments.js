@@ -1,11 +1,11 @@
-import express from 'express';
-import prisma from '../prisma/prismaClient.js';
-import { isLibrarian } from '../middleware/roleCheck.js';
+import express from "express";
+import prisma from "../prisma/prismaClient.js";
+import { isLibrarian } from "../middleware/roleCheck.js";
 
 const router = express.Router();
 
 // Get all payments
-router.get('/', isLibrarian, async (req, res) => {
+router.get("/", isLibrarian, async (req, res) => {
   try {
     const {
       userId,
@@ -13,8 +13,8 @@ router.get('/', isLibrarian, async (req, res) => {
       status,
       page = 1,
       limit = 20,
-      sortBy = 'paymentDate',
-      sortOrder = 'desc'
+      sortBy = "paymentDate",
+      sortOrder = "desc",
     } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -34,8 +34,8 @@ router.get('/', isLibrarian, async (req, res) => {
               id: true,
               email: true,
               fullName: true,
-              name: true
-            }
+              name: true,
+            },
           },
           loan: {
             select: {
@@ -43,19 +43,19 @@ router.get('/', isLibrarian, async (req, res) => {
               book: {
                 select: {
                   title: true,
-                  isbn: true
-                }
+                  isbn: true,
+                },
               },
               borrowDate: true,
-              returnDate: true
-            }
-          }
+              returnDate: true,
+            },
+          },
         },
         skip,
         take,
-        orderBy: { [sortBy]: sortOrder }
+        orderBy: { [sortBy]: sortOrder },
       }),
-      prisma.payment.count({ where })
+      prisma.payment.count({ where }),
     ]);
 
     res.status(200).json({
@@ -65,17 +65,17 @@ router.get('/', isLibrarian, async (req, res) => {
         total,
         page: parseInt(page),
         limit: parseInt(limit),
-        totalPages: Math.ceil(total / parseInt(limit))
-      }
+        totalPages: Math.ceil(total / parseInt(limit)),
+      },
     });
   } catch (error) {
-    console.error('Get payments error:', error);
-    res.status(500).json({ error: 'Failed to fetch payments' });
+    console.error("Get payments error:", error);
+    res.status(500).json({ error: "Failed to fetch payments" });
   }
 });
 
 // Get payment by ID
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -88,8 +88,8 @@ router.get('/:id', async (req, res) => {
             email: true,
             fullName: true,
             name: true,
-            phone: true
-          }
+            phone: true,
+          },
         },
         loan: {
           select: {
@@ -100,54 +100,54 @@ router.get('/:id', async (req, res) => {
                 isbn: true,
                 author: {
                   select: {
-                    name: true
-                  }
-                }
-              }
+                    name: true,
+                  },
+                },
+              },
             },
             borrowDate: true,
             dueDate: true,
             returnDate: true,
-            fine: true
-          }
-        }
-      }
+            fine: true,
+          },
+        },
+      },
     });
 
     if (!payment) {
-      return res.status(404).json({ error: 'Payment not found' });
+      return res.status(404).json({ error: "Payment not found" });
     }
 
     res.status(200).json({
       success: true,
-      data: payment
+      data: payment,
     });
   } catch (error) {
-    console.error('Get payment error:', error);
-    res.status(500).json({ error: 'Failed to fetch payment' });
+    console.error("Get payment error:", error);
+    res.status(500).json({ error: "Failed to fetch payment" });
   }
 });
 
 // Process fine payment
-router.post('/payfine', isLibrarian, async (req, res) => {
+router.post("/payfine", isLibrarian, async (req, res) => {
   try {
     const {
       userId,
       loanId,
       amount,
-      paymentMethod = 'cash',
-      transactionId
+      paymentMethod = "cash",
+      transactionId,
     } = req.body;
 
     if (!userId || !loanId || !amount) {
       return res.status(400).json({
-        error: 'User ID, Loan ID, and amount are required'
+        error: "User ID, Loan ID, and amount are required",
       });
     }
 
     if (amount <= 0) {
       return res.status(400).json({
-        error: 'Amount must be greater than zero'
+        error: "Amount must be greater than zero",
       });
     }
 
@@ -156,44 +156,44 @@ router.post('/payfine', isLibrarian, async (req, res) => {
       include: {
         book: {
           select: {
-            title: true
-          }
-        }
-      }
+            title: true,
+          },
+        },
+      },
     });
 
     if (!loan) {
-      return res.status(404).json({ error: 'Loan not found' });
+      return res.status(404).json({ error: "Loan not found" });
     }
 
     if (loan.userId !== userId) {
       return res.status(403).json({
-        error: 'Unauthorized: Loan does not belong to this user'
+        error: "Unauthorized: Loan does not belong to this user",
       });
     }
 
     if (!loan.fine || loan.fine <= 0) {
       return res.status(400).json({
-        error: 'No fine associated with this loan'
+        error: "No fine associated with this loan",
       });
     }
 
     if (amount > loan.fine) {
       return res.status(400).json({
-        error: `Amount exceeds the fine. Fine amount: $${loan.fine}`
+        error: `Amount exceeds the fine. Fine amount: $${loan.fine}`,
       });
     }
 
     const existingPayment = await prisma.payment.findFirst({
       where: {
         loanId,
-        status: 'completed'
-      }
+        status: "completed",
+      },
     });
 
     if (existingPayment) {
       return res.status(400).json({
-        error: 'Fine for this loan has already been paid'
+        error: "Fine for this loan has already been paid",
       });
     }
 
@@ -204,7 +204,7 @@ router.post('/payfine', isLibrarian, async (req, res) => {
         amount,
         paymentMethod,
         transactionId,
-        status: 'completed'
+        status: "completed",
       },
       include: {
         user: {
@@ -212,8 +212,8 @@ router.post('/payfine', isLibrarian, async (req, res) => {
             id: true,
             email: true,
             fullName: true,
-            name: true
-          }
+            name: true,
+          },
         },
         loan: {
           select: {
@@ -221,36 +221,36 @@ router.post('/payfine', isLibrarian, async (req, res) => {
             book: {
               select: {
                 title: true,
-                isbn: true
-              }
+                isbn: true,
+              },
             },
-            fine: true
-          }
-        }
-      }
+            fine: true,
+          },
+        },
+      },
     });
 
     await prisma.activityLog.create({
       data: {
         userId,
-        action: 'PAY_FINE',
-        details: `Paid fine of $${amount} for book: ${loan.book.title}`
-      }
+        action: "PAY_FINE",
+        details: `Paid fine of $${amount} for book: ${loan.book.title}`,
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Fine paid successfully',
-      data: payment
+      message: "Fine paid successfully",
+      data: payment,
     });
   } catch (error) {
-    console.error('Pay fine error:', error);
-    res.status(500).json({ error: 'Failed to process payment' });
+    console.error("Pay fine error:", error);
+    res.status(500).json({ error: "Failed to process payment" });
   }
 });
 
 // Get user payment history
-router.get('/user/:userId', async (req, res) => {
+router.get("/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -263,33 +263,33 @@ router.get('/user/:userId', async (req, res) => {
             book: {
               select: {
                 title: true,
-                isbn: true
-              }
+                isbn: true,
+              },
             },
             borrowDate: true,
             returnDate: true,
-            fine: true
-          }
-        }
+            fine: true,
+          },
+        },
       },
       orderBy: {
-        paymentDate: 'desc'
-      }
+        paymentDate: "desc",
+      },
     });
 
     const totalPaid = payments.reduce((sum, payment) => {
-      return payment.status === 'completed' ? sum + payment.amount : sum;
+      return payment.status === "completed" ? sum + payment.amount : sum;
     }, 0);
 
     res.status(200).json({
       success: true,
       data: payments,
       total: payments.length,
-      totalPaid
+      totalPaid,
     });
   } catch (error) {
-    console.error('Get user payments error:', error);
-    res.status(500).json({ error: 'Failed to fetch user payments' });
+    console.error("Get user payments error:", error);
+    res.status(500).json({ error: "Failed to fetch user payments" });
   }
 });
 

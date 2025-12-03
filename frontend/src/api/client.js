@@ -1,13 +1,14 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
 // Create axios instance
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: false, // Set to false for cross-origin requests in production
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   timeout: 30000, // 30 second timeout
 });
@@ -15,7 +16,7 @@ const axiosInstance = axios.create({
 // Request interceptor to add auth token
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,7 +24,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor to handle errors
@@ -32,9 +33,13 @@ axiosInstance.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    const message = error.response?.data?.error || error.response?.data?.message || error.message || 'Request failed';
+    const message =
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      error.message ||
+      "Request failed";
     throw new Error(message);
-  }
+  },
 );
 
 export const apiClient = {

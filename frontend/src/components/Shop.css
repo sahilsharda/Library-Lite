@@ -56,7 +56,7 @@
 }
 
 .nav a.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -5px;
   left: 0;
@@ -449,27 +449,27 @@
   .shop-books-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .shop-header {
     flex-direction: column;
     gap: 20px;
     align-items: flex-start;
   }
-  
+
   .shop-search {
     width: 100%;
   }
-  
+
   .slider-container {
     padding: 0 40px;
   }
-  
+
   .slider-btn {
     width: 40px;
     height: 40px;
     font-size: 24px;
   }
-  
+
   .shop-books-slider .shop-book-card {
     min-width: 220px;
   }

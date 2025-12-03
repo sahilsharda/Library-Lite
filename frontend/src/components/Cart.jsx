@@ -1,29 +1,32 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/useCart';
-import './Cart.css';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../context/useCart";
+import "./Cart.css";
 
 const Cart = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
 
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + shipping;
 
   const handleProfileClick = () => {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem("user");
     if (user) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     } else {
-      navigate('/auth');
+      navigate("/auth");
     }
   };
 
   const handleCheckout = () => {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem("user");
     if (!user) {
-      navigate('/auth');
+      navigate("/auth");
       return;
     }
     // TODO: Implement actual checkout logic
@@ -35,7 +38,9 @@ const Cart = () => {
       {/* Header */}
       <header className="header">
         <div className="container">
-          <Link to="/" className="logo">Library Lite</Link>
+          <Link to="/" className="logo">
+            Library Lite
+          </Link>
           <nav className="nav">
             <Link to="/">Home</Link>
             <Link to="/shop">Shop</Link>
@@ -44,9 +49,14 @@ const Cart = () => {
           </nav>
           <div className="header-actions">
             <Link to="/cart" className="cart-btn">
-              🛒 {cartItems.length > 0 && <span className="cart-badge">{cartItems.length}</span>}
+              🛒{" "}
+              {cartItems.length > 0 && (
+                <span className="cart-badge">{cartItems.length}</span>
+              )}
             </Link>
-            <button className="user-btn" onClick={handleProfileClick}>👤</button>
+            <button className="user-btn" onClick={handleProfileClick}>
+              👤
+            </button>
           </div>
         </div>
       </header>
@@ -59,7 +69,9 @@ const Cart = () => {
             <div className="empty-cart-icon">🛒</div>
             <h2>Your cart is empty</h2>
             <p>Add some books to get started!</p>
-            <Link to="/shop" className="continue-shopping-btn">Browse Books</Link>
+            <Link to="/shop" className="continue-shopping-btn">
+              Browse Books
+            </Link>
           </div>
         ) : (
           <div className="cart-content">
@@ -100,7 +112,9 @@ const Cart = () => {
                     </button>
                   </div>
 
-                  <div className="item-total">${(item.price * item.quantity).toFixed(2)}</div>
+                  <div className="item-total">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </div>
 
                   <button
                     className="remove-btn"
@@ -124,7 +138,9 @@ const Cart = () => {
               </div>
               <div className="summary-row">
                 <span>Shipping:</span>
-                <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+                <span>
+                  {shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}
+                </span>
               </div>
               {shipping > 0 && (
                 <p className="free-shipping-note">
@@ -136,8 +152,12 @@ const Cart = () => {
                 <span>Total:</span>
                 <span>${total.toFixed(2)}</span>
               </div>
-              <button className="checkout-btn" onClick={handleCheckout}>Proceed to Checkout</button>
-              <Link to="/shop" className="continue-link">← Continue Shopping</Link>
+              <button className="checkout-btn" onClick={handleCheckout}>
+                Proceed to Checkout
+              </button>
+              <Link to="/shop" className="continue-link">
+                ← Continue Shopping
+              </Link>
             </div>
           </div>
         )}

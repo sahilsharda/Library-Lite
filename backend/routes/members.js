@@ -1,11 +1,11 @@
-import express from 'express';
-import prisma from '../prisma/prismaClient.js';
-import { isLibrarian, isAdmin } from '../middleware/roleCheck.js';
+import express from "express";
+import prisma from "../prisma/prismaClient.js";
+import { isLibrarian, isAdmin } from "../middleware/roleCheck.js";
 
 const router = express.Router();
 
 // Get all members
-router.get('/', isLibrarian, async (req, res) => {
+router.get("/", isLibrarian, async (req, res) => {
   try {
     const {
       search,
@@ -13,8 +13,8 @@ router.get('/', isLibrarian, async (req, res) => {
       membershipType,
       page = 1,
       limit = 20,
-      sortBy = 'createdAt',
-      sortOrder = 'desc'
+      sortBy = "createdAt",
+      sortOrder = "desc",
     } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -25,10 +25,10 @@ router.get('/', isLibrarian, async (req, res) => {
     if (search) {
       where.user = {
         OR: [
-          { fullName: { contains: search, mode: 'insensitive' } },
-          { email: { contains: search, mode: 'insensitive' } },
-          { phone: { contains: search, mode: 'insensitive' } }
-        ]
+          { fullName: { contains: search, mode: "insensitive" } },
+          { email: { contains: search, mode: "insensitive" } },
+          { phone: { contains: search, mode: "insensitive" } },
+        ],
       };
     }
 
@@ -53,15 +53,15 @@ router.get('/', isLibrarian, async (req, res) => {
               phone: true,
               address: true,
               role: true,
-              createdAt: true
-            }
-          }
+              createdAt: true,
+            },
+          },
         },
         skip,
         take,
-        orderBy: { [sortBy]: sortOrder }
+        orderBy: { [sortBy]: sortOrder },
       }),
-      prisma.member.count({ where })
+      prisma.member.count({ where }),
     ]);
 
     res.status(200).json({
@@ -71,17 +71,17 @@ router.get('/', isLibrarian, async (req, res) => {
         total,
         page: parseInt(page),
         limit: parseInt(limit),
-        totalPages: Math.ceil(total / parseInt(limit))
-      }
+        totalPages: Math.ceil(total / parseInt(limit)),
+      },
     });
   } catch (error) {
-    console.error('Get members error:', error);
-    res.status(500).json({ error: 'Failed to fetch members' });
+    console.error("Get members error:", error);
+    res.status(500).json({ error: "Failed to fetch members" });
   }
 });
 
 // Get member by ID
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -107,77 +107,73 @@ router.get('/:id', async (req, res) => {
                     isbn: true,
                     author: {
                       select: {
-                        name: true
-                      }
-                    }
-                  }
-                }
+                        name: true,
+                      },
+                    },
+                  },
+                },
               },
               orderBy: {
-                borrowDate: 'desc'
+                borrowDate: "desc",
               },
-              take: 10
-            }
-          }
-        }
-      }
+              take: 10,
+            },
+          },
+        },
+      },
     });
 
     if (!member) {
-      return res.status(404).json({ error: 'Member not found' });
+      return res.status(404).json({ error: "Member not found" });
     }
 
     res.status(200).json({
       success: true,
-      data: member
+      data: member,
     });
   } catch (error) {
-    console.error('Get member error:', error);
-    res.status(500).json({ error: 'Failed to fetch member' });
+    console.error("Get member error:", error);
+    res.status(500).json({ error: "Failed to fetch member" });
   }
 });
 
 // Create new member
-router.post('/', isLibrarian, async (req, res) => {
+router.post("/", isLibrarian, async (req, res) => {
   try {
-    const {
-      userId,
-      membershipType,
-      expiryDate
-    } = req.body;
+    const { userId, membershipType, expiryDate } = req.body;
 
     if (!userId) {
       return res.status(400).json({
-        error: 'User ID is required'
+        error: "User ID is required",
       });
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     if (!user) {
       return res.status(404).json({
-        error: 'User not found'
+        error: "User not found",
       });
     }
 
     const existingMember = await prisma.member.findUnique({
-      where: { userId }
+      where: { userId },
     });
 
     if (existingMember) {
       return res.status(400).json({
-        error: 'User already has a membership'
+        error: "User already has a membership",
       });
     }
 
     const member = await prisma.member.create({
       data: {
         userId,
-        membershipType: membershipType || 'basic',
+        membershipType: membershipType || "basic",
         expiryDate: expiryDate ? new Date(expiryDate) : null,
-        status: 'active'
+        status: "active",
       },
       include: {
         user: {
@@ -187,46 +183,43 @@ router.post('/', isLibrarian, async (req, res) => {
             fullName: true,
             name: true,
             phone: true,
-            address: true
-          }
-        }
-      }
+            address: true,
+          },
+        },
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: 'Member created successfully',
-      data: member
+      message: "Member created successfully",
+      data: member,
     });
   } catch (error) {
-    console.error('Create member error:', error);
-    res.status(500).json({ error: 'Failed to create member' });
+    console.error("Create member error:", error);
+    res.status(500).json({ error: "Failed to create member" });
   }
 });
 
 // Update member
-router.put('/:id', isLibrarian, async (req, res) => {
+router.put("/:id", isLibrarian, async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      membershipType,
-      startDate,
-      expiryDate,
-      status
-    } = req.body;
+    const { membershipType, startDate, expiryDate, status } = req.body;
 
     const existingMember = await prisma.member.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!existingMember) {
-      return res.status(404).json({ error: 'Member not found' });
+      return res.status(404).json({ error: "Member not found" });
     }
 
     const updateData = {};
-    if (membershipType !== undefined) updateData.membershipType = membershipType;
+    if (membershipType !== undefined)
+      updateData.membershipType = membershipType;
     if (startDate !== undefined) updateData.startDate = new Date(startDate);
-    if (expiryDate !== undefined) updateData.expiryDate = expiryDate ? new Date(expiryDate) : null;
+    if (expiryDate !== undefined)
+      updateData.expiryDate = expiryDate ? new Date(expiryDate) : null;
     if (status !== undefined) updateData.status = status;
 
     const member = await prisma.member.update({
@@ -240,25 +233,25 @@ router.put('/:id', isLibrarian, async (req, res) => {
             fullName: true,
             name: true,
             phone: true,
-            address: true
-          }
-        }
-      }
+            address: true,
+          },
+        },
+      },
     });
 
     res.status(200).json({
       success: true,
-      message: 'Member updated successfully',
-      data: member
+      message: "Member updated successfully",
+      data: member,
     });
   } catch (error) {
-    console.error('Update member error:', error);
-    res.status(500).json({ error: 'Failed to update member' });
+    console.error("Update member error:", error);
+    res.status(500).json({ error: "Failed to update member" });
   }
 });
 
 // Delete member
-router.delete('/:id', isAdmin, async (req, res) => {
+router.delete("/:id", isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -269,35 +262,35 @@ router.delete('/:id', isAdmin, async (req, res) => {
           include: {
             loans: {
               where: {
-                status: { in: ['borrowed', 'overdue'] }
-              }
-            }
-          }
-        }
-      }
+                status: { in: ["borrowed", "overdue"] },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!member) {
-      return res.status(404).json({ error: 'Member not found' });
+      return res.status(404).json({ error: "Member not found" });
     }
 
     if (member.user.loans.length > 0) {
       return res.status(400).json({
-        error: 'Cannot delete member with active loans'
+        error: "Cannot delete member with active loans",
       });
     }
 
     await prisma.member.delete({
-      where: { id }
+      where: { id },
     });
 
     res.status(200).json({
       success: true,
-      message: 'Member deleted successfully'
+      message: "Member deleted successfully",
     });
   } catch (error) {
-    console.error('Delete member error:', error);
-    res.status(500).json({ error: 'Failed to delete member' });
+    console.error("Delete member error:", error);
+    res.status(500).json({ error: "Failed to delete member" });
   }
 });
 

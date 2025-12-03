@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: 'Playfair Display', 'Georgia', serif;
+  font-family: "Playfair Display", "Georgia", serif;
   color: #2c1810;
 }
 
@@ -123,7 +123,7 @@ body {
 
 .login-btn span,
 .dashboard-btn span {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* Hero Section */
@@ -159,7 +159,7 @@ body {
   line-height: 1.8;
   color: #6b5d54;
   margin-bottom: 32px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .cta-button {
@@ -170,7 +170,7 @@ body {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -204,13 +204,17 @@ body {
 
 /* Optional: Add overlay effect on video */
 .hero-video::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, transparent 0%, rgba(44, 24, 16, 0.1) 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(44, 24, 16, 0.1) 100%
+  );
   border-radius: 20px;
   pointer-events: none;
 }
@@ -259,7 +263,7 @@ body {
 .feature-card p {
   color: #6b5d54;
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* Popular Books */
@@ -285,7 +289,7 @@ body {
   color: #a89070;
   text-decoration: none;
   font-size: 16px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   transition: color 0.3s;
 }
 
@@ -340,7 +344,7 @@ body {
   color: #6b5d54;
   font-size: 14px;
   margin-bottom: 16px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .book-footer {
@@ -365,7 +369,7 @@ body {
 .rating span {
   margin-left: 8px;
   color: #6b5d54;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 13px;
   white-space: nowrap;
 }
@@ -386,7 +390,7 @@ body {
   cursor: pointer;
   font-size: 14px;
   transition: background 0.3s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .add-cart-btn:hover {
@@ -443,7 +447,7 @@ body {
   font-size: 13px;
   color: #6b5d54;
   margin-bottom: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .rating-small {
@@ -471,7 +475,7 @@ body {
   color: #a89070;
   font-size: 12px;
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -543,7 +547,7 @@ body {
   content: attr(data-author);
   font-size: 13px;
   color: #6b5d54;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   text-align: left;
   flex: 1;
 }
@@ -560,7 +564,7 @@ body {
 .author-inline {
   font-size: 13px;
   color: #6b5d54;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   text-align: left;
   flex: 1;
 }
@@ -599,7 +603,7 @@ body {
   border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   white-space: nowrap;
   transition: background 0.3s;
   flex-shrink: 0;
@@ -653,7 +657,7 @@ body {
   font-size: 16px;
   margin-bottom: 20px;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .footer-section ul {
@@ -669,7 +673,7 @@ body {
   text-decoration: none;
   font-size: 14px;
   transition: color 0.3s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .footer-section a:hover {
@@ -686,7 +690,7 @@ body {
 .footer-bottom p {
   color: #c4b5a0;
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 /* Make links work */

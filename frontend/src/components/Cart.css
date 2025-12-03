@@ -339,11 +339,11 @@
   .cart-content {
     grid-template-columns: 1fr;
   }
-  
+
   .cart-header {
     display: none;
   }
-  
+
   .cart-item {
     grid-template-columns: 1fr;
     gap: 12px;

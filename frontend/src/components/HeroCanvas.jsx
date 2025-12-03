@@ -55,7 +55,6 @@ export default function HeroCanvas() {
       images.push(img);
     }
 
-
     function render() {
       const img = images[state.frame];
       if (!img || !img.complete || img.naturalWidth === 0) return;
@@ -84,12 +83,9 @@ export default function HeroCanvas() {
       ctx.drawImage(img, x, y, w, h);
     }
 
-
     function update(progress) {
-
       let p = Math.min(progress * 2, 1);
       let frame = Math.floor(p * (FRAME_COUNT - 1));
-
 
       frame = Math.max(0, Math.min(frame, FRAME_COUNT - 1));
 
@@ -97,11 +93,7 @@ export default function HeroCanvas() {
       render();
     }
 
-
     function initialize() {
-      console.log("All frames loaded");
-
-
       state.frame = 0;
       render();
 
@@ -127,4 +119,3 @@ export default function HeroCanvas() {
 
   return <canvas ref={canvasRef} className="hero-canvas"></canvas>;
 }
-

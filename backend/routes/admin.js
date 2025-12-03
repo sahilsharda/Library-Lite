@@ -1,11 +1,11 @@
-import express from 'express';
-import prisma from '../prisma/prismaClient.js';
-import { isAdmin } from '../middleware/roleCheck.js';
+import express from "express";
+import prisma from "../prisma/prismaClient.js";
+import { isAdmin } from "../middleware/roleCheck.js";
 
 const router = express.Router();
 
 // Get dashboard statistics and reports
-router.get('/reports', isAdmin, async (_req, res) => {
+router.get("/reports", isAdmin, async (_req, res) => {
   try {
     const [
       totalUsers,
@@ -18,48 +18,48 @@ router.get('/reports', isAdmin, async (_req, res) => {
       overdueLoans,
       totalReservations,
       totalPayments,
-      totalFinesCollected
+      totalFinesCollected,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.member.count(),
-      prisma.member.count({ where: { status: 'active' } }),
+      prisma.member.count({ where: { status: "active" } }),
       prisma.book.count(),
       prisma.author.count(),
       prisma.book.aggregate({
-        _sum: { availableCopies: true }
+        _sum: { availableCopies: true },
       }),
       prisma.loan.count({
-        where: { status: 'borrowed' }
+        where: { status: "borrowed" },
       }),
       prisma.loan.count({
         where: {
-          status: 'borrowed',
+          status: "borrowed",
           dueDate: {
-            lt: new Date()
-          }
-        }
+            lt: new Date(),
+          },
+        },
       }),
       prisma.reservation.count({
-        where: { status: 'pending' }
+        where: { status: "pending" },
       }),
       prisma.payment.count(),
       prisma.payment.aggregate({
-        where: { status: 'completed' },
-        _sum: { amount: true }
-      })
+        where: { status: "completed" },
+        _sum: { amount: true },
+      }),
     ]);
 
     const topBorrowedBooks = await prisma.loan.groupBy({
-      by: ['bookId'],
+      by: ["bookId"],
       _count: {
-        bookId: true
+        bookId: true,
       },
       orderBy: {
         _count: {
-          bookId: 'desc'
-        }
+          bookId: "desc",
+        },
       },
-      take: 10
+      take: 10,
     });
 
     const bookDetails = await Promise.all(
@@ -72,53 +72,53 @@ router.get('/reports', isAdmin, async (_req, res) => {
             isbn: true,
             author: {
               select: {
-                name: true
-              }
-            }
-          }
+                name: true,
+              },
+            },
+          },
         });
         return {
           ...book,
-          borrowCount: item._count.bookId
+          borrowCount: item._count.bookId,
         };
-      })
+      }),
     );
 
     const recentActivity = await prisma.activityLog.findMany({
       take: 20,
       orderBy: {
-        timestamp: 'desc'
+        timestamp: "desc",
       },
       include: {
         user: {
           select: {
             email: true,
             fullName: true,
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     });
 
     const monthlyStats = await prisma.loan.groupBy({
-      by: ['borrowDate'],
+      by: ["borrowDate"],
       _count: {
-        id: true
+        id: true,
       },
       orderBy: {
-        borrowDate: 'desc'
+        borrowDate: "desc",
       },
-      take: 12
+      take: 12,
     });
 
     const genreDistribution = await prisma.book.findMany({
       select: {
-        genre: true
-      }
+        genre: true,
+      },
     });
 
     const genreCounts = genreDistribution.reduce((acc, book) => {
-      book.genre.forEach(g => {
+      book.genre.forEach((g) => {
         acc[g] = (acc[g] || 0) + 1;
       });
       return acc;
@@ -143,22 +143,22 @@ router.get('/reports', isAdmin, async (_req, res) => {
           overdueLoans,
           totalReservations,
           totalPayments,
-          totalFinesCollected: totalFinesCollected._sum.amount || 0
+          totalFinesCollected: totalFinesCollected._sum.amount || 0,
         },
         topBorrowedBooks: bookDetails,
         recentActivity: recentActivity.slice(0, 10),
         monthlyBorrowingTrend: monthlyStats,
-        genreDistribution: topGenres
-      }
+        genreDistribution: topGenres,
+      },
     });
   } catch (error) {
-    console.error('Get reports error:', error);
-    res.status(500).json({ error: 'Failed to fetch reports' });
+    console.error("Get reports error:", error);
+    res.status(500).json({ error: "Failed to fetch reports" });
   }
 });
 
 // Get activity logs
-router.get('/logs', isAdmin, async (req, res) => {
+router.get("/logs", isAdmin, async (req, res) => {
   try {
     const {
       userId,
@@ -167,7 +167,7 @@ router.get('/logs', isAdmin, async (req, res) => {
       endDate,
       page = 1,
       limit = 50,
-      sortOrder = 'desc'
+      sortOrder = "desc",
     } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -176,7 +176,7 @@ router.get('/logs', isAdmin, async (req, res) => {
     const where = {};
     if (userId) where.userId = userId;
     if (action) where.action = action;
-    
+
     if (startDate || endDate) {
       where.timestamp = {};
       if (startDate) where.timestamp.gte = new Date(startDate);
@@ -193,17 +193,17 @@ router.get('/logs', isAdmin, async (req, res) => {
               email: true,
               fullName: true,
               name: true,
-              role: true
-            }
-          }
+              role: true,
+            },
+          },
         },
         skip,
         take,
         orderBy: {
-          timestamp: sortOrder
-        }
+          timestamp: sortOrder,
+        },
       }),
-      prisma.activityLog.count({ where })
+      prisma.activityLog.count({ where }),
     ]);
 
     res.status(200).json({
@@ -213,50 +213,50 @@ router.get('/logs', isAdmin, async (req, res) => {
         total,
         page: parseInt(page),
         limit: parseInt(limit),
-        totalPages: Math.ceil(total / parseInt(limit))
-      }
+        totalPages: Math.ceil(total / parseInt(limit)),
+      },
     });
   } catch (error) {
-    console.error('Get logs error:', error);
-    res.status(500).json({ error: 'Failed to fetch activity logs' });
+    console.error("Get logs error:", error);
+    res.status(500).json({ error: "Failed to fetch activity logs" });
   }
 });
 
 // Get user statistics
-router.get('/users/stats', isAdmin, async (_req, res) => {
+router.get("/users/stats", isAdmin, async (_req, res) => {
   try {
     const userRoleDistribution = await prisma.user.groupBy({
-      by: ['role'],
+      by: ["role"],
       _count: {
-        role: true
-      }
+        role: true,
+      },
     });
 
     const memberStatusDistribution = await prisma.member.groupBy({
-      by: ['status'],
+      by: ["status"],
       _count: {
-        status: true
-      }
+        status: true,
+      },
     });
 
     const membershipTypeDistribution = await prisma.member.groupBy({
-      by: ['membershipType'],
+      by: ["membershipType"],
       _count: {
-        membershipType: true
-      }
+        membershipType: true,
+      },
     });
 
     const topBorrowers = await prisma.loan.groupBy({
-      by: ['userId'],
+      by: ["userId"],
       _count: {
-        userId: true
+        userId: true,
       },
       orderBy: {
         _count: {
-          userId: 'desc'
-        }
+          userId: "desc",
+        },
       },
-      take: 10
+      take: 10,
     });
 
     const borrowerDetails = await Promise.all(
@@ -267,14 +267,14 @@ router.get('/users/stats', isAdmin, async (_req, res) => {
             id: true,
             email: true,
             fullName: true,
-            name: true
-          }
+            name: true,
+          },
         });
         return {
           ...user,
-          borrowCount: item._count.userId
+          borrowCount: item._count.userId,
         };
-      })
+      }),
     );
 
     res.status(200).json({
@@ -283,49 +283,49 @@ router.get('/users/stats', isAdmin, async (_req, res) => {
         userRoleDistribution,
         memberStatusDistribution,
         membershipTypeDistribution,
-        topBorrowers: borrowerDetails
-      }
+        topBorrowers: borrowerDetails,
+      },
     });
   } catch (error) {
-    console.error('Get user stats error:', error);
-    res.status(500).json({ error: 'Failed to fetch user statistics' });
+    console.error("Get user stats error:", error);
+    res.status(500).json({ error: "Failed to fetch user statistics" });
   }
 });
 
 // Get book statistics
-router.get('/books/stats', isAdmin, async (_req, res) => {
+router.get("/books/stats", isAdmin, async (_req, res) => {
   try {
     const totalCopies = await prisma.book.aggregate({
-      _sum: { totalCopies: true }
+      _sum: { totalCopies: true },
     });
 
     const availableCopies = await prisma.book.aggregate({
-      _sum: { availableCopies: true }
+      _sum: { availableCopies: true },
     });
 
     const languageDistribution = await prisma.book.groupBy({
-      by: ['language'],
+      by: ["language"],
       _count: {
-        language: true
+        language: true,
       },
       orderBy: {
         _count: {
-          language: 'desc'
-        }
-      }
+          language: "desc",
+        },
+      },
     });
 
     const booksPerAuthor = await prisma.book.groupBy({
-      by: ['authorId'],
+      by: ["authorId"],
       _count: {
-        authorId: true
+        authorId: true,
       },
       orderBy: {
         _count: {
-          authorId: 'desc'
-        }
+          authorId: "desc",
+        },
       },
-      take: 10
+      take: 10,
     });
 
     const authorDetails = await Promise.all(
@@ -335,21 +335,21 @@ router.get('/books/stats', isAdmin, async (_req, res) => {
           select: {
             id: true,
             name: true,
-            bio: true
-          }
+            bio: true,
+          },
         });
         return {
           ...author,
-          bookCount: item._count.authorId
+          bookCount: item._count.authorId,
         };
-      })
+      }),
     );
 
     const booksWithLowCopies = await prisma.book.findMany({
       where: {
         availableCopies: {
-          lte: 2
-        }
+          lte: 2,
+        },
       },
       select: {
         id: true,
@@ -359,14 +359,14 @@ router.get('/books/stats', isAdmin, async (_req, res) => {
         availableCopies: true,
         author: {
           select: {
-            name: true
-          }
-        }
+            name: true,
+          },
+        },
       },
       orderBy: {
-        availableCopies: 'asc'
+        availableCopies: "asc",
       },
-      take: 20
+      take: 20,
     });
 
     res.status(200).json({
@@ -374,36 +374,38 @@ router.get('/books/stats', isAdmin, async (_req, res) => {
       data: {
         totalCopies: totalCopies._sum.totalCopies || 0,
         availableCopies: availableCopies._sum.availableCopies || 0,
-        borrowedCopies: (totalCopies._sum.totalCopies || 0) - (availableCopies._sum.availableCopies || 0),
+        borrowedCopies:
+          (totalCopies._sum.totalCopies || 0) -
+          (availableCopies._sum.availableCopies || 0),
         languageDistribution,
         topAuthors: authorDetails,
-        booksWithLowCopies
-      }
+        booksWithLowCopies,
+      },
     });
   } catch (error) {
-    console.error('Get book stats error:', error);
-    res.status(500).json({ error: 'Failed to fetch book statistics' });
+    console.error("Get book stats error:", error);
+    res.status(500).json({ error: "Failed to fetch book statistics" });
   }
 });
 
 // Get loan statistics
-router.get('/loans/stats', isAdmin, async (_req, res) => {
+router.get("/loans/stats", isAdmin, async (_req, res) => {
   try {
     const statusDistribution = await prisma.loan.groupBy({
-      by: ['status'],
+      by: ["status"],
       _count: {
-        status: true
-      }
+        status: true,
+      },
     });
 
     const totalFines = await prisma.loan.aggregate({
       where: {
         fine: {
-          gt: 0
-        }
+          gt: 0,
+        },
       },
       _sum: { fine: true },
-      _count: { fine: true }
+      _count: { fine: true },
     });
 
     const avgLoanDuration = await prisma.$queryRaw`
@@ -415,18 +417,18 @@ router.get('/loans/stats', isAdmin, async (_req, res) => {
     const currentMonthLoans = await prisma.loan.count({
       where: {
         borrowDate: {
-          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-        }
-      }
+          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        },
+      },
     });
 
     const lastMonthLoans = await prisma.loan.count({
       where: {
         borrowDate: {
           gte: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
-          lt: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-        }
-      }
+          lt: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        },
+      },
     });
 
     res.status(200).json({
@@ -438,14 +440,18 @@ router.get('/loans/stats', isAdmin, async (_req, res) => {
         averageLoanDuration: avgLoanDuration[0]?.avg_duration || 0,
         currentMonthLoans,
         lastMonthLoans,
-        loanGrowth: lastMonthLoans > 0 
-          ? ((currentMonthLoans - lastMonthLoans) / lastMonthLoans * 100).toFixed(2)
-          : 0
-      }
+        loanGrowth:
+          lastMonthLoans > 0
+            ? (
+                ((currentMonthLoans - lastMonthLoans) / lastMonthLoans) *
+                100
+              ).toFixed(2)
+            : 0,
+      },
     });
   } catch (error) {
-    console.error('Get loan stats error:', error);
-    res.status(500).json({ error: 'Failed to fetch loan statistics' });
+    console.error("Get loan stats error:", error);
+    res.status(500).json({ error: "Failed to fetch loan statistics" });
   }
 });
 

@@ -37,11 +37,11 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
 .form-group input.password-match {
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
 .form-group input.password-mismatch {
@@ -55,7 +55,7 @@
 }
 
 .password-hint.match {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .password-hint.mismatch {
@@ -74,7 +74,7 @@
 .auth-container button {
   width: 100%;
   padding: 12px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;

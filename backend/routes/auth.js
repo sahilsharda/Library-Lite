@@ -79,9 +79,7 @@ const buildUserDashboard = async (authId) => {
           ? Math.max(1, Math.ceil((dueDate - borrowDate) / msInDay))
           : null;
       const daysRemaining =
-        dueDate !== null
-          ? Math.ceil((dueDate - now) / msInDay)
-          : null;
+        dueDate !== null ? Math.ceil((dueDate - now) / msInDay) : null;
 
       return {
         id: loan.id,
@@ -111,10 +109,10 @@ const buildUserDashboard = async (authId) => {
       loanId: payment.loanId,
       loan: payment.loan
         ? {
-          id: payment.loan.id,
-          bookTitle: payment.loan.book?.title,
-          bookPrice: payment.loan.book?.price || 0,
-        }
+            id: payment.loan.id,
+            bookTitle: payment.loan.book?.title,
+            bookPrice: payment.loan.book?.price || 0,
+          }
         : null,
     }));
 
@@ -151,21 +149,18 @@ const buildUserDashboard = async (authId) => {
     }));
 
     const completedPayments = payments.filter(
-      (payment) => payment.status === "completed"
+      (payment) => payment.status === "completed",
     );
     const totalSpent = completedPayments.reduce(
       (sum, payment) => sum + (payment.amount || 0),
-      0
+      0,
     );
-    const totalFines = loans.reduce(
-      (sum, loan) => sum + (loan.fine || 0),
-      0
-    );
+    const totalFines = loans.reduce((sum, loan) => sum + (loan.fine || 0), 0);
     const activeLoans = loans.filter((loan) => loan.status === "borrowed");
     const overdueLoans = loans.filter(
       (loan) =>
         loan.status === "overdue" ||
-        (loan.status === "borrowed" && (loan.daysRemaining ?? 0) < 0)
+        (loan.status === "borrowed" && (loan.daysRemaining ?? 0) < 0),
     );
 
     // Calculate wallet balance (simulated - in production this would come from User model)
@@ -192,11 +187,11 @@ const buildUserDashboard = async (authId) => {
       },
       subscription: dbUser.member
         ? {
-          membershipType: dbUser.member.membershipType,
-          status: dbUser.member.status,
-          startedAt: dbUser.member.startDate,
-          expiresAt: dbUser.member.expiryDate,
-        }
+            membershipType: dbUser.member.membershipType,
+            status: dbUser.member.status,
+            startedAt: dbUser.member.startDate,
+            expiresAt: dbUser.member.expiryDate,
+          }
         : null,
       loans,
       purchases,
@@ -224,7 +219,8 @@ const attachDashboardToUser = async (authUser) => {
 // Signup route
 router.post("/signup", async (req, res) => {
   try {
-    const { email, password, fullName, confirmPassword, role, phone, address } = req.body;
+    const { email, password, fullName, confirmPassword, role, phone, address } =
+      req.body;
 
     // Validate required fields
     if (!email || !password) {
@@ -255,7 +251,8 @@ router.post("/signup", async (req, res) => {
     }
 
     // Validate role (default to member if not provided)
-    const userRole = role && ['admin', 'librarian', 'member'].includes(role) ? role : 'member';
+    const userRole =
+      role && ["admin", "librarian", "member"].includes(role) ? role : "member";
 
     // Create user in Supabase Auth
     const { data, error } = await supabase.auth.signUp({
@@ -278,7 +275,7 @@ router.post("/signup", async (req, res) => {
       try {
         // Check if user already exists in database
         let newUser = await prisma.user.findUnique({
-          where: { email: data.user.email }
+          where: { email: data.user.email },
         });
 
         if (!newUser) {
@@ -310,23 +307,23 @@ router.post("/signup", async (req, res) => {
         }
 
         // Create member record if role is member
-        if (userRole === 'member') {
+        if (userRole === "member") {
           const thirtyDaysFromNow = new Date();
           thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-          
+
           // Check if member record already exists
           const existingMember = await prisma.member.findUnique({
-            where: { userId: newUser.id }
+            where: { userId: newUser.id },
           });
 
           if (!existingMember) {
             await prisma.member.create({
               data: {
                 userId: newUser.id,
-                membershipType: 'basic',
+                membershipType: "basic",
                 startDate: new Date(),
                 expiryDate: thirtyDaysFromNow,
-                status: 'active',
+                status: "active",
               },
             });
           }
@@ -457,7 +454,7 @@ router.get("/user", async (req, res) => {
     const enrichedUser = await attachDashboardToUser(user);
 
     res.status(200).json({
-      user: enrichedUser
+      user: enrichedUser,
     });
   } catch (error) {
     console.error("Get user error:", error);

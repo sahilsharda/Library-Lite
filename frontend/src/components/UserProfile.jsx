@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
-import './UserProfile.css';
+import { useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+import "./UserProfile.css";
 
 function UserProfile() {
   const { user: authUser, loading: authLoading, refreshUser } = useAuth();
@@ -9,7 +9,7 @@ function UserProfile() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const isDemo = searchParams.get('demo') === '1';
+  const isDemo = searchParams.get("demo") === "1";
 
   const demoUser = useMemo(() => {
     if (!isDemo) return null;
@@ -17,19 +17,19 @@ function UserProfile() {
     const day = 1000 * 60 * 60 * 24;
 
     return {
-      id: 'demo-user',
-      email: 'luna.reader@example.com',
+      id: "demo-user",
+      email: "luna.reader@example.com",
       user_metadata: {
-        full_name: 'Luna Reader',
-        avatar_url: 'https://i.pravatar.cc/150?img=47',
+        full_name: "Luna Reader",
+        avatar_url: "https://i.pravatar.cc/150?img=47",
       },
       dbUser: {
-        fullName: 'Luna Reader',
-        name: 'Luna',
-        avatarUrl: 'https://i.pravatar.cc/150?img=47',
+        fullName: "Luna Reader",
+        name: "Luna",
+        avatarUrl: "https://i.pravatar.cc/150?img=47",
         member: {
-          membershipType: 'premium',
-          status: 'active',
+          membershipType: "premium",
+          status: "active",
           startDate: new Date(now - 320 * day).toISOString(),
           expiryDate: new Date(now + 320 * day).toISOString(),
         },
@@ -48,15 +48,15 @@ function UserProfile() {
           averageSpend: 1556,
         },
         subscription: {
-          membershipType: 'Premium',
-          status: 'active',
+          membershipType: "Premium",
+          status: "active",
           startedAt: new Date(now - 350 * day).toISOString(),
           expiresAt: new Date(now + 15 * day).toISOString(),
         },
         loans: [
           {
-            id: 'loan-1',
-            status: 'borrowed',
+            id: "loan-1",
+            status: "borrowed",
             borrowDate: new Date(now - 5 * day).toISOString(),
             dueDate: new Date(now + 9 * day).toISOString(),
             returnDate: null,
@@ -65,15 +65,15 @@ function UserProfile() {
             daysRemaining: 9,
             book: {
               id: 101,
-              title: 'The Infinite Library',
-              author: 'Ada Finch',
+              title: "The Infinite Library",
+              author: "Ada Finch",
               coverUrl: null,
               price: 599,
             },
           },
           {
-            id: 'loan-2',
-            status: 'overdue',
+            id: "loan-2",
+            status: "overdue",
             borrowDate: new Date(now - 25 * day).toISOString(),
             dueDate: new Date(now - 2 * day).toISOString(),
             returnDate: null,
@@ -82,15 +82,15 @@ function UserProfile() {
             daysRemaining: -2,
             book: {
               id: 102,
-              title: 'Chronicles of Time',
-              author: 'Milo Hart',
+              title: "Chronicles of Time",
+              author: "Milo Hart",
               coverUrl: null,
               price: 899,
             },
           },
           {
-            id: 'loan-3',
-            status: 'returned',
+            id: "loan-3",
+            status: "returned",
             borrowDate: new Date(now - 55 * day).toISOString(),
             dueDate: new Date(now - 42 * day).toISOString(),
             returnDate: new Date(now - 40 * day).toISOString(),
@@ -99,8 +99,8 @@ function UserProfile() {
             daysRemaining: 0,
             book: {
               id: 103,
-              title: 'Designing Worlds',
-              author: 'Caro Bloom',
+              title: "Designing Worlds",
+              author: "Caro Bloom",
               coverUrl: null,
               price: 749,
             },
@@ -108,93 +108,93 @@ function UserProfile() {
         ],
         purchases: [
           {
-            id: 'purchase-1',
-            bookTitle: 'The Art of Reading',
+            id: "purchase-1",
+            bookTitle: "The Art of Reading",
             bookPrice: 1299,
             purchaseDate: new Date(now - 10 * day).toISOString(),
             accessExpiry: new Date(now + 20 * day).toISOString(),
             daysRemaining: 20,
             amount: 1299,
-            method: 'UPI',
+            method: "UPI",
           },
           {
-            id: 'purchase-2',
-            bookTitle: 'Digital Minds',
+            id: "purchase-2",
+            bookTitle: "Digital Minds",
             bookPrice: 1599,
             purchaseDate: new Date(now - 15 * day).toISOString(),
             accessExpiry: new Date(now + 15 * day).toISOString(),
             daysRemaining: 15,
             amount: 1599,
-            method: 'Card',
+            method: "Card",
           },
           {
-            id: 'purchase-3',
-            bookTitle: 'Future of Books',
+            id: "purchase-3",
+            bookTitle: "Future of Books",
             bookPrice: 999,
             purchaseDate: new Date(now - 20 * day).toISOString(),
             accessExpiry: new Date(now + 10 * day).toISOString(),
             daysRemaining: 10,
             amount: 999,
-            method: 'Wallet',
+            method: "Wallet",
           },
           {
-            id: 'purchase-4',
-            bookTitle: 'Reading Revolution',
+            id: "purchase-4",
+            bookTitle: "Reading Revolution",
             bookPrice: 1899,
             purchaseDate: new Date(now - 25 * day).toISOString(),
             accessExpiry: new Date(now + 5 * day).toISOString(),
             daysRemaining: 5,
             amount: 1899,
-            method: 'UPI',
+            method: "UPI",
           },
           {
-            id: 'purchase-5',
-            bookTitle: 'Book Lovers Guide',
+            id: "purchase-5",
+            bookTitle: "Book Lovers Guide",
             bookPrice: 799,
             purchaseDate: new Date(now - 28 * day).toISOString(),
             accessExpiry: new Date(now + 2 * day).toISOString(),
             daysRemaining: 2,
             amount: 799,
-            method: 'Card',
+            method: "Card",
           },
         ],
         payments: [
           {
-            id: 'pay-1',
+            id: "pay-1",
             amount: 1299,
-            status: 'completed',
-            method: 'UPI',
+            status: "completed",
+            method: "UPI",
             paymentDate: new Date(now - 10 * day).toISOString(),
             loanId: null,
             loan: {
               id: null,
-              bookTitle: 'The Art of Reading',
+              bookTitle: "The Art of Reading",
               bookPrice: 1299,
             },
           },
           {
-            id: 'pay-2',
+            id: "pay-2",
             amount: 1599,
-            status: 'completed',
-            method: 'Card',
+            status: "completed",
+            method: "Card",
             paymentDate: new Date(now - 15 * day).toISOString(),
             loanId: null,
             loan: {
               id: null,
-              bookTitle: 'Digital Minds',
+              bookTitle: "Digital Minds",
               bookPrice: 1599,
             },
           },
           {
-            id: 'pay-3',
+            id: "pay-3",
             amount: 250,
-            status: 'completed',
-            method: 'UPI',
+            status: "completed",
+            method: "UPI",
             paymentDate: new Date(now - 3 * day).toISOString(),
             loanId: 102,
             loan: {
               id: 102,
-              bookTitle: 'Chronicles of Time',
+              bookTitle: "Chronicles of Time",
               bookPrice: 899,
             },
           },
@@ -215,9 +215,9 @@ function UserProfile() {
 
   const currencyFormatter = useMemo(
     () =>
-      new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
+      new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       }),
@@ -225,39 +225,40 @@ function UserProfile() {
   );
 
   const activeLoans = useMemo(
-    () => loans.filter((loan) => loan.status === 'borrowed' || loan.status === 'overdue'),
+    () =>
+      loans.filter(
+        (loan) => loan.status === "borrowed" || loan.status === "overdue",
+      ),
     [loans],
   );
   const completedLoans = useMemo(
-    () => loans.filter((loan) => loan.status === 'returned'),
+    () => loans.filter((loan) => loan.status === "returned"),
     [loans],
   );
 
   const displayName = useMemo(() => {
-    if (!user) return '';
+    if (!user) return "";
     return (
       user?.dbUser?.fullName ||
       user?.dbUser?.name ||
       user?.user_metadata?.full_name ||
-      user?.email?.split('@')[0] ||
-      ''
+      user?.email?.split("@")[0] ||
+      ""
     );
   }, [user]);
 
   const initials = useMemo(() => {
-    if (!displayName) return 'U';
-    const parts = displayName.split(' ').filter(Boolean);
-    if (!parts.length) return displayName[0]?.toUpperCase() || 'U';
+    if (!displayName) return "U";
+    const parts = displayName.split(" ").filter(Boolean);
+    if (!parts.length) return displayName[0]?.toUpperCase() || "U";
     return parts
       .slice(0, 2)
-      .map((segment) => segment[0]?.toUpperCase() || '')
-      .join('');
+      .map((segment) => segment[0]?.toUpperCase() || "")
+      .join("");
   }, [displayName]);
 
   const avatarUrl =
-    user?.user_metadata?.avatar_url ||
-    user?.dbUser?.avatarUrl ||
-    null;
+    user?.user_metadata?.avatar_url || user?.dbUser?.avatarUrl || null;
 
   const handleRefresh = async () => {
     if (isDemo) {
@@ -269,7 +270,7 @@ function UserProfile() {
     setRefreshing(true);
     try {
       await refreshUser({ silent: true });
-        } finally {
+    } finally {
       setRefreshing(false);
     }
   };
@@ -287,7 +288,11 @@ function UserProfile() {
     return (
       <div className="profile-state">
         <p>You need to sign in to view your dashboard.</p>
-        <button type="button" className="primary-btn" onClick={() => navigate('/login')}>
+        <button
+          type="button"
+          className="primary-btn"
+          onClick={() => navigate("/login")}
+        >
           Go to Login
         </button>
       </div>
@@ -301,11 +306,15 @@ function UserProfile() {
         <header className="profile-hero">
           <div className="profile-identity">
             <div className="profile-avatar profile-avatar-lg">
-              {avatarUrl ? <img src={avatarUrl} alt={displayName} /> : <span>{initials}</span>}
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={displayName} />
+              ) : (
+                <span>{initials}</span>
+              )}
             </div>
             <div>
               <p className="profile-greeting">Welcome back</p>
-              <h1>{displayName || 'Reader'}</h1>
+              <h1>{displayName || "Reader"}</h1>
               <p className="profile-email">{user.email}</p>
             </div>
           </div>
@@ -314,7 +323,7 @@ function UserProfile() {
             <button
               type="button"
               className="ghost-btn"
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
             >
               Explore Catalog
             </button>
@@ -324,7 +333,11 @@ function UserProfile() {
               onClick={handleRefresh}
               disabled={refreshing || isDemo}
             >
-              {isDemo ? 'Login to Sync' : refreshing ? 'Refreshing...' : 'Sync Latest Data'}
+              {isDemo
+                ? "Login to Sync"
+                : refreshing
+                  ? "Refreshing..."
+                  : "Sync Latest Data"}
             </button>
           </div>
         </header>
@@ -338,7 +351,9 @@ function UserProfile() {
           <div className="stat-card">
             <p>Total Borrows</p>
             <h3>{stats.totalBorrows ?? loans.length}</h3>
-            <span>{stats.completedBorrows ?? completedLoans.length} completed</span>
+            <span>
+              {stats.completedBorrows ?? completedLoans.length} completed
+            </span>
           </div>
           <div className="stat-card">
             <p>Active Borrows</p>
@@ -348,12 +363,19 @@ function UserProfile() {
           <div className="stat-card">
             <p>Purchased Books</p>
             <h3>{stats.totalPurchases ?? purchases.length}</h3>
-            <span>{stats.activePurchases ?? purchases.filter(p => p.daysRemaining > 0).length} active</span>
+            <span>
+              {stats.activePurchases ??
+                purchases.filter((p) => p.daysRemaining > 0).length}{" "}
+              active
+            </span>
           </div>
           <div className="stat-card">
             <p>Total Spent</p>
             <h3>{currencyFormatter.format(stats.totalSpent ?? 0)}</h3>
-            <span>Avg {currencyFormatter.format(stats.averageSpend ?? 0)} / transaction</span>
+            <span>
+              Avg {currencyFormatter.format(stats.averageSpend ?? 0)} /
+              transaction
+            </span>
           </div>
           <div className="stat-card">
             <p>Total Fines</p>
@@ -378,14 +400,16 @@ function UserProfile() {
                 </div>
                 <div>
                   <p className="label">Status</p>
-                  <p className={`badge ${subscription.status}`}>{subscription.status}</p>
+                  <p className={`badge ${subscription.status}`}>
+                    {subscription.status}
+                  </p>
                 </div>
                 <div>
                   <p className="label">Started</p>
                   <p className="value">
                     {subscription.startedAt
                       ? new Date(subscription.startedAt).toLocaleDateString()
-                      : '—'}
+                      : "—"}
                   </p>
                 </div>
                 <div>
@@ -393,7 +417,7 @@ function UserProfile() {
                   <p className="value">
                     {subscription.expiresAt
                       ? new Date(subscription.expiresAt).toLocaleDateString()
-                      : 'No expiry'}
+                      : "No expiry"}
                   </p>
                 </div>
               </div>
@@ -416,18 +440,22 @@ function UserProfile() {
             <div className="spend-body">
               <div>
                 <p className="label">Total Paid</p>
-                <p className="value">{currencyFormatter.format(stats.totalSpent ?? 0)}</p>
+                <p className="value">
+                  {currencyFormatter.format(stats.totalSpent ?? 0)}
+                </p>
               </div>
               <div>
                 <p className="label">Average Payment</p>
-                <p className="value">{currencyFormatter.format(stats.averageSpend ?? 0)}</p>
+                <p className="value">
+                  {currencyFormatter.format(stats.averageSpend ?? 0)}
+                </p>
               </div>
               <div>
                 <p className="label">Last Payment</p>
                 <p className="value">
                   {payments[0]?.paymentDate
                     ? new Date(payments[0].paymentDate).toLocaleDateString()
-                    : 'No payments yet'}
+                    : "No payments yet"}
                 </p>
               </div>
             </div>
@@ -436,17 +464,21 @@ function UserProfile() {
                 <div key={payment.id} className="payment-row">
                   <div>
                     <p className="payment-title">
-                      {payment.loan?.bookTitle || 'Library payment'}
+                      {payment.loan?.bookTitle || "Library payment"}
                     </p>
                     <span>{payment.method}</span>
                   </div>
                   <div className="payment-amount">
                     <p>{currencyFormatter.format(payment.amount)}</p>
-                    <span>{new Date(payment.paymentDate).toLocaleDateString()}</span>
+                    <span>
+                      {new Date(payment.paymentDate).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
               ))}
-              {payments.length === 0 && <p className="empty-text">No payments recorded yet.</p>}
+              {payments.length === 0 && (
+                <p className="empty-text">No payments recorded yet.</p>
+              )}
             </div>
           </div>
         </section>
@@ -458,55 +490,76 @@ function UserProfile() {
               <h3>Your Library</h3>
             </div>
             <span className="chip">
-              {purchases.filter(p => p.daysRemaining > 0).length} active • {purchases.length} total
+              {purchases.filter((p) => p.daysRemaining > 0).length} active •{" "}
+              {purchases.length} total
             </span>
           </div>
           <div className="purchase-list">
-            {purchases.length === 0 && <p className="empty-text">You haven't purchased any books yet.</p>}
+            {purchases.length === 0 && (
+              <p className="empty-text">You haven't purchased any books yet.</p>
+            )}
             {purchases.map((purchase) => (
               <div key={purchase.id} className="purchase-card">
                 <div className="purchase-heading">
                   <div>
-                    <p className="purchase-title">{purchase.bookTitle || 'Untitled Book'}</p>
-                    <span className="purchase-price">{currencyFormatter.format(purchase.bookPrice || purchase.amount)}</span>
+                    <p className="purchase-title">
+                      {purchase.bookTitle || "Untitled Book"}
+                    </p>
+                    <span className="purchase-price">
+                      {currencyFormatter.format(
+                        purchase.bookPrice || purchase.amount,
+                      )}
+                    </span>
                   </div>
-                  <span className={`badge ${purchase.daysRemaining > 0 ? 'active' : 'expired'}`}>
-                    {purchase.daysRemaining > 0 ? 'Active' : 'Expired'}
+                  <span
+                    className={`badge ${purchase.daysRemaining > 0 ? "active" : "expired"}`}
+                  >
+                    {purchase.daysRemaining > 0 ? "Active" : "Expired"}
                   </span>
                 </div>
                 <div className="purchase-meta">
                   <div>
                     <p className="label">Purchased</p>
                     <p className="value">
-                      {purchase.purchaseDate ? new Date(purchase.purchaseDate).toLocaleDateString() : '—'}
+                      {purchase.purchaseDate
+                        ? new Date(purchase.purchaseDate).toLocaleDateString()
+                        : "—"}
                     </p>
                   </div>
                   <div>
                     <p className="label">Access Expires</p>
                     <p className="value">
-                      {purchase.accessExpiry ? new Date(purchase.accessExpiry).toLocaleDateString() : '—'}
+                      {purchase.accessExpiry
+                        ? new Date(purchase.accessExpiry).toLocaleDateString()
+                        : "—"}
                     </p>
                   </div>
                   <div>
                     <p className="label">Payment Method</p>
-                    <p className="value">{purchase.method || '—'}</p>
+                    <p className="value">{purchase.method || "—"}</p>
                   </div>
                   <div>
                     <p className="label">Time Remaining</p>
-                    <p className={`value ${purchase.daysRemaining <= 3 ? 'warning' : ''}`}>
-                      {purchase.daysRemaining > 0 ? `${purchase.daysRemaining} days` : 'Expired'}
+                    <p
+                      className={`value ${purchase.daysRemaining <= 3 ? "warning" : ""}`}
+                    >
+                      {purchase.daysRemaining > 0
+                        ? `${purchase.daysRemaining} days`
+                        : "Expired"}
                     </p>
                   </div>
                 </div>
                 {purchase.daysRemaining > 0 && (
                   <div className="purchase-progress">
                     <div
-                      className={`progress-bar ${purchase.daysRemaining <= 3 ? 'warning' : ''}`}
+                      className={`progress-bar ${purchase.daysRemaining <= 3 ? "warning" : ""}`}
                       style={{
                         width: `${Math.min(100, (purchase.daysRemaining / 30) * 100)}%`,
                       }}
                     />
-                    <span>{purchase.daysRemaining} days of access remaining</span>
+                    <span>
+                      {purchase.daysRemaining} days of access remaining
+                    </span>
                   </div>
                 )}
               </div>
@@ -525,10 +578,15 @@ function UserProfile() {
             </span>
           </div>
           <div className="borrow-list">
-            {loans.length === 0 && <p className="empty-text">You haven't borrowed any books yet.</p>}
+            {loans.length === 0 && (
+              <p className="empty-text">You haven't borrowed any books yet.</p>
+            )}
             {loans.map((loan) => {
               const daysRemaining = loan.daysRemaining ?? null;
-              const safeDuration = loan.durationDays && loan.durationDays > 0 ? loan.durationDays : 1;
+              const safeDuration =
+                loan.durationDays && loan.durationDays > 0
+                  ? loan.durationDays
+                  : 1;
               const progressPercent = loan.durationDays
                 ? Math.min(
                     100,
@@ -543,67 +601,81 @@ function UserProfile() {
 
               return (
                 <div key={loan.id} className="borrow-card">
-                <div className="borrow-heading">
-                  <div>
-                    <p className="borrow-title">{loan.book?.title || 'Untitled Book'}</p>
-                    <span>{loan.book?.author || 'Unknown Author'}</span>
-                    {loan.book?.price && (
-                      <span className="book-price">Price: {currencyFormatter.format(loan.book.price)}</span>
-                    )}
-                  </div>
-                  <span className={`badge ${loan.status}`}>{loan.status}</span>
-                </div>
-                <div className="borrow-meta">
-                  <div>
-                    <p className="label">Borrowed</p>
-                    <p className="value">
-                      {loan.borrowDate ? new Date(loan.borrowDate).toLocaleDateString() : '—'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="label">Due Date</p>
-                    <p className="value">
-                      {loan.dueDate ? new Date(loan.dueDate).toLocaleDateString() : '—'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="label">Borrow Period</p>
-                    <p className="value">
-                      {loan.durationDays ? `${loan.durationDays} days` : '—'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="label">Fine Amount</p>
-                    <p className="value">
-                      {loan.fine ? currencyFormatter.format(loan.fine) : currencyFormatter.format(0)}
-                    </p>
-                  </div>
-                </div>
-                {daysRemaining !== null && (
-                  <div className="borrow-progress">
-                    <div
-                      className={`progress-bar ${
-                        loan.status === 'overdue' || (daysRemaining ?? 0) < 0 ? 'danger' : ''
-                      }`}
-                      style={{
-                        width: `${progressPercent}%`,
-                      }}
-                    />
-                    <span>
-                      {daysRemaining >= 0
-                        ? `${daysRemaining} days remaining`
-                        : `${Math.abs(daysRemaining)} days overdue`}
+                  <div className="borrow-heading">
+                    <div>
+                      <p className="borrow-title">
+                        {loan.book?.title || "Untitled Book"}
+                      </p>
+                      <span>{loan.book?.author || "Unknown Author"}</span>
+                      {loan.book?.price && (
+                        <span className="book-price">
+                          Price: {currencyFormatter.format(loan.book.price)}
+                        </span>
+                      )}
+                    </div>
+                    <span className={`badge ${loan.status}`}>
+                      {loan.status}
                     </span>
-                        </div>
-                    )}
+                  </div>
+                  <div className="borrow-meta">
+                    <div>
+                      <p className="label">Borrowed</p>
+                      <p className="value">
+                        {loan.borrowDate
+                          ? new Date(loan.borrowDate).toLocaleDateString()
+                          : "—"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="label">Due Date</p>
+                      <p className="value">
+                        {loan.dueDate
+                          ? new Date(loan.dueDate).toLocaleDateString()
+                          : "—"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="label">Borrow Period</p>
+                      <p className="value">
+                        {loan.durationDays ? `${loan.durationDays} days` : "—"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="label">Fine Amount</p>
+                      <p className="value">
+                        {loan.fine
+                          ? currencyFormatter.format(loan.fine)
+                          : currencyFormatter.format(0)}
+                      </p>
+                    </div>
+                  </div>
+                  {daysRemaining !== null && (
+                    <div className="borrow-progress">
+                      <div
+                        className={`progress-bar ${
+                          loan.status === "overdue" || (daysRemaining ?? 0) < 0
+                            ? "danger"
+                            : ""
+                        }`}
+                        style={{
+                          width: `${progressPercent}%`,
+                        }}
+                      />
+                      <span>
+                        {daysRemaining >= 0
+                          ? `${daysRemaining} days remaining`
+                          : `${Math.abs(daysRemaining)} days overdue`}
+                      </span>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
         </section>
       </div>
-        </div>
-    );
+    </div>
+  );
 }
 
 export default UserProfile;
